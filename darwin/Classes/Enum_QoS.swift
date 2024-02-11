@@ -8,6 +8,25 @@ enum QoS: String {
   case background = "background"
   case unspecified = "unspecified"
 
+  init(_ rawValue: String) {
+    switch rawValue {
+    case "userInteractive":
+      self = .userInteractive
+    case "userInitiated":
+      self = .userInitiated
+    case "default":
+      self = .default
+    case "utility":
+      self = .utility
+    case "background":
+      self = .background
+    case "unspecified":
+      self = .unspecified
+    default:
+      self = .unspecified
+    }
+  }
+
   func toDispatchQoS() -> DispatchQoS.QoSClass {
     switch self {
     case .userInteractive:

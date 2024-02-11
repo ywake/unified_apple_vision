@@ -12,40 +12,53 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    let arg = call.arguments as! [String: Any]
+    let logLevelString = arg["log_level"] as? String ?? "none"
+    Logger.shared.level = Logger.Level(name: logLevelString)
+
+    Logger.debug("method: \(call.method)", "handle")
+    switch call.method {
+    case "analyze":
+      self.callAnalyze(arg, result)
+    default:
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  func callAnalyze(_ arg: [String: Any], _ result: @escaping FlutterResult) {
+    let funcName = "callAnalyze"
+
     if #available(iOS 13.0, macOS 10.13, *) {
-      do {
-        let input = try PluginInput(call.arguments as! [String: Any])
-        switch call.method {
-        case "analyze":
-          DispatchQueue.global(qos: input.qos).async {
-            let res = self.analyze(input)
-            let map = self.encode(res)
-            DispatchQueue.main.async {
-              result(map)
-            }
-          }
-        default:
-          result(FlutterMethodNotImplemented)
+      Logger.debug("platform available", funcName)
+      let qosString = arg["qos"] as? String ?? "unspecified"
+      let qos = QoS(qosString).toDispatchQoS()
+      Logger.debug("qos: \(qos)", funcName)
+      DispatchQueue.global(qos: qos).async {
+        var output: Any?
+        do {
+          let input = try PluginInput(arg)
+          Logger.debug("input: \(input)", funcName)
+          let res = try self.analyze(input)
+          Logger.debug("res: \(res)", funcName)
+          let map = self.encode(res)
+          Logger.debug("map: \(map)", funcName)
+          Logger.debug("analyze: success", funcName)
+          output = map
+        } catch let error as PluginError {
+          Logger.debug("analyze: \(error)", funcName)
+          output = error.toFlutterError()
+        } catch {
+          Logger.debug("analyze: \(error)", funcName)
+          let err = PluginError.unexpectedError(msg: error.localizedDescription)
+          output = err.toFlutterError()
         }
-      } catch PluginError.invalidImageData {
-        result(PluginError.invalidImageData.toFlutterError())
-      } catch {
-        result(
-          FlutterError(
-            code: "Unexpected Errors",
-            message: error.localizedDescription,
-            details: nil
-          )
-        )
+        DispatchQueue.main.async {
+          result(output)
+        }
       }
     } else {
-      result(
-        FlutterError(
-          code: "Unsupported Platform",
-          message: "This plugin requires at least iOS 11.0 or macOS 10.13",
-          details: nil
-        )
-      )
+      Logger.debug("platform unavailable", funcName)
+      result(PluginError.unsupportedPlatform.toFlutterError())
     }
   }
 
@@ -53,16 +66,26 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   #if os(iOS)
     @available(iOS 13.0, macOS 10.13, *)
   #endif
-  func analyze(_ input: PluginInput) -> AnalyzeResult {
-    do {
-      var results = AnalyzeResults()
-      var requests: [VNRequest] = []
-      if let recognizeTextHandler = input.recognizeTextHandler {
-        let req = recognizeTextHandler.buildRequest(results)
-        requests.append(req)
-      }
+  func analyze(_ input: PluginInput) throws -> AnalyzeResults {
+    let funcName = "analyze"
 
-      // perform requests
+    // build requests
+    var results: AnalyzeResults = AnalyzeResults()
+    var requests: [VNRequest] = []
+    if let recognizeTextHandler = input.recognizeTextHandler {
+      Logger.debug("build recognizeTextHandler request", funcName)
+      let req = try recognizeTextHandler.buildRequest { res in
+        if let res = res {
+          results.recognizeTextResults = res
+        }
+      }
+      requests.append(req)
+    }
+    Logger.debug("build requests: \(requests.count)", funcName)
+
+    // perform requests
+    Logger.debug("perform requests: \(input.handler)", funcName)
+    do {
       switch input.handler {
       case .image:
         let handler = VNImageRequestHandler(
@@ -77,15 +100,17 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
           orientation: input.orientation
         )
       }
+      return results
     } catch {
-      return error.localizedDescription
+      Logger.debug("perform: \(error)", funcName)
+      throw PluginError.analyzeError(msg: error.localizedDescription)
     }
-    return "analyze"
   }
 
   func encode(_ results: AnalyzeResults) -> [String: Any?] {
-    return [
-      "recognize_text_result": results.recognizeTextResult
-    ]
+    let funcName = "encode"
+    Logger.debug("\(results)", funcName)
+
+    return results.toData()
   }
 }

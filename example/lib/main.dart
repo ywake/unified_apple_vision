@@ -27,7 +27,9 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  final _unifiedAppleVision = UnifiedAppleVision();
+  final _unifiedAppleVision = UnifiedAppleVision()
+    ..executionPriority = VisionExecutionPriority.veryHigh
+    ..recognizeTextOption = const VisionRecognizeTextOption();
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +40,17 @@ class _CameraScreenState extends State<CameraScreen> {
             saveConfig: SaveConfig.photo(),
             imageAnalysisConfig: AnalysisConfig(maxFramesPerSecond: 1),
             onImageForAnalysis: (image) async {
-              final results = await image.when(
-                bgra8888: (image) => _unifiedAppleVision.analyze(
-                  bytes: image.bytes,
-                  size: image.size,
-                ),
-              );
-              print(results);
+              try {
+                final results = await image.when(
+                  bgra8888: (image) => _unifiedAppleVision.analyze(
+                    bytes: image.bytes,
+                    size: image.size,
+                  ),
+                );
+                debugPrint('$results');
+              } catch (e) {
+                debugPrint('$e');
+              }
             },
           ),
         ],

@@ -2,14 +2,16 @@ import 'package:flutter/services.dart';
 
 import 'enum/execution_priority.dart';
 import 'enum/image_orientation.dart';
+import 'enum/log_level.dart';
 import 'enum/method.dart';
 import 'enum/operation_mode.dart';
 import 'model/results.dart';
 import 'option/recognize_text_option.dart';
 
 class UnifiedAppleVision {
-  final executionPriority = VisionExecutionPriority.veryHigh;
-  final analyzeMode = VisionAnalyzeMode.oneByOne;
+  var xcodeLogLevel = VisionLogLevel.none;
+  var executionPriority = VisionExecutionPriority.unspecified;
+  var analyzeMode = VisionAnalyzeMode.oneByOne;
   VisionRecognizeTextOption? recognizeTextOption;
 
   UnifiedAppleVision();
@@ -20,11 +22,15 @@ class UnifiedAppleVision {
     VisionImageOrientation orientation = VisionImageOrientation.up,
   }) async {
     final input = _buildInput(bytes, size, orientation);
-    final results = await Method.analyze.invoke(input);
-    if (results == null) {
-      throw Exception('Failed to analyze');
+    try {
+      final results = await Method.analyze.invoke(input);
+      if (results == null) {
+        throw Exception('Failed to analyze');
+      }
+      return VisionResults.fromMap(results);
+    } catch (e) {
+      rethrow;
     }
-    return VisionResults.fromMap(results);
   }
 
   Future<List<String>> supportedRecognitionLanguages() async {
@@ -41,6 +47,7 @@ class UnifiedAppleVision {
     VisionImageOrientation orientation,
   ) {
     return {
+      'log_level': xcodeLogLevel.name,
       'data': bytes,
       'width': size.width,
       'height': size.height,

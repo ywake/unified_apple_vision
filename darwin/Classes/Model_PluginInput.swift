@@ -3,20 +3,17 @@ import Flutter
 import Foundation
 
 class PluginInput {
-  let qos: DispatchQoS.QoSClass
   let orientation: CGImagePropertyOrientation
   let handler: RequestHandler
   let image: CIImage
   let recognizeTextHandler: RecognizeTextHandler?
 
   init(
-    qos: DispatchQoS.QoSClass,
     orientation: CGImagePropertyOrientation,
     handler: RequestHandler,
     image: CIImage,
     recognizeTextHandler: RecognizeTextHandler?
   ) {
-    self.qos = qos
     self.orientation = orientation
     self.handler = handler
     self.image = image
@@ -27,7 +24,6 @@ class PluginInput {
     let bytes = arg["data"] as? FlutterStandardTypedData
     let width = arg["width"] as? Int ?? 0
     let height = arg["height"] as? Int ?? 0
-    let qos = arg["qos"] as? String ?? "default"
     let orientation = arg["orientation"] as? String ?? "down"
     let handler = arg["handler"] as? String ?? "image"
 
@@ -50,10 +46,8 @@ class PluginInput {
     let recognizeTextHandler = arg["recognize_text"] as? [String: Any]
 
     self.init(
-      qos: (QoS(rawValue: qos) ?? .default).toDispatchQoS(),
-      orientation: (Orientation(rawValue: orientation) ?? .down)
-        .toCGImagePropertyOrientation(),
-      handler: RequestHandler(rawValue: handler) ?? .image,
+      orientation: Orientation(orientation).toCGImagePropertyOrientation(),
+      handler: RequestHandler(handler),
       image: image,
       recognizeTextHandler: recognizeTextHandler == nil
         ? nil

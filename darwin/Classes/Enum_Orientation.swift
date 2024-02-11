@@ -10,6 +10,20 @@ enum Orientation: String {
   case right = "right"
   case rightMirrored = "rightMirrored"
 
+  init(_ rawValue: String) {
+    switch rawValue {
+    case "up": self = .up
+    case "upMirrored": self = .upMirrored
+    case "down": self = .down
+    case "downMirrored": self = .downMirrored
+    case "left": self = .left
+    case "leftMirrored": self = .leftMirrored
+    case "right": self = .right
+    case "rightMirrored": self = .rightMirrored
+    default: self = .down
+    }
+  }
+
   func toCGImagePropertyOrientation() -> CGImagePropertyOrientation {
     switch self {
     case .up: return .up

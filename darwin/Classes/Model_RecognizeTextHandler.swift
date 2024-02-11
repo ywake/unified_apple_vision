@@ -42,13 +42,21 @@ class RecognizeTextHandler {
   #if os(iOS)
     @available(iOS 13.0, macOS 10.13, *)
   #endif
-  func buildRequest(_ results: AnalyzeResults) -> VNRecognizeTextRequest {
+  func buildRequest(_ result: @escaping (RecognizeTextResults?) -> Void)
+    -> VNRecognizeTextRequest
+  {
     let request = VNRecognizeTextRequest { request, error in
       if error != nil {
-        print(error!.localizedDescription)
+        Logger.error(error!.localizedDescription, "RecognizeTextHandler.buildRequest")
+        result(nil)
         return
       }
-      return
+      guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
+      let res = RecognizeTextResults(
+        observations,
+        maxCandidates: self.maxCandidates
+      )
+      result(res)
     }
     if let minimumTextHeight = self.minimumTextHeight {
       request.minimumTextHeight = minimumTextHeight
