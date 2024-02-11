@@ -1,8 +1,6 @@
+library unified_apple_vision;
 
-import 'unified_apple_vision_platform_interface.dart';
-
-class UnifiedAppleVision {
-  Future<String?> getPlatformVersion() {
-    return UnifiedAppleVisionPlatform.instance.getPlatformVersion();
-  }
-}
+export 'src/unified_apple_vision.dart';
+export 'src/model/results.dart';
+export 'src/model/recognized_text.dart';
+export 'src/option/recognize_text_option.dart';
