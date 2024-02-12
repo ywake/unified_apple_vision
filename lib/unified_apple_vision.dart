@@ -1,8 +1,16 @@
+library unified_apple_vision;
 
-import 'unified_apple_vision_platform_interface.dart';
+export 'src/unified_apple_vision.dart';
 
-class UnifiedAppleVision {
-  Future<String?> getPlatformVersion() {
-    return UnifiedAppleVisionPlatform.instance.getPlatformVersion();
-  }
-}
+export 'src/enum/execution_priority.dart';
+export 'src/enum/image_orientation.dart';
+export 'src/enum/log_level.dart';
+export 'src/enum/operation_mode.dart';
+export 'src/enum/text_recognition_level.dart';
+
+export 'src/model/input_image.dart';
+export 'src/model/recognized_text.dart';
+export 'src/model/rectangle.dart';
+export 'src/model/results.dart';
+
+export 'src/option/recognize_text_option.dart';
