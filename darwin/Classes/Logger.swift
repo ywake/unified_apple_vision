@@ -26,7 +26,7 @@ class Logger {
   private static let pluginName: String = "UnifiedAppleVisionPlugin"
 
   static func _log(_ level: Level, _ message: String, _ symbol: String?) {
-    if shared.level.rawValue < level.rawValue {
+    if shared.level.rawValue > level.rawValue {
       return
     }
     var prefix = Logger.pluginName

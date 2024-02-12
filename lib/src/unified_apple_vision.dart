@@ -1,12 +1,8 @@
-import 'package:flutter/services.dart';
+import 'dart:ui';
 
-import 'enum/execution_priority.dart';
-import 'enum/image_orientation.dart';
-import 'enum/log_level.dart';
+import 'package:unified_apple_vision/unified_apple_vision.dart';
+
 import 'enum/method.dart';
-import 'enum/operation_mode.dart';
-import 'model/results.dart';
-import 'option/recognize_text_option.dart';
 
 class UnifiedAppleVision {
   var xcodeLogLevel = VisionLogLevel.none;
@@ -16,45 +12,36 @@ class UnifiedAppleVision {
 
   UnifiedAppleVision();
 
-  Future<VisionResults> analyze({
-    required Uint8List bytes,
-    required Size size,
-    VisionImageOrientation orientation = VisionImageOrientation.up,
-  }) async {
-    final input = _buildInput(bytes, size, orientation);
-    try {
-      final results = await Method.analyze.invoke(input);
-      if (results == null) {
-        throw Exception('Failed to analyze');
-      }
-      return VisionResults.fromMap(results);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<List<String>> supportedRecognitionLanguages() async {
-    final results = await Method.supportedRecognitionLanguages.invoke();
-    if (results == null) {
-      throw Exception('Failed to get supported recognition languages');
-    }
-    return [];
-  }
-
-  Map<String, dynamic> _buildInput(
-    Uint8List bytes,
-    Size size,
-    VisionImageOrientation orientation,
-  ) {
-    return {
-      'log_level': xcodeLogLevel.name,
-      'data': bytes,
-      'width': size.width,
-      'height': size.height,
-      'orientation': orientation.name,
+  Future<VisionResults> analyze(VisionInputImage image) async {
+    final results = await Method.analyze.invoke(xcodeLogLevel, {
+      'image': image.toMap(),
       'qos': executionPriority.qos,
       'handler': analyzeMode.handlerName,
       if (recognizeTextOption != null) 'recognize_text': recognizeTextOption!.toMap(),
-    };
+    });
+    if (results == null) {
+      throw Exception('Failed to analyze');
+    }
+    return VisionResults.fromMap(image, results);
+  }
+
+  Future<List<Locale>?> supportedRecognitionLanguages([
+    VisionTextRecognitionLevel recognitionLevel = VisionTextRecognitionLevel.accurate,
+  ]) async {
+    if (recognizeTextOption == null) {
+      throw Exception('recognizeTextOption is needed to get supported recognition languages');
+    }
+
+    final results = await Method.supportedRecognitionLanguages.invoke(xcodeLogLevel, {
+      'recognition_level': recognitionLevel.name,
+    });
+    if (results == null) {
+      throw Exception('Failed to get supported recognition languages');
+    }
+    final languages = results['supported_recognition_languages'] as List?;
+    return languages?.map((e) {
+      final [lang, country] = (e as String).split('-');
+      return Locale(lang, country);
+    }).toList();
   }
 }

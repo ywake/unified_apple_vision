@@ -2,7 +2,7 @@ import Vision
 
 class RecognizeTextHandler {
   let minimumTextHeight: Float?
-  let recognitionLevel: String?
+  let recognitionLevel: TextRecognitionLevel
   let automaticallyDetectsLanguage: Bool?
   let recognitionLanguages: [String]?
   let usesLanguageCorrection: Bool?
@@ -11,7 +11,7 @@ class RecognizeTextHandler {
 
   init(
     minimumTextHeight: Float? = nil,
-    recognitionLevel: String? = nil,
+    recognitionLevel: TextRecognitionLevel,
     automaticallyDetectsLanguage: Bool? = nil,
     recognitionLanguages: [String]? = nil,
     usesLanguageCorrection: Bool? = nil,
@@ -27,10 +27,13 @@ class RecognizeTextHandler {
     self.maxCandidates = maxCandidates ?? 1
   }
 
-  convenience init(_ arg: [String: Any]) {
+  convenience init?(_ arg: [String: Any]?) {
+    guard let arg = arg else { return nil }
+
+    let level = arg["recognition_level"] as? String ?? "accurate"
     self.init(
       minimumTextHeight: arg["minimum_text_height"] as? Float,
-      recognitionLevel: arg["recognition_level"] as? String,
+      recognitionLevel: TextRecognitionLevel(level),
       automaticallyDetectsLanguage: arg["automatically_detects_language"] as? Bool,
       recognitionLanguages: arg["recognition_languages"] as? [String],
       usesLanguageCorrection: arg["uses_language_correction"] as? Bool,
@@ -61,20 +64,13 @@ class RecognizeTextHandler {
     if let minimumTextHeight = self.minimumTextHeight {
       request.minimumTextHeight = minimumTextHeight
     }
-    if let recognitionLevel = self.recognitionLevel {
-      switch recognitionLevel {
-      case "fast":
-        request.recognitionLevel = VNRequestTextRecognitionLevel.fast
-      default:
-        request.recognitionLevel = VNRequestTextRecognitionLevel.accurate
-      }
-    }
+    request.recognitionLevel = self.recognitionLevel.toVNRequestRecognitionLevel()
     if #available(iOS 16.0, macOS 13.0, *) {
       if let automaticallyDetectsLanguage = self.automaticallyDetectsLanguage {
         request.automaticallyDetectsLanguage = automaticallyDetectsLanguage
       }
     } else if self.automaticallyDetectsLanguage != nil {
-      print("Warning: automaticallyDetectsLanguage is available on iOS 16.0+ and macOS 13.0+")
+      Logger.warning("automaticallyDetectsLanguage is available on iOS 16.0+ and macOS 13.0+")
     }
     if let recognitionLanguages = self.recognitionLanguages {
       request.recognitionLanguages = recognitionLanguages

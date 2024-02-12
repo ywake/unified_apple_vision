@@ -7,9 +7,11 @@ class VisionRecognizeTextOption {
   final double? minimumTextHeight;
 
   /// A value that determines whether the request prioritizes accuracy or speed in text recognition.
+  /// Default is [VisionTextRecognitionLevel.accurate]
   final VisionTextRecognitionLevel? recognitionLevel;
 
   /// A Boolean value that indicates whether to attempt detecting the language to use the appropriate model for recognition and language correction.
+  /// Default is false
   /// Available in iOS 16.0+, macOS 13.0+.
   final bool? automaticallyDetectsLanguage;
 

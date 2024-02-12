@@ -20,6 +20,8 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "analyze":
       self.callAnalyze(arg, result)
+    case "supportedRecognitionLanguages":
+      self.supportedRecognitionLanguages(arg, result)
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -74,7 +76,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     var requests: [VNRequest] = []
     if let recognizeTextHandler = input.recognizeTextHandler {
       Logger.debug("build recognizeTextHandler request", funcName)
-      let req = try recognizeTextHandler.buildRequest { res in
+      let req = recognizeTextHandler.buildRequest { res in
         if let res = res {
           results.recognizeTextResults = res
         }
@@ -89,15 +91,15 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
       switch input.handler {
       case .image:
         let handler = VNImageRequestHandler(
-          ciImage: input.image,
-          orientation: input.orientation
+          ciImage: input.image.ciImage,
+          orientation: input.image.orientation
         )
         try handler.perform(requests)
       case .sequence:
         try self.sequence.perform(
           requests,
-          on: input.image,
-          orientation: input.orientation
+          on: input.image.ciImage,
+          orientation: input.image.orientation
         )
       }
       return results
@@ -112,5 +114,27 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     Logger.debug("\(results)", funcName)
 
     return results.toData()
+  }
+
+  func supportedRecognitionLanguages(_ arg: [String: Any], _ result: @escaping FlutterResult) {
+    let funcName = "supportedRecognitionLanguages"
+
+    if #available(iOS 15.0, macOS 12.0, *) {
+      Logger.debug("platform available", funcName)
+      let levelStr = arg["recognition_level"] as? String ?? "accurate"
+      let level = TextRecognitionLevel(levelStr)
+      let request = VNRecognizeTextRequest()
+      request.recognitionLevel = level.toVNRequestRecognitionLevel()
+      do {
+        let langs = try request.supportedRecognitionLanguages()
+        Logger.debug("langs: \(langs)", funcName)
+        result(["supported_recognition_languages": langs])
+      } catch {
+        result(PluginError.unexpectedError(msg: error.localizedDescription).toFlutterError())
+      }
+    } else {
+      Logger.debug("platform unavailable", funcName)
+      result(PluginError.unsupportedPlatform.toFlutterError())
+    }
   }
 }

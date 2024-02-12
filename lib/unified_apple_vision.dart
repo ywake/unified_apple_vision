@@ -8,7 +8,9 @@ export 'src/enum/log_level.dart';
 export 'src/enum/operation_mode.dart';
 export 'src/enum/text_recognition_level.dart';
 
+export 'src/model/input_image.dart';
 export 'src/model/recognized_text.dart';
+export 'src/model/rectangle.dart';
 export 'src/model/results.dart';
 
 export 'src/option/recognize_text_option.dart';
