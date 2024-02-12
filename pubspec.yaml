@@ -1,6 +1,6 @@
 name: unified_apple_vision
 description: "A Flutter plugin for using apple's vision framework."
-version: 0.0.1
+version: 0.1.0
 homepage: https://github.com/ywake/unified_apple_vision
 
 environment:
