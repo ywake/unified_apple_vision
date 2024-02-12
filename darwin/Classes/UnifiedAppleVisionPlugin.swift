@@ -1,11 +1,21 @@
-import Flutter
 import Vision
+
+#if os(iOS)
+  import Flutter
+#elseif os(macOS)
+  import FlutterMacOS
+#endif
 
 public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
+    #if os(iOS)
+      let messenger = registrar.messenger()
+    #elseif os(macOS)
+      let messenger = registrar.messenger
+    #endif
     let channel = FlutterMethodChannel(
       name: "unified_apple_vision",
-      binaryMessenger: registrar.messenger()
+      binaryMessenger: messenger
     )
     let instance = UnifiedAppleVisionPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
@@ -30,7 +40,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   func callAnalyze(_ arg: [String: Any], _ result: @escaping FlutterResult) {
     let funcName = "callAnalyze"
 
-    if #available(iOS 13.0, macOS 10.13, *) {
+    if #available(iOS 13.0, macOS 10.15, *) {
       Logger.debug("platform available", funcName)
       let qosString = arg["qos"] as? String ?? "unspecified"
       let qos = QoS(qosString).toDispatchQoS()
@@ -65,14 +75,12 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   }
 
   private let sequence = VNSequenceRequestHandler()
-  #if os(iOS)
-    @available(iOS 13.0, macOS 10.13, *)
-  #endif
+  @available(iOS 13.0, macOS 10.15, *)
   func analyze(_ input: PluginInput) throws -> AnalyzeResults {
     let funcName = "analyze"
 
     // build requests
-    var results: AnalyzeResults = AnalyzeResults()
+    let results: AnalyzeResults = AnalyzeResults()
     var requests: [VNRequest] = []
     if let recognizeTextHandler = input.recognizeTextHandler {
       Logger.debug("build recognizeTextHandler request", funcName)
@@ -109,6 +117,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     }
   }
 
+  @available(iOS 13.0, macOS 10.15, *)
   func encode(_ results: AnalyzeResults) -> [String: Any?] {
     let funcName = "encode"
     Logger.debug("\(results)", funcName)

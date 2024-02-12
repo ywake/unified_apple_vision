@@ -1,5 +1,6 @@
 import Vision
 
+@available(iOS 13.0, macOS 10.15, *)
 class RecognizeTextResults {
   let observations: [VNRecognizedTextObservation]
   let maxCandidates: Int

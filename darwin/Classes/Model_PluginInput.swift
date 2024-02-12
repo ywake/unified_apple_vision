@@ -1,6 +1,11 @@
 import CoreImage
-import Flutter
 import Foundation
+
+#if os(iOS)
+  import Flutter
+#elseif os(macOS)
+  import FlutterMacOS
+#endif
 
 class PluginInput {
   let image: InputImage

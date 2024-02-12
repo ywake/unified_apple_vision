@@ -42,9 +42,7 @@ class RecognizeTextHandler {
     )
   }
 
-  #if os(iOS)
-    @available(iOS 13.0, macOS 10.13, *)
-  #endif
+  @available(iOS 13.0, macOS 10.15, *)
   func buildRequest(_ result: @escaping (RecognizeTextResults?) -> Void)
     -> VNRecognizeTextRequest
   {

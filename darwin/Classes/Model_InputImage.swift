@@ -1,5 +1,10 @@
 import CoreImage
-import Flutter
+
+#if os(iOS)
+  import Flutter
+#elseif os(macOS)
+  import FlutterMacOS
+#endif
 
 class InputImage {
   var ciImage: CIImage

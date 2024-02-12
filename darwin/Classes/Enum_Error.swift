@@ -1,4 +1,8 @@
-import Flutter
+#if os(iOS)
+  import Flutter
+#elseif os(macOS)
+  import FlutterMacOS
+#endif
 
 enum PluginError: Error {
   case invalidImageData
