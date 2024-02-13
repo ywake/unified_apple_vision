@@ -29,9 +29,9 @@ unified_apple_vision: ^latest
 // config
 final vision = UnifiedAppleVision()
   ..executionPriority = VisionExecutionPriority.veryHigh
-  ..recognizeTextOption = const VisionRecognizeTextOption(
-    automaticallyDetectsLanguage: true,
-  );
+  ..request = [
+    const VisionRecognizeTextRequest(automaticallyDetectsLanguage: true)
+  ];
 
 // analyze
 final res = await vision.analyze(VisionInputImage(

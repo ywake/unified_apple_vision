@@ -15,8 +15,7 @@ class UnifiedAppleVision {
   /// Specify whether to analyze a single still image or a continuous image sequence, such as a video frame.
   var analyzeMode = VisionAnalyzeMode.still;
 
-  /// By adding analysis options to this array, the analysis is performed according to those options.
-  /// If you do not add the analysis option, that analysis will not be performed.
+  /// Requests added to this array are analyzed.
   var request = <AnalysisRequest>[];
 
   UnifiedAppleVision();
