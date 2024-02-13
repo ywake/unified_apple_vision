@@ -1,3 +1,4 @@
+import 'package:unified_apple_vision/src/enum/analysis_type.dart';
 import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/model/input_image.dart';
 
@@ -13,23 +14,22 @@ class VisionResults {
   });
 
   factory VisionResults.fromMap(VisionInputImage image, Map<String, dynamic> map) {
-    final recognizedTexts = map['recognize_text_results'] as List?;
+    final recognizedTexts = map[AnalysisType.recognizeText.key] as Map?;
 
     return VisionResults(
       inputImage: image,
-      recognizedTexts: _parseRecognizedTexts([
-        if (recognizedTexts != null)
-          for (final data in recognizedTexts) (data as Map).castEx(),
-      ]),
+      recognizedTexts: _parseRecognizedTexts(recognizedTexts?.castEx()),
     );
   }
 
-  static List<VisionRecognizedText>? _parseRecognizedTexts(
-    List<Map<String, dynamic>> recognizedTexts,
-  ) {
-    return [
-      for (final data in recognizedTexts) VisionRecognizedText.fromMap(data),
-    ];
+  static List<VisionRecognizedText>? _parseRecognizedTexts(Map<String, dynamic>? recognizedTexts) {
+    if (recognizedTexts == null) {
+      return null;
+    }
+    final observations = recognizedTexts.castEx()["observations"] as List?;
+    return observations?.map((data) {
+      return VisionRecognizedText.fromMap((data as Map).castEx());
+    }).toList();
   }
 
   Map<String, dynamic> toMap() {

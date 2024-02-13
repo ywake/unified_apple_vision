@@ -1,9 +1,10 @@
 import 'package:unified_apple_vision/src/extension/map.dart';
-import 'package:unified_apple_vision/src/model/rectangle.dart';
-import 'package:unified_apple_vision/src/option/recognize_text_option.dart';
+import 'package:unified_apple_vision/src/model/request/recognize_text_request.dart';
+
+import 'rectangle.dart';
 
 class VisionRecognizedText {
-  /// List of candidates for recognition results. The maximum number is specified by [VisionRecognizeTextOption.maxCandidates] in descending order of accuracy.
+  /// List of candidates for recognition results. The maximum number is specified by [VisionRecognizeTextRequest.maxCandidates] in descending order of accuracy.
   final List<VisionRecognizedTextCandidate> candidates;
 
   /// The coordinates are normalized to the image size, with the top-left corner being (0.0, 0.0) and the bottom-right corner being (1.0, 1.0).

@@ -27,7 +27,7 @@ enum PluginError: Error {
     case .unsupportedPlatform:
       return FlutterError(
         code: "UNSUPPORTED_PLATFORM",
-        message: "This method is only supported on iOS 13.0+ and macOS 10.13+.",
+        message: "This method is only supported on iOS 13.0+ and macOS 10.15+.",
         details: nil
       )
     case .unexpectedError(let msg):

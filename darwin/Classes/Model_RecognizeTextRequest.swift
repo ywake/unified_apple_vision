@@ -1,6 +1,6 @@
 import Vision
 
-class RecognizeTextHandler {
+class RecognizeTextRequest: AnalyzeRequest {
   let minimumTextHeight: Float?
   let recognitionLevel: TextRecognitionLevel
   let automaticallyDetectsLanguage: Bool?
@@ -10,13 +10,13 @@ class RecognizeTextHandler {
   let maxCandidates: Int
 
   init(
-    minimumTextHeight: Float? = nil,
+    minimumTextHeight: Float?,
     recognitionLevel: TextRecognitionLevel,
-    automaticallyDetectsLanguage: Bool? = nil,
-    recognitionLanguages: [String]? = nil,
-    usesLanguageCorrection: Bool? = nil,
-    customWords: [String]? = nil,
-    maxCandidates: Int? = nil
+    automaticallyDetectsLanguage: Bool?,
+    recognitionLanguages: [String]?,
+    usesLanguageCorrection: Bool?,
+    customWords: [String]?,
+    maxCandidates: Int?
   ) {
     self.minimumTextHeight = minimumTextHeight
     self.recognitionLevel = recognitionLevel
@@ -25,6 +25,7 @@ class RecognizeTextHandler {
     self.usesLanguageCorrection = usesLanguageCorrection
     self.customWords = customWords
     self.maxCandidates = maxCandidates ?? 1
+    super.init(type: .recognizeText)
   }
 
   convenience init?(_ arg: [String: Any]?) {
@@ -42,17 +43,24 @@ class RecognizeTextHandler {
     )
   }
 
+  override func makeRequest(_ result: @escaping (AnalyzeResults?) -> Void) throws -> VNRequest {
+    if #available(iOS 13.0, macOS 10.15, *) {
+      return _makeRequest(result)
+    } else {
+      throw PluginError.unsupportedPlatform
+    }
+  }
+
   @available(iOS 13.0, macOS 10.15, *)
-  func buildRequest(_ result: @escaping (RecognizeTextResults?) -> Void)
-    -> VNRecognizeTextRequest
+  private func _makeRequest(_ result: @escaping (AnalyzeResults?) -> Void) -> VNRecognizeTextRequest
   {
-    let request = VNRecognizeTextRequest { request, error in
-      if error != nil {
-        Logger.error(error!.localizedDescription, "RecognizeTextHandler.buildRequest")
+    let request = VNRecognizeTextRequest { req, err in
+      if err != nil {
+        Logger.error(err!.localizedDescription, "RecognizeTextRequest.makeRequest")
         result(nil)
         return
       }
-      guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
+      guard let observations = req.results as? [VNRecognizedTextObservation] else { return }
       let res = RecognizeTextResults(
         observations,
         maxCandidates: self.maxCandidates
