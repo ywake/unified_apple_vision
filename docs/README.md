@@ -28,14 +28,13 @@ The priority and mode of analysis processing can be set.
 > | `.still` | Suitable for analyzing still images one by one. |
 > | `.sequential` | It is suitable for analyzing a series of images, such as a video.<br>The results of the analysis of the previous image are used for the next analysis.<br>Suitable for object tracking, etc. |
 
-### Set the options for the analysis you wish to perform
+### Add a request for the analysis you wish to perform
 
 ```dart
-vision.recognizeTextOption = const VisionRecognizeTextOption();
+vision.request = [const VisionRecognizeTextRequest()];
 ```
 
-For example, if you wish to perform text recognition, set `recognizeTextOption`.  
-If left as `null`, no text recognition will be performed.
+For example, if you wish to perform text recognition, add `VisionRecognizeTextRequest` to the `request` property.
 
 ## 3. Start processing
 

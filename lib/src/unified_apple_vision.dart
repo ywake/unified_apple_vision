@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'enum/method.dart';
@@ -14,8 +15,8 @@ class UnifiedAppleVision {
   /// Specify whether to analyze a single still image or a continuous image sequence, such as a video frame.
   var analyzeMode = VisionAnalyzeMode.still;
 
-  ///
-  VisionRecognizeTextOption? recognizeTextOption;
+  /// Requests added to this array are analyzed.
+  var request = <AnalysisRequest>[];
 
   UnifiedAppleVision();
 
@@ -23,8 +24,8 @@ class UnifiedAppleVision {
     final results = await Method.analyze.invoke(xcodeLogLevel, {
       'image': image.toMap(),
       'qos': executionPriority.qos,
-      'handler': analyzeMode.handlerName,
-      if (recognizeTextOption != null) 'recognize_text': recognizeTextOption!.toMap(),
+      'mode': analyzeMode.modeName,
+      'requests': [for (final option in request) option.toRequestMap()],
     });
     if (results == null) {
       throw Exception('Failed to analyze');
@@ -35,10 +36,6 @@ class UnifiedAppleVision {
   Future<List<Locale>?> supportedRecognitionLanguages([
     VisionTextRecognitionLevel recognitionLevel = VisionTextRecognitionLevel.accurate,
   ]) async {
-    if (recognizeTextOption == null) {
-      throw Exception('recognizeTextOption is needed to get supported recognition languages');
-    }
-
     final results = await Method.supportedRecognitionLanguages.invoke(xcodeLogLevel, {
       'recognition_level': recognitionLevel.name,
     });

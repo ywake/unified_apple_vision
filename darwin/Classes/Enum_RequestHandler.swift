@@ -1,4 +1,4 @@
-enum RequestHandler: String {
+enum RequestMode: String {
   case image = "image"
   case sequence = "sequence"
 

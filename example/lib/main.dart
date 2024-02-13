@@ -30,9 +30,9 @@ class _CameraScreenState extends State<CameraScreen> {
   final _unifiedAppleVision = UnifiedAppleVision()
     ..xcodeLogLevel = VisionLogLevel.none
     ..executionPriority = VisionExecutionPriority.veryHigh
-    ..recognizeTextOption = const VisionRecognizeTextOption(
-      automaticallyDetectsLanguage: true,
-    );
+    ..request = [
+      const VisionRecognizeTextRequest(automaticallyDetectsLanguage: true),
+    ];
 
   VisionResults? results;
 
@@ -112,7 +112,7 @@ class _Painter extends CustomPainter {
 
     // Draw top-left corner
     final cornerPaint = Paint()..style = PaintingStyle.fill;
-    canvas.drawCircle(coord.topLeft, 5, cornerPaint..color = Colors.red);
+    canvas.drawCircle(coord.topLeft, 3, cornerPaint..color = Colors.red);
 
     // Draw the text
     final candidate = recognizedText.candidates.first;
@@ -121,10 +121,7 @@ class _Painter extends CustomPainter {
     final textPainter = TextPainter(
       text: TextSpan(
         text: '$text (${confidence.toStringAsFixed(1)})',
-        style: const TextStyle(
-          color: Colors.red,
-          fontSize: 10,
-        ),
+        style: const TextStyle(fontSize: 10),
       ),
       textDirection: TextDirection.ltr,
     )..layout();

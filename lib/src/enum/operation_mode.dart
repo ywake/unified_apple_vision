@@ -9,7 +9,7 @@ enum VisionAnalyzeMode {
   sequential,
   ;
 
-  String get handlerName {
+  String get modeName {
     switch (this) {
       case VisionAnalyzeMode.still:
         return 'image';

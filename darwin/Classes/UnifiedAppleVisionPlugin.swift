@@ -49,12 +49,8 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
         var output: Any?
         do {
           let input = try PluginInput(arg)
-          Logger.debug("input: \(input)", funcName)
           let res = try self.analyze(input)
-          Logger.debug("res: \(res)", funcName)
           let map = self.encode(res)
-          Logger.debug("map: \(map)", funcName)
-          Logger.debug("analyze: success", funcName)
           output = map
         } catch let error as PluginError {
           Logger.debug("analyze: \(error)", funcName)
@@ -76,27 +72,29 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
 
   private let sequence = VNSequenceRequestHandler()
   @available(iOS 13.0, macOS 10.15, *)
-  func analyze(_ input: PluginInput) throws -> AnalyzeResults {
+  func analyze(_ input: PluginInput) throws -> [AnalyzeResults] {
     let funcName = "analyze"
 
     // build requests
-    let results: AnalyzeResults = AnalyzeResults()
+    var results: [AnalyzeResults] = []
     var requests: [VNRequest] = []
-    if let recognizeTextHandler = input.recognizeTextHandler {
-      Logger.debug("build recognizeTextHandler request", funcName)
-      let req = recognizeTextHandler.buildRequest { res in
-        if let res = res {
-          results.recognizeTextResults = res
+    input.requests.forEach { request in
+      do {
+        let req = try request.makeRequest { res in
+          guard let res = res else { return }
+          results.append(res)
         }
+        requests.append(req)
+      } catch {
+        Logger.error("Failed to create \(request.type) Request. Skip.", funcName)
       }
-      requests.append(req)
     }
     Logger.debug("build requests: \(requests.count)", funcName)
 
     // perform requests
-    Logger.debug("perform requests: \(input.handler)", funcName)
+    Logger.debug("perform requests: \(input.mode)", funcName)
     do {
-      switch input.handler {
+      switch input.mode {
       case .image:
         let handler = VNImageRequestHandler(
           ciImage: input.image.ciImage,
@@ -118,11 +116,15 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   }
 
   @available(iOS 13.0, macOS 10.15, *)
-  func encode(_ results: AnalyzeResults) -> [String: Any?] {
+  func encode(_ results: [AnalyzeResults]) -> [String: Any?] {
     let funcName = "encode"
     Logger.debug("\(results)", funcName)
 
-    return results.toData()
+    var data: [String: Any] = [:]
+    results.forEach { res in
+      data[res.type.rawValue] = res.toData()
+    }
+    return data
   }
 
   func supportedRecognitionLanguages(_ arg: [String: Any], _ result: @escaping FlutterResult) {

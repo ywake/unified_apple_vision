@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:unified_apple_vision/src/enum/analysis_type.dart';
 import 'package:unified_apple_vision/src/enum/text_recognition_level.dart';
 
-class VisionRecognizeTextOption {
+import 'analysis_request.dart';
+
+class VisionRecognizeTextRequest extends AnalysisRequest {
   /// The minimum height, relative to the image height, of the text to recognize.
   final double? minimumTextHeight;
 
@@ -31,7 +34,7 @@ class VisionRecognizeTextOption {
   /// The maximum number of candidates to be returned for each word.
   final int maxCandidates;
 
-  const VisionRecognizeTextOption({
+  const VisionRecognizeTextRequest({
     this.minimumTextHeight,
     this.recognitionLevel,
     this.automaticallyDetectsLanguage,
@@ -39,8 +42,9 @@ class VisionRecognizeTextOption {
     this.usesLanguageCorrection,
     this.customWords,
     this.maxCandidates = 1,
-  });
+  }) : super(type: AnalysisType.recognizeText);
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'minimum_text_height': minimumTextHeight,
