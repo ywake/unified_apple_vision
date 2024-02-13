@@ -2,7 +2,7 @@
 enum VisionAnalyzeMode {
   /// Analyze a single still image.
   /// Processed using VNImageRequestHandler.
-  oneByOne,
+  still,
 
   /// Analyze a continuous image sequence.
   /// Processed using VNSequenceRequestHandler.
@@ -11,7 +11,7 @@ enum VisionAnalyzeMode {
 
   String get handlerName {
     switch (this) {
-      case VisionAnalyzeMode.oneByOne:
+      case VisionAnalyzeMode.still:
         return 'image';
       case VisionAnalyzeMode.sequential:
         return 'sequence';

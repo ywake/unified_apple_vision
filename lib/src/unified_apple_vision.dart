@@ -5,9 +5,16 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'enum/method.dart';
 
 class UnifiedAppleVision {
+  /// Log level displayed in xcode.
   var xcodeLogLevel = VisionLogLevel.none;
+
+  /// Priority of the task that performs the analysis.
   var executionPriority = VisionExecutionPriority.unspecified;
-  var analyzeMode = VisionAnalyzeMode.oneByOne;
+
+  /// Specify whether to analyze a single still image or a continuous image sequence, such as a video frame.
+  var analyzeMode = VisionAnalyzeMode.still;
+
+  ///
   VisionRecognizeTextOption? recognizeTextOption;
 
   UnifiedAppleVision();
