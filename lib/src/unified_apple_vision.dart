@@ -39,9 +39,11 @@ class UnifiedAppleVision {
   }
 
   Future<List<Locale>?> supportedRecognitionLanguages([
-    VisionTextRecognitionLevel recognitionLevel = VisionTextRecognitionLevel.accurate,
+    VisionTextRecognitionLevel recognitionLevel =
+        VisionTextRecognitionLevel.accurate,
   ]) async {
-    final results = await Method.supportedRecognitionLanguages.invoke(xcodeLogLevel, {
+    final results =
+        await Method.supportedRecognitionLanguages.invoke(xcodeLogLevel, {
       'recognition_level': recognitionLevel.name,
     });
     if (results == null) {

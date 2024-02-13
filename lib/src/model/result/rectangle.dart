@@ -30,7 +30,10 @@ class VisionRectangle {
     final topLeft = map['top_left'] as Map?;
     final topRight = map['top_right'] as Map?;
 
-    if (bottomLeft == null || bottomRight == null || topLeft == null || topRight == null) {
+    if (bottomLeft == null ||
+        bottomRight == null ||
+        topLeft == null ||
+        topRight == null) {
       throw Exception('Failed to parse VisionRectangle');
     }
 

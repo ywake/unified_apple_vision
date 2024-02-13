@@ -13,7 +13,8 @@ class VisionResults {
     this.recognizedTexts,
   });
 
-  factory VisionResults.fromMap(VisionInputImage image, Map<String, dynamic> map) {
+  factory VisionResults.fromMap(
+      VisionInputImage image, Map<String, dynamic> map) {
     final recognizedTexts = map[AnalysisType.recognizeText.key] as Map?;
 
     return VisionResults(
@@ -22,7 +23,8 @@ class VisionResults {
     );
   }
 
-  static List<VisionRecognizedText>? _parseRecognizedTexts(Map<String, dynamic>? recognizedTexts) {
+  static List<VisionRecognizedText>? _parseRecognizedTexts(
+      Map<String, dynamic>? recognizedTexts) {
     if (recognizedTexts == null) {
       return null;
     }

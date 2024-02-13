@@ -50,8 +50,10 @@ class VisionRecognizeTextRequest extends AnalysisRequest {
       'minimum_text_height': minimumTextHeight,
       'recognition_level': recognitionLevel?.name,
       'automatically_detects_language': automaticallyDetectsLanguage,
-      'recognition_languages': recognitionLanguages?.map((e) => e.toLanguageTag()).toList(),
-      'uses_language_correction': customWords == null ? usesLanguageCorrection : true,
+      'recognition_languages':
+          recognitionLanguages?.map((e) => e.toLanguageTag()).toList(),
+      'uses_language_correction':
+          customWords == null ? usesLanguageCorrection : true,
       'custom_words': customWords,
       'max_candidates': maxCandidates,
     };

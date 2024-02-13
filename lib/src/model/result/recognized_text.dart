@@ -27,7 +27,8 @@ class VisionRecognizedText {
       rectangle: VisionRectangle.fromMap(rectangle.castEx()),
       candidates: [
         for (final data in candidates)
-          if (data != null) VisionRecognizedTextCandidate.fromMap((data as Map).castEx()),
+          if (data != null)
+            VisionRecognizedTextCandidate.fromMap((data as Map).castEx()),
       ],
     );
   }

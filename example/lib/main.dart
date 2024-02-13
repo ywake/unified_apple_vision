@@ -39,7 +39,8 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    final supportedLangs = await _unifiedAppleVision.supportedRecognitionLanguages();
+    final supportedLangs =
+        await _unifiedAppleVision.supportedRecognitionLanguages();
     debugPrint('supportedLangs: $supportedLangs');
   }
 
@@ -97,7 +98,8 @@ class _Painter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // Draw the bounding box
-    final coord = recognizedText.rectangle.scale(size).reverse(Offset(0, size.height));
+    final coord =
+        recognizedText.rectangle.scale(size).reverse(Offset(0, size.height));
     final path = Path()
       ..moveTo(coord.topLeft.dx, coord.topLeft.dy)
       ..lineTo(coord.topRight.dx, coord.topRight.dy)
