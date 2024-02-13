@@ -21,6 +21,11 @@ class UnifiedAppleVision {
   UnifiedAppleVision();
 
   Future<VisionResults> analyze(VisionInputImage image) async {
+    if (request.isEmpty) {
+      // If there are no requests, no analysis is performed.
+      return VisionResults(inputImage: image);
+    }
+
     final results = await Method.analyze.invoke(xcodeLogLevel, {
       'image': image.toMap(),
       'qos': executionPriority.qos,
