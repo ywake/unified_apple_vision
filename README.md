@@ -40,7 +40,7 @@ final res = await vision.analyze(VisionInputImage(
 ));
 ```
 
-### [Documents 📘](docs/README.md)
+### [Documents 📘](doc/README.md)
 
 ## License 📜
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/ywake/unified_apple_vision/blob/main/LICENSE) file for details.
