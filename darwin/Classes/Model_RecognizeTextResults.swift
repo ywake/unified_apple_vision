@@ -8,10 +8,13 @@ class RecognizeTextResults: AnalyzeResults {
   init(_ observations: [VNRecognizedTextObservation], maxCandidates: Int?) {
     self.observations = observations
     self.maxCandidates = maxCandidates ?? 1
-    super.init(type: .recognizeText)
   }
 
-  override func toData() -> [String: Any] {
+  func type() -> AnalysisType {
+    return .recognizeText
+  }
+
+  func toData() -> [String: Any] {
     return [
       "observations": self.observations.map { observation in
         return [

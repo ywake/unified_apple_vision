@@ -78,14 +78,11 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     // build requests
     var results: [AnalyzeResults] = []
     var requests: [VNRequest] = []
-    input.requests.forEach { request in
-      do {
-        let req = try request.makeRequest { res in
-          guard let res = res else { return }
-          results.append(res)
-        }
+    input.requests.forEach { (request: AnalyzeRequest) in
+      let handler = request.onComplete { results.append($0) }
+      if let req = request.makeRequest(handler) {
         requests.append(req)
-      } catch {
+      } else {
         Logger.error("Failed to create \(request.type) Request. Skip.", funcName)
       }
     }
@@ -122,7 +119,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
 
     var data: [String: Any] = [:]
     results.forEach { res in
-      data[res.type.rawValue] = res.toData()
+      data[res.type().rawValue] = res.toData()
     }
     return data
   }
@@ -132,10 +129,9 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
 
     if #available(iOS 15.0, macOS 12.0, *) {
       Logger.debug("platform available", funcName)
-      let levelStr = arg["recognition_level"] as? String ?? "accurate"
-      let level = TextRecognitionLevel(levelStr)
       let request = VNRecognizeTextRequest()
-      request.recognitionLevel = level.toVNRequestRecognitionLevel()
+      let levelStr = arg["recognition_level"] as? String ?? "accurate"
+      request.recognitionLevel = VNRequestTextRecognitionLevel(levelStr)
       do {
         let langs = try request.supportedRecognitionLanguages()
         Logger.debug("langs: \(langs)", funcName)

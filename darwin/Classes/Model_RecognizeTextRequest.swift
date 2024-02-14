@@ -2,7 +2,7 @@ import Vision
 
 class RecognizeTextRequest: AnalyzeRequest {
   let minimumTextHeight: Float?
-  let recognitionLevel: TextRecognitionLevel
+  let recognitionLevel: VNRequestTextRecognitionLevel
   let automaticallyDetectsLanguage: Bool?
   let recognitionLanguages: [String]?
   let usesLanguageCorrection: Bool?
@@ -11,7 +11,7 @@ class RecognizeTextRequest: AnalyzeRequest {
 
   init(
     minimumTextHeight: Float?,
-    recognitionLevel: TextRecognitionLevel,
+    recognitionLevel: VNRequestTextRecognitionLevel,
     automaticallyDetectsLanguage: Bool?,
     recognitionLanguages: [String]?,
     usesLanguageCorrection: Bool?,
@@ -25,7 +25,6 @@ class RecognizeTextRequest: AnalyzeRequest {
     self.usesLanguageCorrection = usesLanguageCorrection
     self.customWords = customWords
     self.maxCandidates = maxCandidates ?? 1
-    super.init(type: .recognizeText)
   }
 
   convenience init?(_ arg: [String: Any]?) {
@@ -34,7 +33,7 @@ class RecognizeTextRequest: AnalyzeRequest {
     let level = arg["recognition_level"] as? String ?? "accurate"
     self.init(
       minimumTextHeight: arg["minimum_text_height"] as? Float,
-      recognitionLevel: TextRecognitionLevel(level),
+      recognitionLevel: VNRequestTextRecognitionLevel(level),
       automaticallyDetectsLanguage: arg["automatically_detects_language"] as? Bool,
       recognitionLanguages: arg["recognition_languages"] as? [String],
       usesLanguageCorrection: arg["uses_language_correction"] as? Bool,
@@ -43,34 +42,31 @@ class RecognizeTextRequest: AnalyzeRequest {
     )
   }
 
-  override func makeRequest(_ result: @escaping (AnalyzeResults?) -> Void) throws -> VNRequest {
+  func type() -> AnalysisType {
+    return .recognizeText
+  }
+
+  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
     if #available(iOS 13.0, macOS 10.15, *) {
-      return _makeRequest(result)
+      return _makeRequest(handler)
     } else {
-      throw PluginError.unsupportedPlatform
+      Logger.error(
+        "RecognizeTextRequest requires iOS 13.0+ or macOS 10.15+",
+        "\(self.type().rawValue)>makeRequest"
+      )
+      return nil
     }
   }
 
   @available(iOS 13.0, macOS 10.15, *)
-  private func _makeRequest(_ result: @escaping (AnalyzeResults?) -> Void) -> VNRecognizeTextRequest
+  private func _makeRequest(_ handler: @escaping VNRequestCompletionHandler)
+    -> VNRecognizeTextRequest
   {
-    let request = VNRecognizeTextRequest { req, err in
-      if err != nil {
-        Logger.error(err!.localizedDescription, "RecognizeTextRequest.makeRequest")
-        result(nil)
-        return
-      }
-      guard let observations = req.results as? [VNRecognizedTextObservation] else { return }
-      let res = RecognizeTextResults(
-        observations,
-        maxCandidates: self.maxCandidates
-      )
-      result(res)
-    }
+    let request = VNRecognizeTextRequest(completionHandler: handler)
     if let minimumTextHeight = self.minimumTextHeight {
       request.minimumTextHeight = minimumTextHeight
     }
-    request.recognitionLevel = self.recognitionLevel.toVNRequestRecognitionLevel()
+    request.recognitionLevel = self.recognitionLevel
     if #available(iOS 16.0, macOS 13.0, *) {
       if let automaticallyDetectsLanguage = self.automaticallyDetectsLanguage {
         request.automaticallyDetectsLanguage = automaticallyDetectsLanguage
@@ -88,5 +84,20 @@ class RecognizeTextRequest: AnalyzeRequest {
       request.customWords = customWords
     }
     return request
+  }
+
+  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {
+    if #available(iOS 13.0, macOS 10.15, *) {
+      return RecognizeTextResults(
+        observations as! [VNRecognizedTextObservation],
+        maxCandidates: self.maxCandidates
+      )
+    } else {
+      Logger.error(
+        "RecognizeTextRequest requires iOS 13.0+ or macOS 10.15+",
+        "\(self.type().rawValue)>makeResults"
+      )
+      return nil
+    }
   }
 }

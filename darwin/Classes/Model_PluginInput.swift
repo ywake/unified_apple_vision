@@ -31,7 +31,7 @@ class PluginInput {
     let analysisRequests = requests.compactMap { req -> AnalyzeRequest? in
       guard let req = req as? [String: Any] else { return nil }
       let requestTypeStr = req["request_type"] as? String ?? ""
-      guard let requestType = AnalysisType(rawValue: requestTypeStr) else { return nil }
+      guard let requestType = AnalysisType(requestTypeStr) else { return nil }
       return requestType.analysisRequest(req)
     }
 
