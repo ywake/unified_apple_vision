@@ -17,7 +17,7 @@ Status: ✅ Complete 👨‍💻 In Progress ❌ Not Yet
 | [Saliency Analysis](https://developer.apple.com/documentation/vision/cropping_images_using_saliency) | [Generate Attention Based Saliency Image](https://developer.apple.com/documentation/vision/vngenerateattentionbasedsaliencyimagerequest) | ❌ | 13.0+ | 10.15+ |
 || [Generate Objectness Based Saliency Image](https://developer.apple.com/documentation/vision/vngenerateobjectnessbasedsaliencyimagerequest) | ❌ | 13.0+ | 10.15+ |
 |
-| [Object Tracking](https://developer.apple.com/documentation/vision/tracking_the_user_s_face_in_real_time) | [Track Rectangle](https://developer.apple.com/documentation/vision/vntrackrectanglerequest) | ❌ | 11.0+ | 10.13+ |
+| [Object Tracking](https://developer.apple.com/documentation/vision/tracking_multiple_objects_or_rectangles_in_video) | [Track Rectangle](https://developer.apple.com/documentation/vision/vntrackrectanglerequest) | ❌ | 11.0+ | 10.13+ |
 || [Track Object](https://developer.apple.com/documentation/vision/vntrackobjectrequest) | ❌ | 11.0+ | 10.13+ |
 |
 | [Rectangle Detection](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | [Detect Rectangle](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | ❌ | 11.0+ | 10.13+ |

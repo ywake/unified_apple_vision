@@ -42,7 +42,7 @@ class RecognizeTextRequest: AnalyzeRequest {
     )
   }
 
-  func type() -> AnalysisType {
+  func type() -> RequestType {
     return .recognizeText
   }
 

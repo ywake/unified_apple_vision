@@ -15,22 +15,20 @@ class UnifiedAppleVision {
   /// Specify whether to analyze a single still image or a continuous image sequence, such as a video frame.
   var analyzeMode = VisionAnalyzeMode.still;
 
-  /// Requests added to this array are analyzed.
-  var request = <AnalysisRequest>[];
-
   UnifiedAppleVision();
 
-  Future<VisionResults> analyze(VisionInputImage image) async {
-    if (request.isEmpty) {
+  Future<VisionResults> analyze(
+      VisionInputImage image, List<AnalysisRequest> requests) async {
+    if (requests.isEmpty) {
       // If there are no requests, no analysis is performed.
-      return VisionResults(inputImage: image);
+      return VisionResults(inputImage: image, observations: {});
     }
 
     final results = await Method.analyze.invoke(xcodeLogLevel, {
       'image': image.toMap(),
       'qos': executionPriority.qos,
       'mode': analyzeMode.modeName,
-      'requests': [for (final option in request) option.toRequestMap()],
+      'requests': [for (final option in requests) option.toRequestMap()],
     });
     if (results == null) {
       throw Exception('Failed to analyze');

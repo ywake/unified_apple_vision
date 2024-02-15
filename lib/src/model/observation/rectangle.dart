@@ -2,9 +2,10 @@ import 'dart:ui';
 
 import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/extension/offset.dart';
+import 'package:unified_apple_vision/src/model/observation/detected_object.dart';
 
 /// An object that represents the four vertices of a detected rectangle.
-class VisionRectangle {
+class VisionRectangleObservation extends VisionDetectedObjectObservation {
   /// The coordinates of the upper-left corner of the observation bounding box.
   final Offset topLeft;
 
@@ -17,27 +18,40 @@ class VisionRectangle {
   /// The coordinates of the lower-right corner of the observation bounding box.
   final Offset bottomRight;
 
-  const VisionRectangle({
+  // VisionRectangleObservation({
+  //   required this.topLeft,
+  //   required this.topRight,
+  //   required this.bottomLeft,
+  //   required this.bottomRight,
+  //   required super.boundingBox,
+  //   required super.uuid,
+  //   required super.confidence,
+  // });
+
+  VisionRectangleObservation.withParent({
+    required VisionDetectedObjectObservation parent,
     required this.topLeft,
     required this.topRight,
     required this.bottomLeft,
     required this.bottomRight,
-  });
+  }) : super.withParent(
+          parent: parent,
+          boundingBox: parent.boundingBox,
+        );
 
-  factory VisionRectangle.fromMap(Map<String, dynamic> map) {
+  factory VisionRectangleObservation.fromMap(Map<String, dynamic> map) {
     final bottomLeft = map['bottom_left'] as Map?;
     final bottomRight = map['bottom_right'] as Map?;
     final topLeft = map['top_left'] as Map?;
     final topRight = map['top_right'] as Map?;
-
     if (bottomLeft == null ||
         bottomRight == null ||
         topLeft == null ||
         topRight == null) {
       throw Exception('Failed to parse VisionRectangle');
     }
-
-    return VisionRectangle(
+    return VisionRectangleObservation.withParent(
+      parent: VisionDetectedObjectObservation.fromMap(map),
       topLeft: OffsetEx.fromMap(topLeft.castEx()),
       topRight: OffsetEx.fromMap(topRight.castEx()),
       bottomLeft: OffsetEx.fromMap(bottomLeft.castEx()),
@@ -45,8 +59,10 @@ class VisionRectangle {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
+      ...super.toMap(),
       'top_left': topLeft.toMap(),
       'top_right': topRight.toMap(),
       'bottom_left': bottomLeft.toMap(),
@@ -54,8 +70,31 @@ class VisionRectangle {
     };
   }
 
-  VisionRectangle scale(Size size) {
-    return VisionRectangle(
+  @override
+  VisionRectangleObservation copyWith({
+    Offset? topLeft,
+    Offset? topRight,
+    Offset? bottomLeft,
+    Offset? bottomRight,
+    Rect? boundingBox,
+    String? uuid,
+    double? confidence,
+  }) {
+    return VisionRectangleObservation.withParent(
+      topLeft: topLeft ?? this.topLeft,
+      topRight: topRight ?? this.topRight,
+      bottomLeft: bottomLeft ?? this.bottomLeft,
+      bottomRight: bottomRight ?? this.bottomRight,
+      parent: super.copyWith(
+        boundingBox: boundingBox,
+        uuid: uuid,
+        confidence: confidence,
+      ),
+    );
+  }
+
+  VisionRectangleObservation scale(Size size) {
+    return copyWith(
       topLeft: topLeft.scale(size.width, size.height),
       topRight: topRight.scale(size.width, size.height),
       bottomLeft: bottomLeft.scale(size.width, size.height),

@@ -28,11 +28,9 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   final _unifiedAppleVision = UnifiedAppleVision()
-    ..xcodeLogLevel = VisionLogLevel.none
+    ..analyzeMode = VisionAnalyzeMode.still
     ..executionPriority = VisionExecutionPriority.veryHigh
-    ..request = [
-      const VisionRecognizeTextRequest(automaticallyDetectsLanguage: true),
-    ];
+    ..xcodeLogLevel = VisionLogLevel.none;
 
   VisionResults? results;
 
@@ -55,12 +53,12 @@ class _CameraScreenState extends State<CameraScreen> {
             onImageForAnalysis: (image) async {
               image.when(
                 bgra8888: (image) {
-                  final input = VisionInputImage(
-                    bytes: image.bytes,
-                    size: Size(image.width.toDouble(), image.height.toDouble()),
-                  );
+                  final input =
+                      VisionInputImage(bytes: image.bytes, size: image.size);
                   try {
-                    _unifiedAppleVision.analyze(input).then((res) {
+                    _unifiedAppleVision.analyze(input, [
+                      const VisionRecognizeTextRequest(),
+                    ]).then((res) {
                       setState(() => results = res);
                     });
                   } catch (e) {
@@ -71,8 +69,12 @@ class _CameraScreenState extends State<CameraScreen> {
             },
           ),
           ...[
-            if (results?.recognizedTexts != null)
-              for (final text in results!.recognizedTexts!) text.build(),
+            if (results?.recognizedText != null)
+              for (final text in results!.recognizedText!) text.build(),
+            if (results?.trackObjects != null)
+              for (final object in results!.trackObjects!) object.build(),
+            if (results?.trackRectangles != null)
+              for (final rect in results!.trackRectangles!) rect.build(),
           ]
         ],
       ),
@@ -80,7 +82,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 }
 
-extension VisionRecognizedTextEx on VisionRecognizedText {
+extension VisionRecognizedTextObservationEx on VisionRecognizedTextObservation {
   Widget build() {
     return Positioned.fill(
       child: CustomPaint(
@@ -91,21 +93,20 @@ extension VisionRecognizedTextEx on VisionRecognizedText {
 }
 
 class _Painter extends CustomPainter {
-  final VisionRecognizedText recognizedText;
+  final VisionRecognizedTextObservation recognizedText;
 
   _Painter(this.recognizedText);
 
   @override
   void paint(Canvas canvas, Size size) {
     // Draw the bounding box
-    final coord =
-        recognizedText.rectangle.scale(size).reverse(Offset(0, size.height));
+    final rect = recognizedText.scale(size).reverse(Offset(0, size.height));
     final path = Path()
-      ..moveTo(coord.topLeft.dx, coord.topLeft.dy)
-      ..lineTo(coord.topRight.dx, coord.topRight.dy)
-      ..lineTo(coord.bottomRight.dx, coord.bottomRight.dy)
-      ..lineTo(coord.bottomLeft.dx, coord.bottomLeft.dy)
-      ..lineTo(coord.topLeft.dx, coord.topLeft.dy);
+      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
+      ..lineTo(rect.topRight.dx, rect.topRight.dy)
+      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
+      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
+      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
     final paint = Paint()
       ..color = Colors.red
       ..style = PaintingStyle.stroke
@@ -114,7 +115,7 @@ class _Painter extends CustomPainter {
 
     // Draw top-left corner
     final cornerPaint = Paint()..style = PaintingStyle.fill;
-    canvas.drawCircle(coord.topLeft, 3, cornerPaint..color = Colors.red);
+    canvas.drawCircle(rect.topLeft, 3, cornerPaint..color = Colors.red);
 
     // Draw the text
     final candidate = recognizedText.candidates.first;
@@ -127,7 +128,7 @@ class _Painter extends CustomPainter {
       ),
       textDirection: TextDirection.ltr,
     )..layout();
-    textPainter.paint(canvas, coord.topLeft);
+    textPainter.paint(canvas, rect.topLeft);
   }
 
   @override
@@ -136,15 +137,87 @@ class _Painter extends CustomPainter {
   }
 }
 
-extension VisionRectangleEx on VisionRectangle {
-  VisionRectangle reverse(Offset offset) {
+extension VisionRectangleEx on VisionRectangleObservation {
+  VisionRectangleObservation reverse(Offset offset) {
     abs(Offset offset) => Offset(offset.dx.abs(), offset.dy.abs());
 
-    return VisionRectangle(
+    return copyWith(
       topLeft: abs(offset - topLeft),
       topRight: abs(offset - topRight),
       bottomLeft: abs(offset - bottomLeft),
       bottomRight: abs(offset - bottomRight),
     );
+  }
+
+  Widget build() {
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: _RectanglePainter(this),
+      ),
+    );
+  }
+}
+
+class _RectanglePainter extends CustomPainter {
+  final VisionRectangleObservation rectangle;
+
+  _RectanglePainter(this.rectangle);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = rectangle.scale(size).reverse(Offset(0, size.height));
+    final path = Path()
+      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
+      ..lineTo(rect.topRight.dx, rect.topRight.dy)
+      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
+      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
+      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
+    final paint = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
+  Widget build() {
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: _ObjectPainter(this),
+      ),
+    );
+  }
+}
+
+class _ObjectPainter extends CustomPainter {
+  final VisionDetectedObjectObservation object;
+
+  _ObjectPainter(this.object);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = object.boundingBox;
+    final path = Path()
+      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
+      ..lineTo(rect.topRight.dx, rect.topRight.dy)
+      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
+      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
+      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
+    final paint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

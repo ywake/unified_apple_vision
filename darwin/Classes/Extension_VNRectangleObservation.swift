@@ -1,24 +1,30 @@
 import Vision
 
 extension VNRectangleObservation {
-  func toData() -> [String: Any] {
+  convenience init?(dict: [String: Any]?) {
+    guard let dict = dict else { return nil }
+    guard
+      let bottomLeft = dict["bottom_left"] as? [String: CGFloat],
+      let bottomRight = dict["bottom_right"] as? [String: CGFloat],
+      let topLeft = dict["top_left"] as? [String: CGFloat],
+      let topRight = dict["top_right"] as? [String: CGFloat]
+    else { return nil }
+
+    self.init(
+      requestRevision: VNDetectRectanglesRequestRevision1,
+      topLeft: CGPoint(x: topLeft["x"]!, y: topLeft["y"]!),
+      bottomLeft: CGPoint(x: bottomLeft["x"]!, y: bottomLeft["y"]!),
+      bottomRight: CGPoint(x: bottomRight["x"]!, y: bottomRight["y"]!),
+      topRight: CGPoint(x: topRight["x"]!, y: topRight["y"]!)
+    )
+  }
+
+  @objc override func toDict() -> [String: Any] {
     return [
-      "bottom_left": [
-        "x": self.bottomLeft.x,
-        "y": self.bottomLeft.y,
-      ],
-      "bottom_right": [
-        "x": self.bottomRight.x,
-        "y": self.bottomRight.y,
-      ],
-      "top_left": [
-        "x": self.topLeft.x,
-        "y": self.topLeft.y,
-      ],
-      "top_right": [
-        "x": self.topRight.x,
-        "y": self.topRight.y,
-      ],
-    ]
+      "bottom_left": self.bottomLeft.toDict(),
+      "bottom_right": self.bottomRight.toDict(),
+      "top_left": self.topLeft.toDict(),
+      "top_right": self.topRight.toDict(),
+    ].merging(super.toDict()) { (old, _) in old }
   }
 }
