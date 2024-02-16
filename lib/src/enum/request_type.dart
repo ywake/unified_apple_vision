@@ -1,5 +1,9 @@
+import 'package:unified_apple_vision/src/model/observation/detected_object.dart';
+import 'package:unified_apple_vision/src/model/observation/observation.dart';
+import 'package:unified_apple_vision/src/model/observation/recognized_object.dart';
+import 'package:unified_apple_vision/src/model/observation/recognized_text.dart';
+import 'package:unified_apple_vision/src/model/observation/rectangle.dart';
 import 'package:unified_apple_vision/src/model/observation/text.dart';
-import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:unified_apple_vision/src/extension/map.dart';
 
 typedef Factory = List<VisionObservation>? Function(Map<String, dynamic> map);
