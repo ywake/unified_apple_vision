@@ -40,38 +40,32 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   func callAnalyze(_ arg: [String: Any], _ result: @escaping FlutterResult) {
     let funcName = "callAnalyze"
 
-    if #available(iOS 13.0, macOS 10.15, *) {
-      Logger.debug("platform available", funcName)
-      let qosString = arg["qos"] as? String ?? "unspecified"
-      let qos = QoS(qosString).toDispatchQoS()
-      Logger.debug("qos: \(qos)", funcName)
-      DispatchQueue.global(qos: qos).async {
-        var output: Any?
-        do {
-          let input = try PluginInput(arg)
-          let res = try self.analyze(input)
-          let map = self.encode(res)
-          output = map
-        } catch let error as PluginError {
-          Logger.debug("analyze: \(error)", funcName)
-          output = error.toFlutterError()
-        } catch {
-          Logger.debug("analyze: \(error)", funcName)
-          let err = PluginError.unexpectedError(msg: error.localizedDescription)
-          output = err.toFlutterError()
-        }
-        DispatchQueue.main.async {
-          result(output)
-        }
+    Logger.debug("platform available", funcName)
+    let qosString = arg["qos"] as? String ?? "unspecified"
+    let qos = QoS(qosString).toDispatchQoS()
+    Logger.debug("qos: \(qos)", funcName)
+    DispatchQueue.global(qos: qos).async {
+      var output: Any?
+      do {
+        let input = try PluginInput(arg)
+        let res = try self.analyze(input)
+        let map = self.encode(res)
+        output = map
+      } catch let error as PluginError {
+        Logger.debug("analyze: \(error)", funcName)
+        output = error.toFlutterError()
+      } catch {
+        Logger.debug("analyze: \(error)", funcName)
+        let err = PluginError.unexpectedError(msg: error.localizedDescription)
+        output = err.toFlutterError()
       }
-    } else {
-      Logger.debug("platform unavailable", funcName)
-      result(PluginError.unsupportedPlatform.toFlutterError())
+      DispatchQueue.main.async {
+        result(output)
+      }
     }
   }
 
   private let sequence = VNSequenceRequestHandler()
-  @available(iOS 13.0, macOS 10.15, *)
   func analyze(_ input: PluginInput) throws -> [AnalyzeResults] {
     let funcName = "analyze"
 
@@ -112,7 +106,6 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  @available(iOS 13.0, macOS 10.15, *)
   func encode(_ results: [AnalyzeResults]) -> [String: Any?] {
     let funcName = "encode"
     Logger.debug("\(results)", funcName)
