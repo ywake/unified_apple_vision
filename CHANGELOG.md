@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Feat: Add Text Detection API
+
 ## 0.4.0
 
 * Feat Add Animal Detection API
