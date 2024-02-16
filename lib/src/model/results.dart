@@ -53,4 +53,7 @@ class VisionResults {
   //     get<VisionDetectedObjectObservation>(VisionRequestType.trackObject);
   // List<VisionRectangleObservation>? get trackRectangles =>
   //     get<VisionRectangleObservation>(VisionRequestType.trackRectangle);
+  List<VisionRecognizedObjectObservation>? get recognizedAnimals =>
+      get<VisionRecognizedObjectObservation>(
+          VisionRequestType.recognizeAnimals);
 }

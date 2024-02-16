@@ -31,6 +31,7 @@ class PluginInput {
     let analyzeRequests = requests.compactMap { req -> AnalyzeRequest? in
       guard let req = req as? [String: Any] else { return nil }
       let requestTypeStr = req["request_type"] as? String ?? ""
+      Logger.debug("Comming Request type: \(requestTypeStr)", "PluginInput")
       guard let requestType = RequestType(requestTypeStr) else { return nil }
       return requestType.mapToRequest(req)
     }

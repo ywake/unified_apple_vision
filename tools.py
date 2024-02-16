@@ -53,7 +53,7 @@ import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
 
 class Vision{request_pascal}Request extends AnalysisRequest {{
-  const Vision{request_pascal}Request() : super(type: VisionRequestType.{pascal_to_snake_case(request_pascal)});
+  const Vision{request_pascal}Request() : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
 
   @override
   Map<String, dynamic> toMap() {{
@@ -135,7 +135,7 @@ class {request_pascal}Results: AnalyzeResults {{
     return .{pascal_to_camel_case(request_pascal)}
   }}
 
-  func toDict() -> [String: Any] {{
+  func toDict() -> [[String: Any]] {{
     return [
       "observations": self.observations.map {{ observation in
         return observation.toDict()

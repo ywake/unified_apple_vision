@@ -1,4 +1,5 @@
 import 'package:unified_apple_vision/src/extension/map.dart';
+import 'package:unified_apple_vision/src/model/observation/recognized_object.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 typedef Factory = List<VisionObservation>? Function(Map<String, dynamic> map);
@@ -8,6 +9,7 @@ enum VisionRequestType {
   detectRectangles,
   trackObject,
   trackRectangle,
+  recognizeAnimals,
   ;
 
   String get key => switch (this) {
@@ -15,6 +17,7 @@ enum VisionRequestType {
         VisionRequestType.detectRectangles => 'detect_rectangles',
         VisionRequestType.trackObject => 'track_object',
         VisionRequestType.trackRectangle => 'track_rectangle',
+        VisionRequestType.recognizeAnimals => 'recognize_animals',
       };
 
   List<VisionObservation> fromListMap(List<Map> observations) {
@@ -29,6 +32,8 @@ enum VisionRequestType {
             VisionDetectedObjectObservation.fromMap(observation.castEx()),
           VisionRequestType.trackRectangle =>
             VisionRectangleObservation.fromMap(observation.castEx()),
+          VisionRequestType.recognizeAnimals =>
+            VisionRecognizedObjectObservation.fromMap(observation.castEx()),
         },
     ];
   }
@@ -45,6 +50,8 @@ enum VisionRequestType {
             (observation as VisionDetectedObjectObservation).toMap(),
           VisionRequestType.trackRectangle =>
             (observation as VisionRectangleObservation).toMap(),
+          VisionRequestType.recognizeAnimals =>
+            (observation as VisionRecognizedObjectObservation).toMap(),
         },
     ];
   }

@@ -1,6 +1,7 @@
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
+import 'package:unified_apple_vision_example/extension/vision_classification_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_recognized_text_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_rectangle_observation.dart';
 
@@ -64,6 +65,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     _unifiedAppleVision.analyze(input, [
                       const VisionRecognizeTextRequest(),
                       const VisionDetectRectanglesRequest(maxObservations: 0),
+                      const VisionRecognizeAnimalsRequest(),
                     ]).then((res) {
                       final end = DateTime.now();
                       debugPrint('${end.difference(start).inMilliseconds}ms');
@@ -81,6 +83,8 @@ class _CameraScreenState extends State<CameraScreen> {
               for (final text in results!.recognizedText!) text.build(),
             if (results?.detectedRectangles != null)
               for (final rect in results!.detectedRectangles!) rect.build(),
+            if (results?.recognizedAnimals != null)
+              for (final animal in results!.recognizedAnimals!) animal.build(),
           ]
         ],
       ),
