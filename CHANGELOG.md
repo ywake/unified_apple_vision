@@ -1,3 +1,7 @@
+## 0.4.0
+
+* Feat Add Animal Detection API
+
 ## 0.3.0
 
 * Feat: Add Rectangle Detection API
@@ -13,4 +17,4 @@
 
 ## 0.1.0
 
-* Feat: Text Recognition API
+* Feat: Add Text Recognition API
