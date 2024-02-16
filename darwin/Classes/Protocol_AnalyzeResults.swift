@@ -1,4 +1,4 @@
 protocol AnalyzeResults {
   func type() -> AnalysisType
-  func toData() -> [String: Any]
+  func toData() -> [[String: Any]]
 }

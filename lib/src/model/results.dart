@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 class VisionResults {
@@ -19,7 +18,8 @@ class VisionResults {
     for (final type in VisionRequestType.values) {
       if (!map.containsKey(type.key)) continue;
       try {
-        observations[type] = type.fromMap((map[type.key] as Map).castEx());
+        observations[type] =
+            type.fromListMap((map[type.key] as List).cast<Map>());
       } catch (e, st) {
         debugPrint('Failed to parse ${type.key}. skipping...');
         debugPrint('$e');

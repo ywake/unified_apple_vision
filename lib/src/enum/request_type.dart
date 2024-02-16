@@ -15,17 +15,14 @@ enum VisionRequestType {
         VisionRequestType.trackRectangle => 'track_rectangle',
       };
 
-  List<VisionObservation> fromMap(Map<String, dynamic> map) {
-    final observations = map['observations'] as List?;
-    if (observations == null) {
-      throw Exception('map[$key]["observations"] is null.');
-    }
-
+  List<VisionObservation> fromListMap(List<Map> observations) {
     return [
-      for (final observation in observations.cast<Map>())
+      for (final observation in observations)
         switch (this) {
           VisionRequestType.recognizeText =>
             VisionRecognizedTextObservation.fromMap(observation.castEx()),
+          VisionRequestType.detectRectangles =>
+            VisionRectangleObservation.fromMap(observation.castEx()),
           VisionRequestType.trackObject =>
             VisionDetectedObjectObservation.fromMap(observation.castEx()),
           VisionRequestType.trackRectangle =>
@@ -40,6 +37,8 @@ enum VisionRequestType {
         switch (this) {
           VisionRequestType.recognizeText =>
             (observation as VisionRecognizedTextObservation).toMap(),
+          VisionRequestType.detectRectangles =>
+            (observation as VisionRectangleObservation).toMap(),
           VisionRequestType.trackObject =>
             (observation as VisionDetectedObjectObservation).toMap(),
           VisionRequestType.trackRectangle =>
