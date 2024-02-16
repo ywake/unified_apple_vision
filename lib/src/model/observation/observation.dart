@@ -1,3 +1,6 @@
+/// The superclass for analysis results.
+///
+/// Observations resulting from Vision image analysis requests inherit from this base class.
 class VisionObservation {
   /// A unique identifier assigned to the Vision observation.
   final String uuid;
@@ -9,6 +12,12 @@ class VisionObservation {
     required this.uuid,
     required this.confidence,
   });
+
+  VisionObservation.clone(VisionObservation other)
+      : this(
+          uuid: other.uuid,
+          confidence: other.confidence,
+        );
 
   factory VisionObservation.fromMap(Map<String, dynamic> map) {
     final uuid = map['uuid'] as String?;

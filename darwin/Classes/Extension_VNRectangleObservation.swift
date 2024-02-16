@@ -1,7 +1,7 @@
 import Vision
 
 extension VNRectangleObservation {
-  convenience init?(dict: [String: Any]?) {
+  @objc convenience init?(dict: [String: Any]?) {
     guard let dict = dict else { return nil }
     guard
       let bottomLeft = dict["bottom_left"] as? [String: CGFloat],

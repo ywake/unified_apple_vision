@@ -1,3 +1,4 @@
+import 'package:unified_apple_vision/src/model/observation/text.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:unified_apple_vision/src/extension/map.dart';
 
@@ -9,6 +10,7 @@ enum VisionRequestType {
   trackObject,
   trackRectangle,
   recognizeAnimals,
+  detectTextRectangles,
   ;
 
   String get key => switch (this) {
@@ -17,6 +19,7 @@ enum VisionRequestType {
         VisionRequestType.trackObject => 'track_object',
         VisionRequestType.trackRectangle => 'track_rectangle',
         VisionRequestType.recognizeAnimals => 'recognize_animals',
+        VisionRequestType.detectTextRectangles => 'detect_text_rectangles',
       };
 
   List<VisionObservation> fromListMap(List<Map> observations) {
@@ -33,6 +36,8 @@ enum VisionRequestType {
             VisionRectangleObservation.fromMap(observation.castEx()),
           VisionRequestType.recognizeAnimals =>
             VisionRecognizedObjectObservation.fromMap(observation.castEx()),
+          VisionRequestType.detectTextRectangles =>
+            VisionTextObservation.fromMap(observation.castEx()),
         },
     ];
   }
@@ -51,6 +56,8 @@ enum VisionRequestType {
             (observation as VisionRectangleObservation).toMap(),
           VisionRequestType.recognizeAnimals =>
             (observation as VisionRecognizedObjectObservation).toMap(),
+          VisionRequestType.detectTextRectangles =>
+            (observation as VisionTextObservation).toMap(),
         },
     ];
   }

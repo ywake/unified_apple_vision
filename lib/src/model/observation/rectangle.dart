@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/extension/offset.dart';
-import 'package:unified_apple_vision/src/model/observation/detected_object.dart';
+
+import 'detected_object.dart';
 
 /// An object that represents the four vertices of a detected rectangle.
 class VisionRectangleObservation extends VisionDetectedObjectObservation {
@@ -18,16 +19,6 @@ class VisionRectangleObservation extends VisionDetectedObjectObservation {
   /// The coordinates of the lower-right corner of the observation bounding box.
   final Offset bottomRight;
 
-  // VisionRectangleObservation({
-  //   required this.topLeft,
-  //   required this.topRight,
-  //   required this.bottomLeft,
-  //   required this.bottomRight,
-  //   required super.boundingBox,
-  //   required super.uuid,
-  //   required super.confidence,
-  // });
-
   VisionRectangleObservation.withParent({
     required VisionDetectedObjectObservation parent,
     required this.topLeft,
@@ -37,6 +28,15 @@ class VisionRectangleObservation extends VisionDetectedObjectObservation {
   }) : super.withParent(
           parent: parent,
           boundingBox: parent.boundingBox,
+        );
+
+  VisionRectangleObservation.clone(VisionRectangleObservation other)
+      : this.withParent(
+          parent: other,
+          topLeft: other.topLeft,
+          topRight: other.topRight,
+          bottomLeft: other.bottomLeft,
+          bottomRight: other.bottomRight,
         );
 
   factory VisionRectangleObservation.fromMap(Map<String, dynamic> map) {

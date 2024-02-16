@@ -1,4 +1,4 @@
-import 'package:unified_apple_vision/src/model/observation/observation.dart';
+import 'observation.dart';
 
 /// An object that represents classification information that an image analysis request produces.
 ///
@@ -9,9 +9,12 @@ class VisionClassificationObservation extends VisionObservation {
   VisionClassificationObservation.withParent({
     required VisionObservation parent,
     required this.identifier,
-  }) : super(
-          uuid: parent.uuid,
-          confidence: parent.confidence,
+  }) : super.clone(parent);
+
+  VisionClassificationObservation.clone(VisionClassificationObservation other)
+      : this.withParent(
+          parent: other,
+          identifier: other.identifier,
         );
 
   factory VisionClassificationObservation.fromMap(Map<String, dynamic> map) {

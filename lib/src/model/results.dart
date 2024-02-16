@@ -1,5 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:unified_apple_vision/unified_apple_vision.dart';
+import 'package:unified_apple_vision/src/enum/request_type.dart';
+import 'package:unified_apple_vision/src/model/input_image.dart';
+import 'package:unified_apple_vision/src/model/observation/observation.dart';
+import 'package:unified_apple_vision/src/model/observation/recognized_object.dart';
+import 'package:unified_apple_vision/src/model/observation/recognized_text.dart';
+import 'package:unified_apple_vision/src/model/observation/rectangle.dart';
+import 'package:unified_apple_vision/src/model/observation/text.dart';
 
 class VisionResults {
   final VisionInputImage inputImage;
@@ -56,4 +62,6 @@ class VisionResults {
   List<VisionRecognizedObjectObservation>? get recognizedAnimals =>
       get<VisionRecognizedObjectObservation>(
           VisionRequestType.recognizeAnimals);
+  List<VisionTextObservation>? get detectTextRectangles =>
+      get<VisionTextObservation>(VisionRequestType.detectTextRectangles);
 }

@@ -19,21 +19,10 @@ class _Painter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw the bounding box
-    final rect = recognizedText.scale(size).reverse(Offset(0, size.height));
-    final path = Path()
-      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
-      ..lineTo(rect.topRight.dx, rect.topRight.dy)
-      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
-      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
-      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
-    final paint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    canvas.drawPath(path, paint);
+    recognizedText.drawRect(canvas: canvas, size: size, color: Colors.red);
 
     // Draw top-left corner
+    final rect = recognizedText.scale(size).reverse(Offset(0, size.height));
     final cornerPaint = Paint()..style = PaintingStyle.fill;
     canvas.drawCircle(rect.topLeft, 3, cornerPaint..color = Colors.red);
 

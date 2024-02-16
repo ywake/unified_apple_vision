@@ -1,6 +1,7 @@
 import 'package:unified_apple_vision/src/extension/map.dart';
-import 'package:unified_apple_vision/src/model/observation/classification.dart';
-import 'package:unified_apple_vision/src/model/observation/detected_object.dart';
+
+import 'classification.dart';
+import 'detected_object.dart';
 
 /// A detected object observation with an array of classification labels that classify the recognized object.
 ///
@@ -13,7 +14,14 @@ class VisionRecognizedObjectObservation
   VisionRecognizedObjectObservation.withParent({
     required VisionDetectedObjectObservation parent,
     required this.labels,
-  }) : super.withParent(boundingBox: parent.boundingBox, parent: parent);
+  }) : super.clone(parent);
+
+  VisionRecognizedObjectObservation.clone(
+      VisionRecognizedObjectObservation other)
+      : this.withParent(
+          parent: other,
+          labels: other.labels,
+        );
 
   factory VisionRecognizedObjectObservation.fromMap(Map<String, dynamic> map) {
     final labels = (map['labels'] as List?)?.cast<Map>();

@@ -2,24 +2,25 @@ import 'dart:ui';
 
 import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/extension/rect.dart';
+import 'package:unified_apple_vision/src/model/request/object_tracking/track_object_request.dart';
 
 import 'observation.dart';
 
+/// An observation that provides the position and extent of an image feature that an image analysis request detects.
+///
+/// This class is the observation type that [VisionTrackObjectRequest] generates. It represents an object that the Vision request detects and tracks.
 class VisionDetectedObjectObservation extends VisionObservation {
   final Rect boundingBox;
-
-  // const VisionDetectedObjectObservation({
-  //   required this.boundingBox,
-  //   required super.uuid,
-  //   required super.confidence,
-  // });
 
   VisionDetectedObjectObservation.withParent({
     required this.boundingBox,
     required VisionObservation parent,
-  }) : super(
-          uuid: parent.uuid,
-          confidence: parent.confidence,
+  }) : super.clone(parent);
+
+  VisionDetectedObjectObservation.clone(VisionDetectedObjectObservation other)
+      : this.withParent(
+          boundingBox: other.boundingBox,
+          parent: other,
         );
 
   factory VisionDetectedObjectObservation.fromMap(Map<String, dynamic> map) {
