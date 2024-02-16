@@ -68,18 +68,20 @@ unified_apple_vision: ^latest
 ## Usage 🕹
 
 ```dart
-// config
-final vision = UnifiedAppleVision()
-  ..executionPriority = VisionExecutionPriority.veryHigh
-  ..request = [
-    const VisionRecognizeTextRequest(automaticallyDetectsLanguage: true)
-  ];
+// initialize
+final vision = UnifiedAppleVision();
 
-// analyze
-final res = await vision.analyze(VisionInputImage(
+// create input image
+final input = VisionInputImage(
   bytes: image.bytes,
   size: image.size,
-));
+);
+
+// analyze
+final res = await vision.analyze(input, [
+  // add requests you want to process
+  const VisionRecognizeTextRequest(),
+]);
 ```
 
 ### [Documents 📘](doc/README.md)
