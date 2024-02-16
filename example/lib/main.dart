@@ -1,7 +1,6 @@
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
-import 'package:unified_apple_vision_example/extension/vision_detected_object_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_recognized_text_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_rectangle_observation.dart';
 
@@ -56,8 +55,10 @@ class _CameraScreenState extends State<CameraScreen> {
             onImageForAnalysis: (image) async {
               image.when(
                 bgra8888: (image) {
-                  final input =
-                      VisionInputImage(bytes: image.bytes, size: image.size);
+                  final input = VisionInputImage(
+                    bytes: image.bytes,
+                    size: image.size,
+                  );
                   try {
                     final start = DateTime.now();
                     _unifiedAppleVision.analyze(input, [
@@ -80,10 +81,6 @@ class _CameraScreenState extends State<CameraScreen> {
               for (final text in results!.recognizedText!) text.build(),
             if (results?.detectedRectangles != null)
               for (final rect in results!.detectedRectangles!) rect.build(),
-            if (results?.trackObjects != null)
-              for (final object in results!.trackObjects!) object.build(),
-            if (results?.trackRectangles != null)
-              for (final rect in results!.trackRectangles!) rect.build(),
           ]
         ],
       ),

@@ -20,6 +20,6 @@ export 'src/model/observation/rectangle.dart';
 
 export 'src/model/request/detect_rectangles.dart';
 export 'src/model/request/recognize_text_request.dart';
-export 'src/model/request/object_tracking/track_object_request.dart';
-export 'src/model/request/object_tracking/track_rectangle_request.dart';
-export 'src/model/request/object_tracking/tracking_request.dart';
+// export 'src/model/request/object_tracking/track_object_request.dart';
+// export 'src/model/request/object_tracking/track_rectangle_request.dart';
+// export 'src/model/request/object_tracking/tracking_request.dart';
