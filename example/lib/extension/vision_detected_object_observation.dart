@@ -9,6 +9,24 @@ extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
       ),
     );
   }
+
+  void drawBoundingBox({
+    required Canvas canvas,
+    required Size size,
+    Color color = Colors.black,
+  }) {
+    final path = Path()
+      ..moveTo(boundingBox.topLeft.dx, boundingBox.topLeft.dy)
+      ..lineTo(boundingBox.topRight.dx, boundingBox.topRight.dy)
+      ..lineTo(boundingBox.bottomRight.dx, boundingBox.bottomRight.dy)
+      ..lineTo(boundingBox.bottomLeft.dx, boundingBox.bottomLeft.dy)
+      ..lineTo(boundingBox.topLeft.dx, boundingBox.topLeft.dy);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawPath(path, paint);
+  }
 }
 
 class _ObjectPainter extends CustomPainter {
@@ -18,18 +36,7 @@ class _ObjectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = object.boundingBox;
-    final path = Path()
-      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
-      ..lineTo(rect.topRight.dx, rect.topRight.dy)
-      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
-      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
-      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
-    final paint = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    canvas.drawPath(path, paint);
+    object.drawBoundingBox(canvas: canvas, size: size, color: Colors.blue);
   }
 
   @override

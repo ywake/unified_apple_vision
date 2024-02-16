@@ -13,6 +13,25 @@ extension VisionRectangleEx on VisionRectangleObservation {
     );
   }
 
+  void drawRect({
+    required Canvas canvas,
+    required Size size,
+    Color color = Colors.black,
+  }) {
+    final rect = scale(size).reverse(Offset(0, size.height));
+    final path = Path()
+      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
+      ..lineTo(rect.topRight.dx, rect.topRight.dy)
+      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
+      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
+      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawPath(path, paint);
+  }
+
   Widget build() {
     return Positioned.fill(
       child: CustomPaint(
@@ -29,18 +48,7 @@ class _RectanglePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = rectangle.scale(size).reverse(Offset(0, size.height));
-    final path = Path()
-      ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
-      ..lineTo(rect.topRight.dx, rect.topRight.dy)
-      ..lineTo(rect.bottomRight.dx, rect.bottomRight.dy)
-      ..lineTo(rect.bottomLeft.dx, rect.bottomLeft.dy)
-      ..lineTo(rect.topLeft.dx, rect.topLeft.dy);
-    final paint = Paint()
-      ..color = Colors.green
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    canvas.drawPath(path, paint);
+    rectangle.drawRect(canvas: canvas, size: size, color: Colors.green);
   }
 
   @override

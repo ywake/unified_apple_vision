@@ -4,6 +4,7 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:unified_apple_vision_example/extension/vision_classification_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_recognized_text_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_rectangle_observation.dart';
+import 'package:unified_apple_vision_example/extension/vision_text_observation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,9 +64,10 @@ class _CameraScreenState extends State<CameraScreen> {
                   try {
                     final start = DateTime.now();
                     _unifiedAppleVision.analyze(input, [
-                      const VisionRecognizeTextRequest(),
-                      const VisionDetectRectanglesRequest(maxObservations: 0),
-                      const VisionRecognizeAnimalsRequest(),
+                      // const VisionRecognizeTextRequest(),
+                      const VisionDetectTextRectanglesRequest(
+                        reportCharacterBoxes: true,
+                      )
                     ]).then((res) {
                       final end = DateTime.now();
                       debugPrint('${end.difference(start).inMilliseconds}ms');
@@ -85,6 +87,8 @@ class _CameraScreenState extends State<CameraScreen> {
               for (final rect in results!.detectedRectangles!) rect.build(),
             if (results?.recognizedAnimals != null)
               for (final animal in results!.recognizedAnimals!) animal.build(),
+            if (results?.detectTextRectangles != null)
+              for (final text in results!.detectTextRectangles!) text.build(),
           ]
         ],
       ),
