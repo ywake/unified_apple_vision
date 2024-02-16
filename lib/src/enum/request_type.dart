@@ -5,12 +5,14 @@ typedef Factory = List<VisionObservation>? Function(Map<String, dynamic> map);
 
 enum VisionRequestType {
   recognizeText,
+  detectRectangles,
   trackObject,
   trackRectangle,
   ;
 
   String get key => switch (this) {
         VisionRequestType.recognizeText => 'recognize_text',
+        VisionRequestType.detectRectangles => 'detect_rectangles',
         VisionRequestType.trackObject => 'track_object',
         VisionRequestType.trackRectangle => 'track_rectangle',
       };
