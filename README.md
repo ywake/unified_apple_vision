@@ -45,7 +45,7 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 ||||||
 | [Barcode Detection](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | [Detect Barcodes](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | ❌ | 11.0+ | 10.13+ |
 ||||||
-| [Text Detection](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | [Detect Text Rectangles](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | ❌ | 11.0+ | 10.13+ |
+| [Text Detection](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | [Detect Text Rectangles](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | ✅ | 11.0+ | 10.13+ |
 ||||||
 | [Text Recognition](https://developer.apple.com/documentation/vision/recognizing_text_in_images) | [Recognize Text](https://developer.apple.com/documentation/vision/vnrecognizetextrequest) | ✅ | 13.0+ | 10.15+ |
 ||||||
