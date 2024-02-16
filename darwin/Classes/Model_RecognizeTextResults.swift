@@ -14,11 +14,9 @@ class RecognizeTextResults: AnalyzeResults {
     return .recognizeText
   }
 
-  func toDict() -> [String: Any] {
-    return [
-      "observations": self.observations.map { observation in
-        return observation.toDict(self.maxCandidates)
-      }
-    ]
+  func toDict() -> [[String: Any]] {
+    return self.observations.map { observation in
+      return observation.toDict(self.maxCandidates)
+    }
   }
 }

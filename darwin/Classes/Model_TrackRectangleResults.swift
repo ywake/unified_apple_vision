@@ -12,11 +12,9 @@ class TrackRectangleResults: AnalyzeResults {
     return .trackRectangle
   }
 
-  func toDict() -> [String: Any] {
-    return [
-      "observations": self.observations.map { observation in
-        return observation.toDict()
-      }
-    ]
+  func toDict() -> [[String: Any]] {
+    return self.observations.map { observation in
+      return observation.toDict()
+    }
   }
 }

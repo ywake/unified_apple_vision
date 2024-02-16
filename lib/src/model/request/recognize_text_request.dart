@@ -2,9 +2,16 @@ import 'dart:ui';
 
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/enum/text_recognition_level.dart';
+import 'package:unified_apple_vision/src/model/observation/recognized_text.dart';
 
 import 'analysis_request.dart';
 
+/// **iOS 13.0+, macOS 10.15+**
+///
+/// An image analysis request that finds and recognizes text in an image.
+///
+/// By default, a text recognition request first locates all possible glyphs or characters in the input image, and then analyzes each string. To specify or limit the languages to find in the request, set the recognitionLanguages property to an array that contains the names of the languages of text you want to recognize. Vision returns the result of this request in a [VisionRecognizedTextObservation] object.
+///
 class VisionRecognizeTextRequest extends AnalysisRequest {
   /// The minimum height, relative to the image height, of the text to recognize.
   final double? minimumTextHeight;

@@ -1,4 +1,4 @@
 protocol AnalyzeResults {
   func type() -> RequestType
-  func toDict() -> [String: Any]
+  func toDict() -> [[String: Any]]
 }
