@@ -38,7 +38,7 @@ class TrackObjectRequest: AnalyzeRequest {
       return _makeRequest(handler)
     } else {
       Logger.error(
-        "RecognizeTextRequest requires iOS 13.0+ or macOS 10.15+",
+        "TrackObjectRequest requires iOS 11.0+ or macOS 10.13+",
         "\(self.type().rawValue)>makeRequest"
       )
       return nil
@@ -67,7 +67,7 @@ class TrackObjectRequest: AnalyzeRequest {
       return TrackObjectResults(observations as! [VNDetectedObjectObservation])
     } else {
       Logger.error(
-        "RecognizeTextRequest requires iOS 13.0+ or macOS 10.15+",
+        "TrackObjectRequest requires iOS 11.0+ or macOS 10.13+",
         "\(self.type().rawValue)>makeResults"
       )
       return nil
