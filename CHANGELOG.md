@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Feat: Add Rectangle Detection API
+
 ## 0.1.2
 
 * Update documentation
