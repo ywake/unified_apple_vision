@@ -56,9 +56,13 @@ class _CameraScreenState extends State<CameraScreen> {
                   final input =
                       VisionInputImage(bytes: image.bytes, size: image.size);
                   try {
+                    final start = DateTime.now();
                     _unifiedAppleVision.analyze(input, [
                       const VisionRecognizeTextRequest(),
+                      const VisionDetectRectanglesRequest(maxObservations: 0),
                     ]).then((res) {
+                      final end = DateTime.now();
+                      debugPrint('${end.difference(start).inMilliseconds}ms');
                       setState(() => results = res);
                     });
                   } catch (e) {
@@ -71,6 +75,8 @@ class _CameraScreenState extends State<CameraScreen> {
           ...[
             if (results?.recognizedText != null)
               for (final text in results!.recognizedText!) text.build(),
+            if (results?.detectedRectangles != null)
+              for (final rect in results!.detectedRectangles!) rect.build(),
             if (results?.trackObjects != null)
               for (final object in results!.trackObjects!) object.build(),
             if (results?.trackRectangles != null)
