@@ -9,29 +9,15 @@ class VisionRecognizedTextObservation extends VisionRectangleObservation {
   /// List of candidates for recognition results. The maximum number is specified by [VisionRecognizeTextRequest.maxCandidates] in descending order of accuracy.
   final List<VisionRecognizedTextCandidate> candidates;
 
-  /// The coordinates are normalized to the image size, with the top-left corner being (0.0, 0.0) and the bottom-right corner being (1.0, 1.0).
-  // final VisionRectangleObservation rectangle;
-
-  // VisionRecognizedTextObservation({
-  //   required this.candidates,
-  //   required super.topLeft,
-  //   required super.topRight,
-  //   required super.bottomLeft,
-  //   required super.bottomRight,
-  //   required super.boundingBox,
-  //   required super.uuid,
-  //   required super.confidence,
-  // });
-
   VisionRecognizedTextObservation.withParent({
     required VisionRectangleObservation parent,
     required this.candidates,
-  }) : super.withParent(
-          parent: parent,
-          topLeft: parent.topLeft,
-          topRight: parent.topRight,
-          bottomLeft: parent.bottomLeft,
-          bottomRight: parent.bottomRight,
+  }) : super.clone(parent);
+
+  VisionRecognizedTextObservation.clone(VisionRecognizedTextObservation other)
+      : this.withParent(
+          parent: other,
+          candidates: other.candidates,
         );
 
   factory VisionRecognizedTextObservation.fromMap(Map<String, dynamic> map) {
