@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:unified_apple_vision/src/extension/map.dart';
-import 'package:unified_apple_vision/src/model/request/recognize_text_request.dart';
+import 'package:unified_apple_vision/src/model/request/recognize_text.dart';
 
 import 'rectangle.dart';
 

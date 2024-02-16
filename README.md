@@ -32,7 +32,7 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 ||||||
 | [3D Body Pose Detection](https://developer.apple.com/documentation/vision/identifying_3d_human_body_poses_in_images) | [Detect Human Body Pose 3D](https://developer.apple.com/documentation/vision/vndetecthumanbodypose3drequest) | ❌ | 17.0+ | 14.0+ |
 ||||||
-| [Animal Detection](https://developer.apple.com/documentation/vision/vnrecognizeanimalsrequest) | [Recognize Animals](https://developer.apple.com/documentation/vision/vnrecognizeanimalsrequest) | ❌ | 13.0+ | 10.15+ |
+| [Animal Detection](https://developer.apple.com/documentation/vision/vnrecognizeanimalsrequest) | [Recognize Animals](https://developer.apple.com/documentation/vision/vnrecognizeanimalsrequest)<br>(only dogs and cats...😓) | ✅ | 13.0+ | 10.15+ |
 ||||||
 | [Animal Body Pose Detection](https://developer.apple.com/documentation/vision/detecting_animal_body_poses_with_vision) | [Detect Animal Body Pose](https://developer.apple.com/documentation/vision/vndetectanimalbodyposerequest) | ❌ | 17.0+ | 14.0+ |
 ||||||
