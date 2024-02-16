@@ -4,6 +4,7 @@ enum RequestType: String {
   case trackObject = "track_object"
   case trackRectangle = "track_rectangle"
   case recognizeAnimals = "recognize_animals"
+  case detectTextRectangles = "detect_text_rectangles"
 
   init?(_ string: String) {
     self.init(rawValue: string)
@@ -21,6 +22,8 @@ enum RequestType: String {
       return TrackRectangleRequest(map)
     case .recognizeAnimals:
       return RecognizeAnimalsRequest()
+    case .detectTextRectangles:
+      return DetectTextRectanglesRequest(map)
     }
   }
 }
