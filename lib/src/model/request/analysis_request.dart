@@ -1,7 +1,7 @@
-import 'package:unified_apple_vision/src/enum/analysis_type.dart';
+import 'package:unified_apple_vision/src/enum/request_type.dart';
 
 abstract class AnalysisRequest {
-  final AnalysisType type;
+  final VisionRequestType type;
 
   const AnalysisRequest({required this.type});
 

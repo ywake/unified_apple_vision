@@ -1,7 +1,7 @@
 import Vision
 
 protocol AnalyzeRequest {
-  func type() -> AnalysisType
+  func type() -> RequestType
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest?
   func makeResults(_ observations: [VNObservation]) -> AnalyzeResults?
 }

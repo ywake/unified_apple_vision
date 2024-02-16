@@ -1,30 +1,46 @@
+import 'dart:ui';
+
 import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/model/request/recognize_text_request.dart';
 
 import 'rectangle.dart';
 
-class VisionRecognizedText {
+class VisionRecognizedTextObservation extends VisionRectangleObservation {
   /// List of candidates for recognition results. The maximum number is specified by [VisionRecognizeTextRequest.maxCandidates] in descending order of accuracy.
   final List<VisionRecognizedTextCandidate> candidates;
 
   /// The coordinates are normalized to the image size, with the top-left corner being (0.0, 0.0) and the bottom-right corner being (1.0, 1.0).
-  final VisionRectangle rectangle;
+  // final VisionRectangleObservation rectangle;
 
-  const VisionRecognizedText({
+  // VisionRecognizedTextObservation({
+  //   required this.candidates,
+  //   required super.topLeft,
+  //   required super.topRight,
+  //   required super.bottomLeft,
+  //   required super.bottomRight,
+  //   required super.boundingBox,
+  //   required super.uuid,
+  //   required super.confidence,
+  // });
+
+  VisionRecognizedTextObservation.withParent({
+    required VisionRectangleObservation parent,
     required this.candidates,
-    required this.rectangle,
-  });
+  }) : super.withParent(
+          parent: parent,
+          topLeft: parent.topLeft,
+          topRight: parent.topRight,
+          bottomLeft: parent.bottomLeft,
+          bottomRight: parent.bottomRight,
+        );
 
-  factory VisionRecognizedText.fromMap(Map<String, dynamic> map) {
+  factory VisionRecognizedTextObservation.fromMap(Map<String, dynamic> map) {
     final candidates = map['candidates'] as List<Object?>?;
-    final rectangle = map['rectangle'] as Map?;
-
-    if (candidates == null || rectangle == null) {
+    if (candidates == null) {
       throw Exception('Failed to parse VisionRecognizedText');
     }
-
-    return VisionRecognizedText(
-      rectangle: VisionRectangle.fromMap(rectangle.castEx()),
+    return VisionRecognizedTextObservation.withParent(
+      parent: VisionRectangleObservation.fromMap(map),
       candidates: [
         for (final data in candidates)
           if (data != null)
@@ -33,11 +49,37 @@ class VisionRecognizedText {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
+      ...super.toMap(),
       'candidates': [for (final c in candidates) c.toMap()],
-      'rectangle': rectangle.toMap(),
     };
+  }
+
+  @override
+  VisionRecognizedTextObservation copyWith({
+    List<VisionRecognizedTextCandidate>? candidates,
+    Offset? topLeft,
+    Offset? topRight,
+    Offset? bottomLeft,
+    Offset? bottomRight,
+    Rect? boundingBox,
+    String? uuid,
+    double? confidence,
+  }) {
+    return VisionRecognizedTextObservation.withParent(
+      candidates: candidates ?? this.candidates,
+      parent: super.copyWith(
+        topLeft: topLeft,
+        topRight: topRight,
+        bottomLeft: bottomLeft,
+        bottomRight: bottomRight,
+        boundingBox: boundingBox,
+        uuid: uuid,
+        confidence: confidence,
+      ),
+    );
   }
 }
 

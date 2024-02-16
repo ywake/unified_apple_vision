@@ -10,22 +10,14 @@ class RecognizeTextResults: AnalyzeResults {
     self.maxCandidates = maxCandidates ?? 1
   }
 
-  func type() -> AnalysisType {
+  func type() -> RequestType {
     return .recognizeText
   }
 
-  func toData() -> [String: Any] {
+  func toDict() -> [String: Any] {
     return [
       "observations": self.observations.map { observation in
-        return [
-          "candidates": observation.topCandidates(self.maxCandidates).map { candidate in
-            return [
-              "string": candidate.string,
-              "confidence": candidate.confidence,
-            ]
-          },
-          "rectangle": observation.toData(),
-        ]
+        return observation.toDict(self.maxCandidates)
       }
     ]
   }

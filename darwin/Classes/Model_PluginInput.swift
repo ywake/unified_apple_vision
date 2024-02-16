@@ -28,17 +28,17 @@ class PluginInput {
 
     let requests = arg["requests"] as? [[String: Any]] ?? []
 
-    let analysisRequests = requests.compactMap { req -> AnalyzeRequest? in
+    let analyzeRequests = requests.compactMap { req -> AnalyzeRequest? in
       guard let req = req as? [String: Any] else { return nil }
       let requestTypeStr = req["request_type"] as? String ?? ""
-      guard let requestType = AnalysisType(requestTypeStr) else { return nil }
-      return requestType.analysisRequest(req)
+      guard let requestType = RequestType(requestTypeStr) else { return nil }
+      return requestType.mapToRequest(req)
     }
 
     self.init(
       image: image,
       mode: RequestMode(mode),
-      requests: analysisRequests
+      requests: analyzeRequests
     )
   }
 }

@@ -119,7 +119,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
 
     var data: [String: Any] = [:]
     results.forEach { res in
-      data[res.type().rawValue] = res.toData()
+      data[res.type().rawValue] = res.toDict()
     }
     return data
   }

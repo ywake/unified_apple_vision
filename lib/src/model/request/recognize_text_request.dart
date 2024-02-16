@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:unified_apple_vision/src/enum/analysis_type.dart';
+import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/enum/text_recognition_level.dart';
 
 import 'analysis_request.dart';
@@ -42,7 +42,7 @@ class VisionRecognizeTextRequest extends AnalysisRequest {
     this.usesLanguageCorrection,
     this.customWords,
     this.maxCandidates = 1,
-  }) : super(type: AnalysisType.recognizeText);
+  }) : super(type: VisionRequestType.recognizeText);
 
   @override
   Map<String, dynamic> toMap() {
