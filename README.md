@@ -41,7 +41,7 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 | [Optical Flow](https://developer.apple.com/documentation/vision/vngenerateopticalflowrequest) | [Generate Optical Flow](https://developer.apple.com/documentation/vision/vngenerateopticalflowrequest) | ❌ | 14.0+ | 11.0+ |
 || [Track Optical Flow](https://developer.apple.com/documentation/vision/vntrackopticalflowrequest) | ❌ | 17.0+ | 14.0+ |
 ||||||
-| [Barcode Detection](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | [Detect Barcodes](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | ❌ | 11.0+ | 10.13+ |
+| [Barcode Detection](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | [Detect Barcodes](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | ✅ | 11.0+ | 10.13+ |
 ||||||
 | [Text Detection](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | [Detect Text Rectangles](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | ✅ | 11.0+ | 10.13+ |
 ||||||
@@ -77,7 +77,7 @@ final input = VisionInputImage(
 
 // analyze
 final res = await vision.analyze(input, [
-  // add requests you want to process
+  // add requests you wish to perform
   const VisionRecognizeTextRequest(),
 ]);
 ```
