@@ -23,10 +23,6 @@ def main():
         observation_creation(args.name, args.ios, args.macos)
 
 
-if __name__ == "__main__":
-    main()
-
-
 def request_creation(class_name: str, ios: str, macos: str):
     # Extract the meaningful part of the class name
     if not class_name.startswith('VN') or not class_name.endswith('Request'):
@@ -46,7 +42,7 @@ def request_creation(class_name: str, ios: str, macos: str):
         f'darwin/Classes/Model_{request_pascal}Results.swift',
         swift_results_template(request_pascal, ios, macos)
     )
-    print('File created')
+    print('Files created')
 
 
 def observation_creation(class_name: str, ios: str, macos: str):
@@ -64,7 +60,7 @@ def observation_creation(class_name: str, ios: str, macos: str):
         f'darwin/Classes/Extension_{class_name}.swift',
         swift_observation_template(class_name, ios, macos)
     )
-    print('File created')
+    print('Files created')
 
 
 def create_file(path: str, content: str):
@@ -88,7 +84,8 @@ import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
 
 class Vision{request_pascal}Request extends AnalysisRequest {{
-  const Vision{request_pascal}Request() : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
+  const Vision{request_pascal}Request()
+    : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
 
   @override
   Map<String, dynamic> toMap() {{
@@ -211,3 +208,7 @@ extension {class_name} {{
   }}
 }}
 """.strip()
+
+
+if __name__ == "__main__":
+    main()
