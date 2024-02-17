@@ -1,6 +1,7 @@
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
+import 'package:unified_apple_vision_example/extension/vision_barcode_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_classification_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_recognized_text_observation.dart';
 import 'package:unified_apple_vision_example/extension/vision_rectangle_observation.dart';
@@ -67,7 +68,8 @@ class _CameraScreenState extends State<CameraScreen> {
                       // const VisionRecognizeTextRequest(),
                       const VisionDetectTextRectanglesRequest(
                         reportCharacterBoxes: true,
-                      )
+                      ),
+                      const VisionDetectBarcodesRequest(),
                     ]).then((res) {
                       final end = DateTime.now();
                       debugPrint('${end.difference(start).inMilliseconds}ms');
@@ -87,8 +89,10 @@ class _CameraScreenState extends State<CameraScreen> {
               for (final rect in results!.detectedRectangles!) rect.build(),
             if (results?.recognizedAnimals != null)
               for (final animal in results!.recognizedAnimals!) animal.build(),
-            if (results?.detectTextRectangles != null)
-              for (final text in results!.detectTextRectangles!) text.build(),
+            if (results?.detectedTextRectangles != null)
+              for (final text in results!.detectedTextRectangles!) text.build(),
+            if (results?.detectedBarcodes != null)
+              for (final barcode in results!.detectedBarcodes!) barcode.build(),
           ]
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:unified_apple_vision/src/model/observation/barcode.dart';
 import 'package:unified_apple_vision/src/model/observation/detected_object.dart';
 import 'package:unified_apple_vision/src/model/observation/observation.dart';
 import 'package:unified_apple_vision/src/model/observation/recognized_object.dart';
@@ -15,6 +16,7 @@ enum VisionRequestType {
   trackRectangle,
   recognizeAnimals,
   detectTextRectangles,
+  detectBarcodes,
   ;
 
   String get key => switch (this) {
@@ -24,6 +26,7 @@ enum VisionRequestType {
         VisionRequestType.trackRectangle => 'track_rectangle',
         VisionRequestType.recognizeAnimals => 'recognize_animals',
         VisionRequestType.detectTextRectangles => 'detect_text_rectangles',
+        VisionRequestType.detectBarcodes => 'detect_barcodes',
       };
 
   List<VisionObservation> fromListMap(List<Map> observations) {
@@ -42,6 +45,8 @@ enum VisionRequestType {
             VisionRecognizedObjectObservation.fromMap(observation.castEx()),
           VisionRequestType.detectTextRectangles =>
             VisionTextObservation.fromMap(observation.castEx()),
+          VisionRequestType.detectBarcodes =>
+            VisionBarcodeObservation.fromMap(observation.castEx()),
         },
     ];
   }
@@ -62,6 +67,8 @@ enum VisionRequestType {
             (observation as VisionRecognizedObjectObservation).toMap(),
           VisionRequestType.detectTextRectangles =>
             (observation as VisionTextObservation).toMap(),
+          VisionRequestType.detectBarcodes =>
+            (observation as VisionBarcodeObservation).toMap(),
         },
     ];
   }
