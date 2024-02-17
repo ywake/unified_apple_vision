@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/input_image.dart';
+import 'package:unified_apple_vision/src/model/observation/barcode.dart';
 import 'package:unified_apple_vision/src/model/observation/observation.dart';
 import 'package:unified_apple_vision/src/model/observation/recognized_object.dart';
 import 'package:unified_apple_vision/src/model/observation/recognized_text.dart';
@@ -62,6 +63,8 @@ class VisionResults {
   List<VisionRecognizedObjectObservation>? get recognizedAnimals =>
       get<VisionRecognizedObjectObservation>(
           VisionRequestType.recognizeAnimals);
-  List<VisionTextObservation>? get detectTextRectangles =>
+  List<VisionTextObservation>? get detectedTextRectangles =>
       get<VisionTextObservation>(VisionRequestType.detectTextRectangles);
+  List<VisionBarcodeObservation>? get detectedBarcodes =>
+      get<VisionBarcodeObservation>(VisionRequestType.detectBarcodes);
 }
