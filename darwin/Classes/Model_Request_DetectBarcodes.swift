@@ -58,6 +58,7 @@ class DetectBarcodesRequest: AnalyzeRequest {
   }
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
+    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map { ($0 as? VNBarcodeObservation)?.toDict() ?? [:] }
   }
 }

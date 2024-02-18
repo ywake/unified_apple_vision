@@ -57,6 +57,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
         try self.analyze(input) { results in
           let json = try! JSONSerialization.data(withJSONObject: results, options: [])
           let data = String(data: json, encoding: .utf8)!
+          Logger.debug("Send Results: \(data)", "\(funcName)>analyze.onResult")
           DispatchQueue.main.async {
             self.channel.invokeMethod("response", arguments: data)
           }

@@ -14,13 +14,15 @@ extension AnalyzeRequest {
     -> VNRequestCompletionHandler
   {
     return { (req: VNRequest, err: Error?) in
-      let funcName = "\(self.type().rawValue)>onResult"
+      let funcName = "\(self.type().rawValue)>getCompletionHandler"
+      Logger.debug("Request completed: \(self.type())", funcName)
 
       let isGood = err == nil && req.results != nil
       if !isGood {
         Logger.error("Failed to analyze \(self.type()) Request.", funcName)
         return
       }
+      Logger.debug("Request results: \(req.results!)", funcName)
       let res = [
         "request_id": self.id(),
         "results": self.encodeResult(req.results!),
