@@ -1,3 +1,6 @@
+## 1.0.0
+* Feat: Change design to receive results in callbacks.
+
 ## 0.6.0
 * Feat: Add Barcode Detection API
 
