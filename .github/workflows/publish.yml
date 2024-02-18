@@ -19,8 +19,6 @@ jobs:
           cache: true
           cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
           cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' 
-          pub-cache-key: 'flutter-pub:os:-:channel:-:version:-:arch:-:hash:' 
-          pub-cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:'
       - uses: dart-lang/setup-dart@v1
       - name: Install dependencies
         run: flutter pub get
