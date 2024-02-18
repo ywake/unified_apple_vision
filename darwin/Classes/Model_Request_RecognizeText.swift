@@ -96,6 +96,6 @@ class RecognizeTextRequest: AnalyzeRequest {
   }
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
-    return result.map { ($0 as? VNRecognizedTextObservation)?.toDict() ?? [:] }
+    return result.map { ($0 as? VNRecognizedTextObservation)?.toDict(self.maxCandidates) ?? [:] }
   }
 }
