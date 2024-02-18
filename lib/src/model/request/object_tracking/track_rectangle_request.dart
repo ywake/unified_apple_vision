@@ -15,6 +15,7 @@ class VisionTrackRectangleRequest extends VisionTrackingRequest {
     required this.target,
     super.trackingLevel,
     super.isLastFrame,
+    required super.onResult,
   }) : super(type: VisionRequestType.trackRectangle);
 
   @override
@@ -24,5 +25,13 @@ class VisionTrackRectangleRequest extends VisionTrackingRequest {
       'tracking_level': trackingLevel.name,
       'is_last_frame': isLastFrame,
     };
+  }
+
+  @override
+  List<VisionRectangleObservation> toObservations(
+      List<Map<String, dynamic>> results) {
+    return [
+      for (final result in results) VisionRectangleObservation.fromMap(result)
+    ];
   }
 }

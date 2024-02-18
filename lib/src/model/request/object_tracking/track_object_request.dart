@@ -15,6 +15,7 @@ class VisionTrackObjectRequest extends VisionTrackingRequest {
     required this.target,
     super.trackingLevel,
     super.isLastFrame,
+    required super.onResult,
   }) : super(type: VisionRequestType.trackObject);
 
   @override
@@ -24,5 +25,14 @@ class VisionTrackObjectRequest extends VisionTrackingRequest {
       'tracking_level': trackingLevel.name,
       'is_last_frame': isLastFrame,
     };
+  }
+
+  @override
+  List<VisionDetectedObjectObservation> toObservations(
+      List<Map<String, dynamic>> results) {
+    return [
+      for (final result in results)
+        VisionDetectedObjectObservation.fromMap(result)
+    ];
   }
 }

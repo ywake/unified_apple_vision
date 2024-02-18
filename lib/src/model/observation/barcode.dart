@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:unified_apple_vision/src/enum/barcode_composite_type.dart';
 import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
+import 'package:unified_apple_vision/src/extension/string.dart';
 import 'package:unified_apple_vision/src/model/request/detect_barcodes.dart';
 
 import 'rectangle.dart';
@@ -71,29 +71,14 @@ class VisionBarcodeObservation extends VisionRectangleObservation {
         );
 
   factory VisionBarcodeObservation.fromMap(Map<String, dynamic> map) {
-    final payloadStringValue = map['payload_string_value'] as String?;
-    final payloadDataBase64 = map['payload_data'] as String?;
-    final payloadData =
-        payloadDataBase64 == null ? null : base64.decode(payloadDataBase64);
-    final supplementalPayloadString =
-        map['supplemental_payload_string'] as String?;
-    final supplementalPayloadDataBase64 =
-        map['supplemental_payload_data'] as String?;
-    final supplementalPayloadData = supplementalPayloadDataBase64 == null
-        ? null
-        : base64.decode(supplementalPayloadDataBase64);
-    final supplementalCompositeTypeStr =
-        map['supplemental_composite_type'] as String?;
-    final supplementalCompositeType = supplementalCompositeTypeStr == null
-        ? null
-        : VisionBarcodeCompositeType.values
-            .byName(supplementalCompositeTypeStr);
-    final isGS1DataCarrier = map['is_gs1_data_carrier'] as bool?;
-    final symbologyStr = map['symbology'] as String?;
-    final symbology = symbologyStr == null
-        ? null
-        : VisionBarcodeSymbology.values.byName(symbologyStr);
-    final isColorInverted = map['is_color_inverted'] as bool?;
+    final payloadData = (map['payload_data'] as String?)?.decodeBase64();
+    final supplementalPayloadData =
+        (map['supplemental_payload_data'] as String?)?.decodeBase64();
+    final supplementalCompositeType =
+        (map['supplemental_composite_type'] as String?)
+            ?.toEnum(VisionBarcodeCompositeType.values);
+    final symbology =
+        (map['symbology'] as String?)?.toEnum(VisionBarcodeSymbology.values);
 
     if (symbology == null) {
       throw Exception('Failed to parse VisionBarcodeObservation');
@@ -101,14 +86,14 @@ class VisionBarcodeObservation extends VisionRectangleObservation {
 
     return VisionBarcodeObservation.withParent(
       parent: VisionRectangleObservation.fromMap(map),
-      payloadStringValue: payloadStringValue,
+      payloadStringValue: map['payload_string_value'] as String?,
       payloadData: payloadData,
-      supplementalPayloadString: supplementalPayloadString,
+      supplementalPayloadString: map['supplemental_payload_string'] as String?,
       supplementalPayloadData: supplementalPayloadData,
       supplementalCompositeType: supplementalCompositeType,
-      isGS1DataCarrier: isGS1DataCarrier,
+      isGS1DataCarrier: map['is_gs1_data_carrier'] as bool?,
       symbology: symbology,
-      isColorInverted: isColorInverted,
+      isColorInverted: map['is_color_inverted'] as bool?,
     );
   }
 }

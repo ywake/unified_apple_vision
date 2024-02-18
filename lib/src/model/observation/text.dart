@@ -28,12 +28,9 @@ class VisionTextObservation extends VisionRectangleObservation {
 
     return VisionTextObservation.withParent(
       parent: VisionRectangleObservation.fromMap(map),
-      characterBoxes: characterBoxes == null
-          ? null
-          : [
-              for (final characterBox in characterBoxes)
-                VisionRectangleObservation.fromMap(characterBox.castEx()),
-            ],
+      characterBoxes: characterBoxes
+          ?.map((e) => VisionRectangleObservation.fromMap(e.castEx()))
+          .toList(),
     );
   }
 }

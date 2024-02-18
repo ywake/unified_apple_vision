@@ -21,13 +21,13 @@ class VisionObservation {
 
   factory VisionObservation.fromMap(Map<String, dynamic> map) {
     final uuid = map['uuid'] as String?;
-    final confidence = map['confidence'] as double?;
+    final confidence = map['confidence'] as num?;
     if (uuid == null || confidence == null) {
       throw Exception('Failed to parse VisionObservation');
     }
     return VisionObservation(
       uuid: uuid,
-      confidence: confidence,
+      confidence: confidence.toDouble(),
     );
   }
 
