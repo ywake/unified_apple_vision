@@ -46,11 +46,13 @@ vision.analyze(
     // add requests you wish to perform
     VisionRecognizeTextRequest(
       onResult: (result) {
+        final observations = result.ofRecognizeTextRequest; // get casted results
         // some action
       },
     ),
     VisionDetectTextRectanglesRequest(
       onResult: (result) {
+        final observations = result.ofDetectTextRectanglesRequest;
         // some action
       },
     ),
