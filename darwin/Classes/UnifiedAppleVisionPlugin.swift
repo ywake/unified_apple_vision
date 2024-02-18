@@ -7,6 +7,12 @@ import Vision
 #endif
 
 public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
+  private let channel: FlutterMethodChannel
+
+  public init(channel: FlutterMethodChannel) {
+    self.channel = channel
+  }
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     #if os(iOS)
       let messenger = registrar.messenger()
@@ -14,10 +20,10 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
       let messenger = registrar.messenger
     #endif
     let channel = FlutterMethodChannel(
-      name: "unified_apple_vision",
+      name: "unified_apple_vision/method",
       binaryMessenger: messenger
     )
-    let instance = UnifiedAppleVisionPlugin()
+    let instance = UnifiedAppleVisionPlugin(channel: channel)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
@@ -47,10 +53,14 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     DispatchQueue.global(qos: qos).async {
       var output: Any?
       do {
-        let input = try PluginInput(arg)
-        let res = try self.analyze(input)
-        let map = self.encode(res)
-        output = map
+        let input = try AnalyzeInput(arg)
+        try self.analyze(input) { results in
+          let json = try! JSONSerialization.data(withJSONObject: results, options: [])
+          let data = String(data: json, encoding: .utf8)!
+          DispatchQueue.main.async {
+            self.channel.invokeMethod("response", arguments: data)
+          }
+        }
       } catch let error as PluginError {
         Logger.debug("analyze: \(error)", funcName)
         output = error.toFlutterError()
@@ -59,21 +69,19 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
         let err = PluginError.unexpectedError(msg: error.localizedDescription)
         output = err.toFlutterError()
       }
-      DispatchQueue.main.async {
-        result(output)
-      }
     }
   }
 
   private let sequence = VNSequenceRequestHandler()
-  func analyze(_ input: PluginInput) throws -> [AnalyzeResults] {
+  func analyze(
+    _ input: AnalyzeInput, _ onResult: @escaping OnResultHandler
+  ) throws {
     let funcName = "analyze"
 
     // build requests
-    var results: [AnalyzeResults] = []
     var requests: [VNRequest] = []
-    input.requests.forEach { (request: AnalyzeRequest) in
-      let handler = request.onComplete { results.append($0) }
+    for request: AnalyzeRequest in input.requests {
+      let handler = request.getCompletionHandler(onResult)
       if let req = request.makeRequest(handler) {
         requests.append(req)
       } else {
@@ -99,22 +107,10 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
           orientation: input.image.orientation
         )
       }
-      return results
     } catch {
       Logger.debug("perform: \(error)", funcName)
       throw PluginError.analyzeError(msg: error.localizedDescription)
     }
-  }
-
-  func encode(_ results: [AnalyzeResults]) -> [String: Any?] {
-    let funcName = "encode"
-    Logger.debug("\(results)", funcName)
-
-    var data: [String: Any] = [:]
-    results.forEach { res in
-      data[res.type().rawValue] = res.toDict()
-    }
-    return data
   }
 
   func supportedRecognitionLanguages(_ arg: [String: Any], _ result: @escaping FlutterResult) {

@@ -1,6 +1,7 @@
 import Vision
 
 class DetectRectanglesRequest: AnalyzeRequest {
+  let requestId: String
   let minAspectRatio: VNAspectRatio?
   let maxAspectRatio: VNAspectRatio?
   let quadratureTolerance: VNDegrees?
@@ -9,6 +10,7 @@ class DetectRectanglesRequest: AnalyzeRequest {
   let maxObservations: Int?
 
   init(
+    requestId: String,
     minAspectRatio: VNAspectRatio?,
     maxAspectRatio: VNAspectRatio?,
     quadratureTolerance: VNDegrees?,
@@ -16,6 +18,7 @@ class DetectRectanglesRequest: AnalyzeRequest {
     minConfidence: Float?,
     maxObservations: Int?
   ) {
+    self.requestId = requestId
     self.minAspectRatio = minAspectRatio
     self.maxAspectRatio = maxAspectRatio
     self.quadratureTolerance = quadratureTolerance
@@ -26,7 +29,9 @@ class DetectRectanglesRequest: AnalyzeRequest {
 
   convenience init?(_ arg: [String: Any]?) {
     guard let arg = arg else { return nil }
+    guard let requestId = arg["request_id"] as? String else { return nil }
     self.init(
+      requestId: requestId,
       minAspectRatio: arg["min_aspect_ratio"] as? VNAspectRatio,
       maxAspectRatio: arg["max_aspect_ratio"] as? VNAspectRatio,
       quadratureTolerance: arg["quadrature_tolerance"] as? VNDegrees,
@@ -38,6 +43,10 @@ class DetectRectanglesRequest: AnalyzeRequest {
 
   func type() -> RequestType {
     return .detectRectangles
+  }
+
+  func id() -> String {
+    return self.requestId
   }
 
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
@@ -78,17 +87,7 @@ class DetectRectanglesRequest: AnalyzeRequest {
     return request
   }
 
-  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {
-    if #available(iOS 11.0, macOS 10.13, *) {
-      return DetectRectanglesResults(
-        observations as! [VNRectangleObservation]
-      )
-    } else {
-      Logger.error(
-        "DetectRectanglesRequest requires iOS 11.0+ or macOS 10.13+",
-        "\(self.type().rawValue)>makeResults"
-      )
-      return nil
-    }
+  func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
+    return result.map { ($0 as? VNRectangleObservation)?.toDict() ?? [:] }
   }
 }

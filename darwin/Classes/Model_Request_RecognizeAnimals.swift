@@ -1,8 +1,24 @@
 import Vision
 
 class RecognizeAnimalsRequest: AnalyzeRequest {
+  let requestId: String
+
+  init(requestId: String) {
+    self.requestId = requestId
+  }
+
+  convenience init?(_ arg: [String: Any]?) {
+    guard let arg = arg else { return nil }
+    guard let requestId = arg["request_id"] as? String else { return nil }
+    self.init(requestId: requestId)
+  }
+
   func type() -> RequestType {
     return .recognizeAnimals
+  }
+
+  func id() -> String {
+    return self.requestId
   }
 
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
@@ -25,17 +41,7 @@ class RecognizeAnimalsRequest: AnalyzeRequest {
     return request
   }
 
-  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {
-    if #available(iOS 13.0, macOS 10.15, *) {
-      return RecognizeAnimalsResults(
-        observations as! [VNRecognizedObjectObservation]
-      )
-    } else {
-      Logger.error(
-        "RecognizeAnimalsRequest requires iOS 13.0+ or macOS 10.15+",
-        "\(self.type().rawValue)>makeResults"
-      )
-      return nil
-    }
+  func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
+    return result.map { ($0 as? VNRecognizedObjectObservation)?.toDict() ?? [:] }
   }
 }
