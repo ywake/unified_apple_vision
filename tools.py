@@ -35,12 +35,8 @@ def request_creation(class_name: str, ios: str, macos: str):
         dart_request_template(request_pascal)
     )
     create_file(
-        f'darwin/Classes/Model_{request_pascal}Request.swift',
+        f'darwin/Classes/Model_Request_{request_pascal}.swift',
         swift_request_template(request_pascal, ios, macos)
-    )
-    create_file(
-        f'darwin/Classes/Model_{request_pascal}Results.swift',
-        swift_results_template(request_pascal, ios, macos)
     )
     print('Files created')
 
@@ -78,11 +74,12 @@ def pascal_to_camel_case(name: str):
     return name[0].lower() + name[1:]
 
 
-def dart_request_template(request_pascal: str) -> str:
+def dart_request_template(request_pascal: str, ios: str, macos: str) -> str:
     return f"""
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
 
+/// **iOS {ios}+, macOS {macos}+**
 class Vision{request_pascal}Request extends AnalysisRequest {{
   const Vision{request_pascal}Request()
     : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
@@ -100,8 +97,13 @@ def swift_request_template(request_pascal: str, ios: str, macos: str) -> str:
 import Vision
 
 class {request_pascal}Request: AnalyzeRequest {{
+  let requestId: String
 
-  init() {{}}
+  init(
+    requestId: String
+  ) {{
+    self.requestId = requestId 
+  }}
 
   convenience init?(_ arg: [String: Any]?) {{
     guard let arg = arg else {{ return nil }}
@@ -110,6 +112,10 @@ class {request_pascal}Request: AnalyzeRequest {{
 
   func type() -> RequestType {{
     return .{pascal_to_camel_case(request_pascal)}
+  }}
+
+  func id() -> String {{
+    return self.requestId
   }}
 
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {{
@@ -128,49 +134,13 @@ class {request_pascal}Request: AnalyzeRequest {{
   private func _makeRequest(_ handler: @escaping VNRequestCompletionHandler)
     -> VN{request_pascal}Request
   {{
-    // TODO: Implement
     let request = VN{request_pascal}Request(completionHandler: handler)
     return request
   }}
 
-  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {{
-    if #available(iOS {ios}, macOS {macos}, *) {{
-      // TODO: Implement
-      return {request_pascal}Results(
-        observations as! [VN{request_pascal}Observation]
-      )
-    }} else {{
-      Logger.error(
-        "{request_pascal}Request requires iOS {ios}+ or macOS {macos}+",
-        "\(self.type().rawValue)>makeResults"
-      )
-      return nil
-    }}
-  }}
-}}
-""".strip()
-
-
-def swift_results_template(request_pascal: str, ios: str, macos: str) -> str:
-    return f"""
-import Vision
-
-@available(iOS {ios}, macOS {macos}, *)
-class {request_pascal}Results: AnalyzeResults {{
-  let observations: [VN{request_pascal}Observation]
-
-  init(_ observations: [VN{request_pascal}Observation]) {{
-    self.observations = observations
-  }}
-
-  func type() -> RequestType {{
-    return .{pascal_to_camel_case(request_pascal)}
-  }}
-
-  func toDict() -> [[String: Any]] {{
-    return self.observations.map {{ observation in
-      return observation.toDict()
-    }}
+  func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {{
+    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    return result.map {{ ($0 as? VN_Observation).toDict() ?? [:] }}
   }}
 }}
 """.strip()
@@ -184,13 +154,11 @@ class Vision{observation_pascal}Observation extends VisionObservation {{
   }}) : super.clone(parent);
 
   Vision{observation_pascal}Observation.clone(Vision{observation_pascal}Observation other)
-      : this.withParent(
-          parent: other,
-        );
+      : this.withParent(parent: other);
 
-  factory Vision{observation_pascal}Observation.fromMap(Map<String, dynamic> map) {{
+  factory Vision{observation_pascal}Observation.fromJson(Json json) {{
     return Vision{observation_pascal}Observation.withParent(
-      parent: VisionObservation.fromMap(map),
+      parent: VisionObservation.fromJson(json),
     );
   }}
 }}

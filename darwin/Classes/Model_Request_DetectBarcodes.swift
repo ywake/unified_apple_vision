@@ -52,7 +52,6 @@ class DetectBarcodesRequest: AnalyzeRequest {
   private func _makeRequest(_ handler: @escaping VNRequestCompletionHandler)
     -> VNDetectBarcodesRequest
   {
-    // TODO: Implement
     let request = VNDetectBarcodesRequest(completionHandler: handler)
     return request
   }
