@@ -40,10 +40,22 @@ final input = VisionInputImage(
 );
 
 // analyze
-final result = await vision.analyze(input, [
-  // add requests you wish to perform
-  const VisionRecognizeTextRequest(),
-]);
+vision.analyze(
+  image: input,
+  requests: [
+    // add requests you wish to perform
+    VisionRecognizeTextRequest(
+      onResult: (result) {
+        // some action
+      },
+    ),
+    VisionDetectTextRectanglesRequest(
+      onResult: (result) {
+        // some action
+      },
+    ),
+  ],
+);
 ```
 
 For example, if you wish to perform text recognition, add `VisionRecognizeTextRequest()`.

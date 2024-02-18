@@ -76,10 +76,17 @@ final input = VisionInputImage(
 );
 
 // analyze
-final res = await vision.analyze(input, [
-  // add requests you wish to perform
-  const VisionRecognizeTextRequest(),
-]);
+vision.analyze(
+  image: input,
+  requests: [
+    // add requests you wish to perform
+    VisionRecognizeTextRequest(
+      onResult: (result) {
+        // some action
+      },
+    ),
+  ],
+);
 ```
 
 ### [Documents 📘](doc/README.md)
