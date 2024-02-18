@@ -49,7 +49,7 @@ class VisionRecognizeTextRequest extends VisionRequest {
     this.usesLanguageCorrection,
     this.customWords,
     this.maxCandidates = 1,
-    required super.onResult,
+    required super.onResults,
   }) : super(type: VisionRequestType.recognizeText);
 
   @override
@@ -65,14 +65,5 @@ class VisionRecognizeTextRequest extends VisionRequest {
       'custom_words': customWords,
       'max_candidates': maxCandidates,
     };
-  }
-
-  @override
-  List<VisionRecognizedTextObservation> toObservations(
-      List<Map<String, dynamic>> results) {
-    return [
-      for (final result in results)
-        VisionRecognizedTextObservation.fromMap(result),
-    ];
   }
 }

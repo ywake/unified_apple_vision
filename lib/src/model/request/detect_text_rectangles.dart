@@ -7,7 +7,7 @@ import 'request.dart';
 ///
 /// An image analysis request that finds regions of visible text in an image.
 ///
-/// This request returns detected text characters as rectangular bounding boxes with origin and size.
+/// This request returns [VisionTextObservation] as rectangular bounding boxes with origin and size.
 ///
 class VisionDetectTextRectanglesRequest extends VisionRequest {
   /// A Boolean value that indicates whether the request detects character bounding boxes.
@@ -15,7 +15,7 @@ class VisionDetectTextRectanglesRequest extends VisionRequest {
 
   const VisionDetectTextRectanglesRequest({
     this.reportCharacterBoxes,
-    required super.onResult,
+    required super.onResults,
   }) : super(type: VisionRequestType.detectTextRectangles);
 
   @override
@@ -23,13 +23,5 @@ class VisionDetectTextRectanglesRequest extends VisionRequest {
     return {
       'reportCharacterBoxes': reportCharacterBoxes,
     };
-  }
-
-  @override
-  List<VisionTextObservation> toObservations(
-      List<Map<String, dynamic>> results) {
-    return [
-      for (final result in results) VisionTextObservation.fromMap(result)
-    ];
   }
 }

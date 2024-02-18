@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:unified_apple_vision/src/enum/barcode_composite_type.dart';
 import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
-import 'package:unified_apple_vision/src/extension/string.dart';
 import 'package:unified_apple_vision/src/model/request/detect_barcodes.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'rectangle.dart';
 
@@ -70,30 +70,18 @@ class VisionBarcodeObservation extends VisionRectangleObservation {
           isColorInverted: other.isColorInverted,
         );
 
-  factory VisionBarcodeObservation.fromMap(Map<String, dynamic> map) {
-    final payloadData = (map['payload_data'] as String?)?.decodeBase64();
-    final supplementalPayloadData =
-        (map['supplemental_payload_data'] as String?)?.decodeBase64();
-    final supplementalCompositeType =
-        (map['supplemental_composite_type'] as String?)
-            ?.toEnum(VisionBarcodeCompositeType.values);
-    final symbology =
-        (map['symbology'] as String?)?.toEnum(VisionBarcodeSymbology.values);
-
-    if (symbology == null) {
-      throw Exception('Failed to parse VisionBarcodeObservation');
-    }
-
+  factory VisionBarcodeObservation.fromJson(Json json) {
     return VisionBarcodeObservation.withParent(
-      parent: VisionRectangleObservation.fromMap(map),
-      payloadStringValue: map['payload_string_value'] as String?,
-      payloadData: payloadData,
-      supplementalPayloadString: map['supplemental_payload_string'] as String?,
-      supplementalPayloadData: supplementalPayloadData,
-      supplementalCompositeType: supplementalCompositeType,
-      isGS1DataCarrier: map['is_gs1_data_carrier'] as bool?,
-      symbology: symbology,
-      isColorInverted: map['is_color_inverted'] as bool?,
+      parent: VisionRectangleObservation.fromJson(json),
+      payloadStringValue: json.strOr('payload_string_value'),
+      payloadData: json.bytesOr('payload_data'),
+      supplementalPayloadString: json.strOr('supplemental_payload_string'),
+      supplementalPayloadData: json.bytesOr('supplemental_payload_data'),
+      supplementalCompositeType: json.enumOr(
+          'supplemental_composite_type', VisionBarcodeCompositeType.values),
+      isGS1DataCarrier: json.boolOr('is_gs1_data_carrier'),
+      symbology: json.enum_('symbology', VisionBarcodeSymbology.values),
+      isColorInverted: json.boolOr('is_color_inverted'),
     );
   }
 }

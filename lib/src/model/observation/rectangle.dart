@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/extension/offset.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'detected_object.dart';
 
@@ -39,23 +39,17 @@ class VisionRectangleObservation extends VisionDetectedObjectObservation {
           bottomRight: other.bottomRight,
         );
 
-  factory VisionRectangleObservation.fromMap(Map<String, dynamic> map) {
-    final bottomLeft = map['bottom_left'] as Map?;
-    final bottomRight = map['bottom_right'] as Map?;
-    final topLeft = map['top_left'] as Map?;
-    final topRight = map['top_right'] as Map?;
-    if (bottomLeft == null ||
-        bottomRight == null ||
-        topLeft == null ||
-        topRight == null) {
-      throw Exception('Failed to parse VisionRectangle');
-    }
+  factory VisionRectangleObservation.fromJson(Json json) {
+    final bottomLeft = json.json('bottom_left');
+    final bottomRight = json.json('bottom_right');
+    final topLeft = json.json('top_left');
+    final topRight = json.json('top_right');
     return VisionRectangleObservation.withParent(
-      parent: VisionDetectedObjectObservation.fromMap(map),
-      topLeft: OffsetEx.fromMap(topLeft.castEx()),
-      topRight: OffsetEx.fromMap(topRight.castEx()),
-      bottomLeft: OffsetEx.fromMap(bottomLeft.castEx()),
-      bottomRight: OffsetEx.fromMap(bottomRight.castEx()),
+      parent: VisionDetectedObjectObservation.fromJson(json),
+      topLeft: OffsetEx.fromJson(topLeft),
+      topRight: OffsetEx.fromJson(topRight),
+      bottomLeft: OffsetEx.fromJson(bottomLeft),
+      bottomRight: OffsetEx.fromJson(bottomRight),
     );
   }
 

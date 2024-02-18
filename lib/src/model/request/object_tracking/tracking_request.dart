@@ -11,7 +11,7 @@ abstract class VisionTrackingRequest extends VisionRequest {
 
   const VisionTrackingRequest({
     required super.type,
-    required super.onResult,
+    required super.onResults,
     this.trackingLevel = VisionTrackingLevel.accurate,
     this.isLastFrame = false,
   });

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/extension/rect.dart';
 import 'package:unified_apple_vision/src/model/request/object_tracking/track_object_request.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'observation.dart';
 
@@ -23,14 +23,11 @@ class VisionDetectedObjectObservation extends VisionObservation {
           parent: other,
         );
 
-  factory VisionDetectedObjectObservation.fromMap(Map<String, dynamic> map) {
-    final boundingBox = map['bounding_box'] as Map?;
-    if (boundingBox == null) {
-      throw Exception('Failed to parse VisionDetectedObjectObservation');
-    }
+  factory VisionDetectedObjectObservation.fromJson(Json json) {
+    final boundingBox = json.json('bounding_box');
     return VisionDetectedObjectObservation.withParent(
-      parent: VisionObservation.fromMap(map),
-      boundingBox: RectEx.fromMap(boundingBox.castEx()),
+      parent: VisionObservation.fromJson(json),
+      boundingBox: RectEx.fromJson(boundingBox),
     );
   }
 

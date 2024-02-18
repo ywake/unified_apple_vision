@@ -24,7 +24,7 @@ class VisionDetectBarcodesRequest extends VisionRequest {
   const VisionDetectBarcodesRequest({
     this.symbologies,
     this.coalesceCompositeSymbologies,
-    required super.onResult,
+    required super.onResults,
   }) : super(type: VisionRequestType.detectBarcodes);
 
   static List<VisionBarcodeSymbology> supportedSymbologies() {
@@ -37,13 +37,5 @@ class VisionDetectBarcodesRequest extends VisionRequest {
       'symbologies': symbologies?.map((e) => e.name).toList(),
       'coalesce_composite_symbologies': coalesceCompositeSymbologies,
     };
-  }
-
-  @override
-  List<VisionBarcodeObservation> toObservations(
-      List<Map<String, dynamic>> results) {
-    return [
-      for (final result in results) VisionBarcodeObservation.fromMap(result)
-    ];
   }
 }

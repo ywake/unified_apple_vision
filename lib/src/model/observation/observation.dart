@@ -1,3 +1,5 @@
+import 'package:unified_apple_vision/src/utility/json.dart';
+
 /// The superclass for analysis results.
 ///
 /// Observations resulting from Vision image analysis requests inherit from this base class.
@@ -19,15 +21,10 @@ class VisionObservation {
           confidence: other.confidence,
         );
 
-  factory VisionObservation.fromMap(Map<String, dynamic> map) {
-    final uuid = map['uuid'] as String?;
-    final confidence = map['confidence'] as num?;
-    if (uuid == null || confidence == null) {
-      throw Exception('Failed to parse VisionObservation');
-    }
+  factory VisionObservation.fromJson(Json json) {
     return VisionObservation(
-      uuid: uuid,
-      confidence: confidence.toDouble(),
+      uuid: json.str('uuid'),
+      confidence: json.double_('confidence'),
     );
   }
 

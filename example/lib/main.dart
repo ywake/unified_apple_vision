@@ -52,15 +52,17 @@ class _MyAppState extends State<MyApp> {
                     _unifiedAppleVision.analyze(
                       image: input,
                       requests: [
-                        VisionDetectTextRectanglesRequest(
-                          reportCharacterBoxes: true,
-                          onResult: (results) => setState(() {
-                            detectedTextRectangles = results.cast();
-                          }),
+                        VisionRecognizeTextRequest(
+                          automaticallyDetectsLanguage: true,
+                          onResults: (results) {
+                            setState(() {
+                              recognizedTexts = results.ofRecognizeTextRequest;
+                            });
+                          },
                         ),
                         VisionDetectBarcodesRequest(
-                          onResult: (results) => setState(() {
-                            detectedBarcodes = results.cast();
+                          onResults: (results) => setState(() {
+                            detectedBarcodes = results.ofDetectBarcodesRequest;
                           }),
                         ),
                       ],

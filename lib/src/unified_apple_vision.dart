@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:unified_apple_vision/src/model/results.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:uuid/uuid.dart';
 
 import 'api.dart';
 import 'model/request/request.dart';
+import 'utility/json.dart';
 
 typedef _UUID = String;
 
@@ -55,9 +56,7 @@ class UnifiedAppleVision {
     for (final req in mReqs) {
       req.completer.future.then((data) {
         try {
-          // FIXME: Maybe there is a better way.
-          final observations = req.request.toObservations(data);
-          req.request.onResult(observations);
+          req.request.onResults(data);
         } catch (e, st) {
           debugPrint('error: $e');
           debugPrint('stacktrace: $st');
@@ -78,11 +77,15 @@ class UnifiedAppleVision {
 
   void _onResponse(dynamic arguments) {
     try {
-      final json = jsonDecode(arguments.toString());
-      final input = ResponseApi.fromMap(json);
+      final json = Json.fromString(arguments.toString());
+      final input = ResponseApi.fromJson(json);
       final req = _requests.remove(input.requestId);
       if (req != null) {
-        req.completer.complete(input.observations);
+        final result = VisionResults.fromJsonList(
+          type: req.request.type,
+          data: input.observations,
+        );
+        req.completer.complete(result);
       }
     } catch (e, st) {
       debugPrint('error: $e');
@@ -114,7 +117,7 @@ class _ManagingRequest {
 
   final _UUID requestId;
   final VisionRequest request;
-  final Completer<List<Map<String, dynamic>>> completer;
+  final Completer<VisionResults> completer;
 
   _ManagingRequest(this.request)
       : requestId = _uuid.v7(),

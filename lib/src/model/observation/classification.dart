@@ -1,3 +1,5 @@
+import 'package:unified_apple_vision/src/utility/json.dart';
+
 import 'observation.dart';
 
 /// An object that represents classification information that an image analysis request produces.
@@ -17,14 +19,10 @@ class VisionClassificationObservation extends VisionObservation {
           identifier: other.identifier,
         );
 
-  factory VisionClassificationObservation.fromMap(Map<String, dynamic> map) {
-    final identifier = map['identifier'] as String?;
-    if (identifier == null) {
-      throw Exception('Failed to parse VisionClassificationObservation');
-    }
+  factory VisionClassificationObservation.fromJson(Json json) {
     return VisionClassificationObservation.withParent(
-      parent: VisionObservation.fromMap(map),
-      identifier: identifier,
+      parent: VisionObservation.fromJson(json),
+      identifier: json.str('identifier'),
     );
   }
 

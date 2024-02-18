@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/model/request/recognize_text.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'rectangle.dart';
 
@@ -20,18 +20,11 @@ class VisionRecognizedTextObservation extends VisionRectangleObservation {
           candidates: other.candidates,
         );
 
-  factory VisionRecognizedTextObservation.fromMap(Map<String, dynamic> map) {
-    final candidates = map['candidates'] as List<Object?>?;
-    if (candidates == null) {
-      throw Exception('Failed to parse VisionRecognizedText');
-    }
+  factory VisionRecognizedTextObservation.fromJson(Json json) {
     return VisionRecognizedTextObservation.withParent(
-      parent: VisionRectangleObservation.fromMap(map),
-      candidates: [
-        for (final data in candidates)
-          if (data != null)
-            VisionRecognizedTextCandidate.fromMap((data as Map).castEx()),
-      ],
+      parent: VisionRectangleObservation.fromJson(json),
+      candidates:
+          json.objList('candidates', VisionRecognizedTextCandidate.fromJson),
     );
   }
 
@@ -82,17 +75,10 @@ class VisionRecognizedTextCandidate {
     required this.confidence,
   });
 
-  factory VisionRecognizedTextCandidate.fromMap(Map<String, dynamic> map) {
-    final str = map['string'] as String?;
-    final confidence = map['confidence'] as double?;
-
-    if (str == null || confidence == null) {
-      throw Exception('Failed to parse VisionRecognizedTextCandidate');
-    }
-
+  factory VisionRecognizedTextCandidate.fromJson(Json json) {
     return VisionRecognizedTextCandidate(
-      text: str,
-      confidence: confidence,
+      text: json.str('string'),
+      confidence: json.double_('confidence'),
     );
   }
 

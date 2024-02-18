@@ -48,7 +48,7 @@ class VisionDetectRectanglesRequest extends VisionRequest {
     this.minSize,
     this.minConfidence,
     this.maxObservations,
-    required super.onResult,
+    required super.onResults,
   })  : assert(
           minAspectRatio == null || 0 <= minAspectRatio && minAspectRatio <= 1,
           'The aspect ratio should range from 0 to 1, inclusive.',
@@ -78,13 +78,5 @@ class VisionDetectRectanglesRequest extends VisionRequest {
       'min_confidence': minConfidence,
       'max_observations': maxObservations,
     };
-  }
-
-  @override
-  List<VisionRectangleObservation> toObservations(
-      List<Map<String, dynamic>> results) {
-    return [
-      for (final result in results) VisionRectangleObservation.fromMap(result),
-    ];
   }
 }

@@ -13,6 +13,7 @@ export 'src/enum/text_recognition_level.dart';
 export 'src/enum/tracking_level.dart';
 
 export 'src/model/input_image.dart';
+export 'src/model/results.dart';
 
 export 'src/model/observation/barcode.dart';
 export 'src/model/observation/classification.dart';

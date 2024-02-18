@@ -1,15 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:unified_apple_vision/src/enum/request_type.dart';
-import 'package:unified_apple_vision/src/model/observation/observation.dart';
+import 'package:unified_apple_vision/src/model/results.dart';
 
-typedef VisionRequestCallback<T> = void Function(
-    List<VisionObservation> results);
+typedef VisionRequestCallback = void Function(VisionResults results);
 
 abstract class VisionRequest {
   final VisionRequestType type;
-  final VisionRequestCallback onResult;
+  final VisionRequestCallback onResults;
 
-  const VisionRequest({required this.type, required this.onResult});
+  const VisionRequest({required this.type, required this.onResults});
 
   Map<String, dynamic> encode() {
     final map = toMap();
@@ -25,5 +24,4 @@ abstract class VisionRequest {
 
   @protected
   Map<String, dynamic> toMap();
-  List<VisionObservation> toObservations(List<Map<String, dynamic>> results);
 }

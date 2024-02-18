@@ -7,22 +7,14 @@ import 'request.dart';
 ///
 /// A request that recognizes animals in an image.
 ///
+/// Vision returns the result of this request in a [VisionRecognizedObjectObservation] object.
 class VisionRecognizeAnimalsRequest extends VisionRequest {
   const VisionRecognizeAnimalsRequest({
-    required super.onResult,
+    required super.onResults,
   }) : super(type: VisionRequestType.recognizeAnimals);
 
   @override
   Map<String, dynamic> toMap() {
     return {};
-  }
-
-  @override
-  List<VisionRecognizedObjectObservation> toObservations(
-      List<Map<String, dynamic>> results) {
-    return [
-      for (final result in results)
-        VisionRecognizedObjectObservation.fromMap(result),
-    ];
   }
 }

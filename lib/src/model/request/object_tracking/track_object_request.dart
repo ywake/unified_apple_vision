@@ -8,6 +8,7 @@ import 'package:unified_apple_vision/src/model/request/object_tracking/tracking_
 ///
 /// Use this type of request to track the bounding boxes around objects previously identified in an image. Vision attempts to locate the same object from the input observation throughout the sequence.
 ///
+/// Vision returns locations for objects found in all orientations and sizes as [VisionDetectedObjectObservation].
 class VisionTrackObjectRequest extends VisionTrackingRequest {
   final VisionDetectedObjectObservation target;
 
@@ -15,7 +16,7 @@ class VisionTrackObjectRequest extends VisionTrackingRequest {
     required this.target,
     super.trackingLevel,
     super.isLastFrame,
-    required super.onResult,
+    required super.onResults,
   }) : super(type: VisionRequestType.trackObject);
 
   @override
@@ -25,14 +26,5 @@ class VisionTrackObjectRequest extends VisionTrackingRequest {
       'tracking_level': trackingLevel.name,
       'is_last_frame': isLastFrame,
     };
-  }
-
-  @override
-  List<VisionDetectedObjectObservation> toObservations(
-      List<Map<String, dynamic>> results) {
-    return [
-      for (final result in results)
-        VisionDetectedObjectObservation.fromMap(result)
-    ];
   }
 }

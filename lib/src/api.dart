@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:unified_apple_vision/unified_apple_vision.dart';
 
-import 'extension/list.dart';
+import 'enum/log_level.dart';
+import 'utility/json.dart';
 
 enum Method {
   analyze,
@@ -24,19 +24,16 @@ enum Method {
 
 class ResponseApi {
   final String requestId;
-  final List<Map<String, dynamic>> observations;
+  final List<Json> observations;
 
   ResponseApi({
     required this.requestId,
     required this.observations,
   });
 
-  factory ResponseApi.fromMap(Map<String, dynamic> map) {
-    final requestId = map['request_id'] as String?;
-    final observations = (map['results'] as List?)?.castMap();
-    if (requestId == null || observations == null) {
-      throw Exception('Failed to parse ResponseApi from Map');
-    }
+  factory ResponseApi.fromJson(Json json) {
+    final requestId = json.str('request_id');
+    final observations = json.jsonList('results');
     return ResponseApi(requestId: requestId, observations: observations);
   }
 }
