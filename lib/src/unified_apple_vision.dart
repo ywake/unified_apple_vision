@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:unified_apple_vision/src/model/results.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:uuid/uuid.dart';
 
