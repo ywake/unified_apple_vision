@@ -1,70 +1,55 @@
-import 'package:flutter/foundation.dart';
-import 'package:unified_apple_vision/src/enum/request_type.dart';
-import 'package:unified_apple_vision/src/model/input_image.dart';
-import 'package:unified_apple_vision/src/model/observation/barcode.dart';
-import 'package:unified_apple_vision/src/model/observation/observation.dart';
-import 'package:unified_apple_vision/src/model/observation/recognized_object.dart';
-import 'package:unified_apple_vision/src/model/observation/recognized_text.dart';
-import 'package:unified_apple_vision/src/model/observation/rectangle.dart';
-import 'package:unified_apple_vision/src/model/observation/text.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
+import 'package:unified_apple_vision/unified_apple_vision.dart';
 
+// FIXME: Maybe there is a better way.
 class VisionResults {
-  final VisionInputImage inputImage;
-  final Map<VisionRequestType, List<VisionObservation>> observations;
+  final List<VisionObservation> observations;
 
-  VisionResults({
-    required this.inputImage,
-    required this.observations,
-  });
+  VisionResults(this.observations);
 
-  factory VisionResults.fromMap(
-    VisionInputImage image,
-    Map<String, dynamic> map,
-  ) {
-    final observations = <VisionRequestType, List<VisionObservation>>{};
-    for (final type in VisionRequestType.values) {
-      if (!map.containsKey(type.key)) continue;
-      try {
-        observations[type] =
-            type.fromListMap((map[type.key] as List).cast<Map>());
-      } catch (e, st) {
-        debugPrint('Failed to parse ${type.key}. skipping...');
-        debugPrint('$e');
-        debugPrint('$st');
-      }
-    }
-    return VisionResults(inputImage: image, observations: observations);
+  factory VisionResults.fromJsonList({
+    required VisionRequestType type,
+    required List<Json> data,
+  }) {
+    return VisionResults([
+      for (final json in data)
+        switch (type) {
+          VisionRequestType.recognizeText =>
+            VisionRecognizedTextObservation.fromJson(json),
+          VisionRequestType.detectRectangles =>
+            VisionRectangleObservation.fromJson(json),
+          VisionRequestType.trackObject =>
+            VisionDetectedObjectObservation.fromJson(json),
+          VisionRequestType.trackRectangle =>
+            VisionRectangleObservation.fromJson(json),
+          VisionRequestType.recognizeAnimals =>
+            VisionRecognizedObjectObservation.fromJson(json),
+          VisionRequestType.detectTextRectangles =>
+            VisionTextObservation.fromJson(json),
+          VisionRequestType.detectBarcodes =>
+            VisionBarcodeObservation.fromJson(json),
+        }
+    ]);
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      for (final type in VisionRequestType.values)
-        if (observations.containsKey(type))
-          type.key: type.toListMap(observations[type]!),
-    };
-  }
+  List<VisionDetectedObjectObservation> get ofTrackObjectRequest =>
+      observations.cast<VisionDetectedObjectObservation>();
 
-  @override
-  String toString() {
-    return toMap().toString();
-  }
+  List<VisionRectangleObservation> get ofTrackRectangleRequest =>
+      observations.cast<VisionRectangleObservation>();
 
-  bool has(VisionRequestType type) => observations.containsKey(type);
-  List<T>? get<T>(VisionRequestType type) => observations[type]?.cast<T>();
+  List<VisionBarcodeObservation> get ofDetectBarcodesRequest =>
+      observations.cast<VisionBarcodeObservation>();
 
-  List<VisionRecognizedTextObservation>? get recognizedText =>
-      get<VisionRecognizedTextObservation>(VisionRequestType.recognizeText);
-  List<VisionRectangleObservation>? get detectedRectangles =>
-      get<VisionRectangleObservation>(VisionRequestType.detectRectangles);
-  // List<VisionDetectedObjectObservation>? get trackObjects =>
-  //     get<VisionDetectedObjectObservation>(VisionRequestType.trackObject);
-  // List<VisionRectangleObservation>? get trackRectangles =>
-  //     get<VisionRectangleObservation>(VisionRequestType.trackRectangle);
-  List<VisionRecognizedObjectObservation>? get recognizedAnimals =>
-      get<VisionRecognizedObjectObservation>(
-          VisionRequestType.recognizeAnimals);
-  List<VisionTextObservation>? get detectedTextRectangles =>
-      get<VisionTextObservation>(VisionRequestType.detectTextRectangles);
-  List<VisionBarcodeObservation>? get detectedBarcodes =>
-      get<VisionBarcodeObservation>(VisionRequestType.detectBarcodes);
+  List<VisionRectangleObservation> get ofDetectRectanglesRequest =>
+      observations.cast<VisionRectangleObservation>();
+
+  List<VisionTextObservation> get ofDetectTextRectanglesRequest =>
+      observations.cast<VisionTextObservation>();
+
+  List<VisionRecognizedObjectObservation> get ofRecognizeAnimalsRequest =>
+      observations.cast<VisionRecognizedObjectObservation>();
+
+  List<VisionRecognizedTextObservation> get ofRecognizeTextRequest =>
+      observations.cast<VisionRecognizedTextObservation>();
 }

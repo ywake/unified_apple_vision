@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:unified_apple_vision/src/enum/barcode_composite_type.dart';
 import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
 import 'package:unified_apple_vision/src/model/request/detect_barcodes.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'rectangle.dart';
 
@@ -70,45 +70,18 @@ class VisionBarcodeObservation extends VisionRectangleObservation {
           isColorInverted: other.isColorInverted,
         );
 
-  factory VisionBarcodeObservation.fromMap(Map<String, dynamic> map) {
-    final payloadStringValue = map['payload_string_value'] as String?;
-    final payloadDataBase64 = map['payload_data'] as String?;
-    final payloadData =
-        payloadDataBase64 == null ? null : base64.decode(payloadDataBase64);
-    final supplementalPayloadString =
-        map['supplemental_payload_string'] as String?;
-    final supplementalPayloadDataBase64 =
-        map['supplemental_payload_data'] as String?;
-    final supplementalPayloadData = supplementalPayloadDataBase64 == null
-        ? null
-        : base64.decode(supplementalPayloadDataBase64);
-    final supplementalCompositeTypeStr =
-        map['supplemental_composite_type'] as String?;
-    final supplementalCompositeType = supplementalCompositeTypeStr == null
-        ? null
-        : VisionBarcodeCompositeType.values
-            .byName(supplementalCompositeTypeStr);
-    final isGS1DataCarrier = map['is_gs1_data_carrier'] as bool?;
-    final symbologyStr = map['symbology'] as String?;
-    final symbology = symbologyStr == null
-        ? null
-        : VisionBarcodeSymbology.values.byName(symbologyStr);
-    final isColorInverted = map['is_color_inverted'] as bool?;
-
-    if (symbology == null) {
-      throw Exception('Failed to parse VisionBarcodeObservation');
-    }
-
+  factory VisionBarcodeObservation.fromJson(Json json) {
     return VisionBarcodeObservation.withParent(
-      parent: VisionRectangleObservation.fromMap(map),
-      payloadStringValue: payloadStringValue,
-      payloadData: payloadData,
-      supplementalPayloadString: supplementalPayloadString,
-      supplementalPayloadData: supplementalPayloadData,
-      supplementalCompositeType: supplementalCompositeType,
-      isGS1DataCarrier: isGS1DataCarrier,
-      symbology: symbology,
-      isColorInverted: isColorInverted,
+      parent: VisionRectangleObservation.fromJson(json),
+      payloadStringValue: json.strOr('payload_string_value'),
+      payloadData: json.bytesOr('payload_data'),
+      supplementalPayloadString: json.strOr('supplemental_payload_string'),
+      supplementalPayloadData: json.bytesOr('supplemental_payload_data'),
+      supplementalCompositeType: json.enumOr(
+          'supplemental_composite_type', VisionBarcodeCompositeType.values),
+      isGS1DataCarrier: json.boolOr('is_gs1_data_carrier'),
+      symbology: json.enum_('symbology', VisionBarcodeSymbology.values),
+      isColorInverted: json.boolOr('is_color_inverted'),
     );
   }
 }

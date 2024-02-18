@@ -6,7 +6,7 @@ import 'package:unified_apple_vision/src/model/observation/rectangle.dart';
 ///
 /// An image analysis request that tracks the movement of a previously identified object across multiple images or video frames.
 ///
-/// Use this type of request to track the bounding boxes of rectangles throughout a sequence of images. Vision returns locations for rectangles found in all orientations and sizes.
+/// Use this type of request to track the bounding boxes of rectangles throughout a sequence of images. Vision returns locations for rectangles found in all orientations and sizes as [VisionRectangleObservation].
 ///
 class VisionTrackRectangleRequest extends VisionTrackingRequest {
   final VisionRectangleObservation target;
@@ -15,6 +15,7 @@ class VisionTrackRectangleRequest extends VisionTrackingRequest {
     required this.target,
     super.trackingLevel,
     super.isLastFrame,
+    required super.onResults,
   }) : super(type: VisionRequestType.trackRectangle);
 
   @override

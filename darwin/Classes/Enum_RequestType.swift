@@ -22,7 +22,7 @@ enum RequestType: String {
     case .trackRectangle:
       return TrackRectangleRequest(map)
     case .recognizeAnimals:
-      return RecognizeAnimalsRequest()
+      return RecognizeAnimalsRequest(map)
     case .detectTextRectangles:
       return DetectTextRectanglesRequest(map)
     case .detectBarcodes:

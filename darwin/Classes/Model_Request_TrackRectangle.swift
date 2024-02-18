@@ -1,15 +1,18 @@
 import Vision
 
-class TrackObjectRequest: AnalyzeRequest {
-  let inputObservation: VNDetectedObjectObservation
+class TrackRectangleRequest: AnalyzeRequest {
+  let requestId: String
+  let inputObservation: VNRectangleObservation
   let trackingLevel: VNRequestTrackingLevel?
   let isLastFrame: Bool?
 
   init(
-    inputObservation: VNDetectedObjectObservation,
+    requestId: String,
+    inputObservation: VNRectangleObservation,
     trackingLevel: VNRequestTrackingLevel?,
     isLastFrame: Bool?
   ) {
+    self.requestId = requestId
     self.inputObservation = inputObservation
     self.trackingLevel = trackingLevel
     self.isLastFrame = isLastFrame
@@ -17,12 +20,17 @@ class TrackObjectRequest: AnalyzeRequest {
 
   convenience init?(_ arg: [String: Any]?) {
     guard let arg = arg else { return nil }
+    guard let requestId = arg["request_id"] as? String else { return nil }
 
     let input = arg["input"] as? [String: Any]
-    let inputObservation = VNDetectedObjectObservation(dict: input)
+    guard let input = input else { return nil }
+
+    let inputObservation = VNRectangleObservation(dict: input)
     guard let inputObservation = inputObservation else { return nil }
+
     let level = arg["tracking_level"] as? String
     self.init(
+      requestId: requestId,
       inputObservation: inputObservation,
       trackingLevel: VNRequestTrackingLevel(level),
       isLastFrame: arg["is_last_frame"] as? Bool
@@ -30,7 +38,11 @@ class TrackObjectRequest: AnalyzeRequest {
   }
 
   func type() -> RequestType {
-    return .trackObject
+    return .trackRectangle
+  }
+
+  func id() -> String {
+    return self.requestId
   }
 
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
@@ -38,7 +50,7 @@ class TrackObjectRequest: AnalyzeRequest {
       return _makeRequest(handler)
     } else {
       Logger.error(
-        "TrackObjectRequest requires iOS 11.0+ or macOS 10.13+",
+        "TrackRectangleRequest requires iOS 11.0+ or macOS 10.13+",
         "\(self.type().rawValue)>makeRequest"
       )
       return nil
@@ -47,10 +59,10 @@ class TrackObjectRequest: AnalyzeRequest {
 
   @available(iOS 11.0, macOS 10.13, *)
   private func _makeRequest(_ handler: @escaping VNRequestCompletionHandler)
-    -> VNTrackObjectRequest
+    -> VNTrackRectangleRequest
   {
-    var request = VNTrackObjectRequest(
-      detectedObjectObservation: self.inputObservation,
+    var request = VNTrackRectangleRequest(
+      rectangleObservation: self.inputObservation,
       completionHandler: handler
     )
     if let trackingLevel = self.trackingLevel {
@@ -62,15 +74,8 @@ class TrackObjectRequest: AnalyzeRequest {
     return request
   }
 
-  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {
-    if #available(iOS 11.0, macOS 10.13, *) {
-      return TrackObjectResults(observations as! [VNDetectedObjectObservation])
-    } else {
-      Logger.error(
-        "TrackObjectRequest requires iOS 11.0+ or macOS 10.13+",
-        "\(self.type().rawValue)>makeResults"
-      )
-      return nil
-    }
+  func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
+    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    return result.map { ($0 as? VNRectangleObservation)?.toDict() ?? [:] }
   }
 }

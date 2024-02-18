@@ -1,51 +1,37 @@
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
-import 'package:unified_apple_vision_example/extension/vision_barcode_observation.dart';
-import 'package:unified_apple_vision_example/extension/vision_classification_observation.dart';
-import 'package:unified_apple_vision_example/extension/vision_recognized_text_observation.dart';
-import 'package:unified_apple_vision_example/extension/vision_rectangle_observation.dart';
-import 'package:unified_apple_vision_example/extension/vision_text_observation.dart';
+
+import 'extension/vision_barcode_observation.dart';
+import 'extension/vision_classification_observation.dart';
+import 'extension/vision_recognized_text_observation.dart';
+import 'extension/vision_rectangle_observation.dart';
+import 'extension/vision_text_observation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  runApp(const MaterialApp(
+    home: MyApp(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: CameraScreen(),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class CameraScreen extends StatefulWidget {
-  const CameraScreen({super.key});
-
-  @override
-  State<CameraScreen> createState() => _CameraScreenState();
-}
-
-class _CameraScreenState extends State<CameraScreen> {
+class _MyAppState extends State<MyApp> {
   final _unifiedAppleVision = UnifiedAppleVision()
-    ..analyzeMode = VisionAnalyzeMode.still
-    ..executionPriority = VisionExecutionPriority.veryHigh
-    ..xcodeLogLevel = VisionLogLevel.none;
+    ..executionPriority = VisionExecutionPriority.veryHigh;
 
-  VisionResults? results;
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final supportedLangs =
-        await _unifiedAppleVision.supportedRecognitionLanguages();
-    debugPrint('supportedLangs: $supportedLangs');
-  }
+  List<VisionRecognizedTextObservation>? recognizedTexts;
+  List<VisionRectangleObservation>? detectedRectangles;
+  List<VisionRecognizedObjectObservation>? recognizedAnimals;
+  List<VisionTextObservation>? detectedTextRectangles;
+  List<VisionBarcodeObservation>? detectedBarcodes;
 
   @override
   Widget build(BuildContext context) {
@@ -63,18 +49,24 @@ class _CameraScreenState extends State<CameraScreen> {
                     size: image.size,
                   );
                   try {
-                    final start = DateTime.now();
-                    _unifiedAppleVision.analyze(input, [
-                      // const VisionRecognizeTextRequest(),
-                      const VisionDetectTextRectanglesRequest(
-                        reportCharacterBoxes: true,
-                      ),
-                      const VisionDetectBarcodesRequest(),
-                    ]).then((res) {
-                      final end = DateTime.now();
-                      debugPrint('${end.difference(start).inMilliseconds}ms');
-                      setState(() => results = res);
-                    });
+                    _unifiedAppleVision.analyze(
+                      image: input,
+                      requests: [
+                        VisionRecognizeTextRequest(
+                          automaticallyDetectsLanguage: true,
+                          onResults: (results) {
+                            setState(() {
+                              recognizedTexts = results.ofRecognizeTextRequest;
+                            });
+                          },
+                        ),
+                        VisionDetectBarcodesRequest(
+                          onResults: (results) => setState(() {
+                            detectedBarcodes = results.ofDetectBarcodesRequest;
+                          }),
+                        ),
+                      ],
+                    );
                   } catch (e) {
                     debugPrint('$e');
                   }
@@ -83,16 +75,16 @@ class _CameraScreenState extends State<CameraScreen> {
             },
           ),
           ...[
-            if (results?.recognizedText != null)
-              for (final text in results!.recognizedText!) text.build(),
-            if (results?.detectedRectangles != null)
-              for (final rect in results!.detectedRectangles!) rect.build(),
-            if (results?.recognizedAnimals != null)
-              for (final animal in results!.recognizedAnimals!) animal.build(),
-            if (results?.detectedTextRectangles != null)
-              for (final text in results!.detectedTextRectangles!) text.build(),
-            if (results?.detectedBarcodes != null)
-              for (final barcode in results!.detectedBarcodes!) barcode.build(),
+            if (recognizedTexts != null)
+              for (final text in recognizedTexts!) text.build(),
+            if (detectedRectangles != null)
+              for (final rect in detectedRectangles!) rect.build(),
+            if (recognizedAnimals != null)
+              for (final animal in recognizedAnimals!) animal.build(),
+            if (detectedTextRectangles != null)
+              for (final text in detectedTextRectangles!) text.build(),
+            if (detectedBarcodes != null)
+              for (final barcode in detectedBarcodes!) barcode.build(),
           ]
         ],
       ),

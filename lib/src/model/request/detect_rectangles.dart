@@ -1,6 +1,7 @@
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/observation/rectangle.dart';
-import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
+
+import 'request.dart';
 
 /// **iOS 11.0+, macOS 10.13+**
 ///
@@ -12,7 +13,7 @@ import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
 ///
 /// To further configure or restrict the types of rectangles found, set properties on the request specifying a range of aspect ratios, sizes, and quadrature to5lerance.
 ///
-class VisionDetectRectanglesRequest extends AnalysisRequest {
+class VisionDetectRectanglesRequest extends VisionRequest {
   /// A double specifying the minimum aspect ratio of the rectangle to detect, defined as the shorter dimension over the longer dimension.
   /// The value should range from 0.0 to 1.0, inclusive. The default value is 0.5.
   final double? minAspectRatio;
@@ -47,6 +48,7 @@ class VisionDetectRectanglesRequest extends AnalysisRequest {
     this.minSize,
     this.minConfidence,
     this.maxObservations,
+    required super.onResults,
   })  : assert(
           minAspectRatio == null || 0 <= minAspectRatio && minAspectRatio <= 1,
           'The aspect ratio should range from 0 to 1, inclusive.',

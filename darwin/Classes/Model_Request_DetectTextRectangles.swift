@@ -1,25 +1,32 @@
 import Vision
 
 class DetectTextRectanglesRequest: AnalyzeRequest {
+  let requestId: String
   let reportCharacterBoxes: Bool?
 
   init(
+    requestId: String,
     reportCharacterBoxes: Bool?
   ) {
+    self.requestId = requestId
     self.reportCharacterBoxes = reportCharacterBoxes
   }
 
   convenience init?(_ arg: [String: Any]?) {
     guard let arg = arg else { return nil }
-
-    let reportCharacterBoxes = arg["reportCharacterBoxes"] as? Bool
+    guard let requestId = arg["request_id"] as? String else { return nil }
     self.init(
-      reportCharacterBoxes: reportCharacterBoxes
+      requestId: requestId,
+      reportCharacterBoxes: arg["reportCharacterBoxes"] as? Bool
     )
   }
 
   func type() -> RequestType {
     return .detectTextRectangles
+  }
+
+  func id() -> String {
+    return self.requestId
   }
 
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
@@ -45,17 +52,8 @@ class DetectTextRectanglesRequest: AnalyzeRequest {
     return request
   }
 
-  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {
-    if #available(iOS 11.0, macOS 10.13, *) {
-      return DetectTextRectanglesResults(
-        observations as! [VNTextObservation]
-      )
-    } else {
-      Logger.error(
-        "DetectTextRectanglesRequest requires iOS 11.0+ or macOS 10.13+",
-        "\(self.type().rawValue)>makeResults"
-      )
-      return nil
-    }
+  func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
+    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    return result.map { ($0 as? VNTextObservation)?.toDict() ?? [:] }
   }
 }

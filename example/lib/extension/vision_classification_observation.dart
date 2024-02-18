@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
-extension VisionRecognizedObjectObservationX
+extension VisionRecognizedObjectObservationEx
     on VisionRecognizedObjectObservation {
   Widget build() {
     return Positioned.fill(

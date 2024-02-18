@@ -1,4 +1,4 @@
-import 'package:unified_apple_vision/src/extension/map.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'classification.dart';
 import 'detected_object.dart';
@@ -23,18 +23,10 @@ class VisionRecognizedObjectObservation
           labels: other.labels,
         );
 
-  factory VisionRecognizedObjectObservation.fromMap(Map<String, dynamic> map) {
-    final labels = (map['labels'] as List?)?.cast<Map>();
-    if (labels == null) {
-      throw Exception('Failed to parse VisionRecognizedObjectObservation');
-    }
-
+  factory VisionRecognizedObjectObservation.fromJson(Json json) {
     return VisionRecognizedObjectObservation.withParent(
-      parent: VisionDetectedObjectObservation.fromMap(map),
-      labels: [
-        for (final label in labels)
-          VisionClassificationObservation.fromMap(label.castEx()),
-      ],
+      parent: VisionDetectedObjectObservation.fromJson(json),
+      labels: json.objList('labels', VisionClassificationObservation.fromJson),
     );
   }
 

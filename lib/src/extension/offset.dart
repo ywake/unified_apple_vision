@@ -1,15 +1,12 @@
 import 'package:flutter/services.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 extension OffsetEx on Offset {
-  static Offset fromMap(Map<String, dynamic> map) {
-    final x = map['x'] as double?;
-    final y = map['y'] as double?;
-
-    if (x == null || y == null) {
-      throw Exception('Failed to parse Offset');
-    }
-
-    return Offset(x, y);
+  static Offset fromJson(Json json) {
+    return Offset(
+      json.double_('x'),
+      json.double_('y'),
+    );
   }
 
   Map<String, dynamic> toMap() {

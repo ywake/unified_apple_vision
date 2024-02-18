@@ -1,6 +1,7 @@
 import Vision
 
 class RecognizeTextRequest: AnalyzeRequest {
+  let requestId: String
   let minimumTextHeight: Float?
   let recognitionLevel: VNRequestTextRecognitionLevel
   let automaticallyDetectsLanguage: Bool?
@@ -10,6 +11,7 @@ class RecognizeTextRequest: AnalyzeRequest {
   let maxCandidates: Int
 
   init(
+    requestId: String,
     minimumTextHeight: Float?,
     recognitionLevel: VNRequestTextRecognitionLevel,
     automaticallyDetectsLanguage: Bool?,
@@ -18,6 +20,7 @@ class RecognizeTextRequest: AnalyzeRequest {
     customWords: [String]?,
     maxCandidates: Int?
   ) {
+    self.requestId = requestId
     self.minimumTextHeight = minimumTextHeight
     self.recognitionLevel = recognitionLevel
     self.automaticallyDetectsLanguage = automaticallyDetectsLanguage
@@ -29,9 +32,11 @@ class RecognizeTextRequest: AnalyzeRequest {
 
   convenience init?(_ arg: [String: Any]?) {
     guard let arg = arg else { return nil }
+    guard let requestId = arg["request_id"] as? String else { return nil }
 
     let level = arg["recognition_level"] as? String ?? "accurate"
     self.init(
+      requestId: requestId,
       minimumTextHeight: arg["minimum_text_height"] as? Float,
       recognitionLevel: VNRequestTextRecognitionLevel(level),
       automaticallyDetectsLanguage: arg["automatically_detects_language"] as? Bool,
@@ -44,6 +49,10 @@ class RecognizeTextRequest: AnalyzeRequest {
 
   func type() -> RequestType {
     return .recognizeText
+  }
+
+  func id() -> String {
+    return self.requestId
   }
 
   func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
@@ -86,18 +95,8 @@ class RecognizeTextRequest: AnalyzeRequest {
     return request
   }
 
-  func makeResults(_ observations: [VNObservation]) -> AnalyzeResults? {
-    if #available(iOS 13.0, macOS 10.15, *) {
-      return RecognizeTextResults(
-        observations as! [VNRecognizedTextObservation],
-        maxCandidates: self.maxCandidates
-      )
-    } else {
-      Logger.error(
-        "RecognizeTextRequest requires iOS 13.0+ or macOS 10.15+",
-        "\(self.type().rawValue)>makeResults"
-      )
-      return nil
-    }
+  func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
+    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    return result.map { ($0 as? VNRecognizedTextObservation)?.toDict(self.maxCandidates) ?? [:] }
   }
 }

@@ -1,5 +1,5 @@
-import 'package:unified_apple_vision/src/extension/map.dart';
 import 'package:unified_apple_vision/src/model/request/detect_text_rectangles.dart';
+import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'rectangle.dart';
 
@@ -23,17 +23,11 @@ class VisionTextObservation extends VisionRectangleObservation {
           characterBoxes: other.characterBoxes,
         );
 
-  factory VisionTextObservation.fromMap(Map<String, dynamic> map) {
-    final characterBoxes = (map['characterBoxes'] as List?)?.cast<Map>();
-
+  factory VisionTextObservation.fromJson(Json json) {
     return VisionTextObservation.withParent(
-      parent: VisionRectangleObservation.fromMap(map),
-      characterBoxes: characterBoxes == null
-          ? null
-          : [
-              for (final characterBox in characterBoxes)
-                VisionRectangleObservation.fromMap(characterBox.castEx()),
-            ],
+      parent: VisionRectangleObservation.fromJson(json),
+      characterBoxes: json.objListOr(
+          'character_boxes', VisionRectangleObservation.fromJson),
     );
   }
 }
