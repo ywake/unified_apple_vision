@@ -1,5 +1,6 @@
 import Vision
 
+@available(iOS 11.0, macOS 10.13, *)
 extension VNRectangleObservation {
   @objc convenience init(dict: [String: Any]) throws {
     let json = Json(dict)
@@ -17,11 +18,12 @@ extension VNRectangleObservation {
   }
 
   @objc override func toDict() -> [String: Any] {
+    // Convert the lower left origin to the upper left origin
     return [
-      "bottom_left": self.bottomLeft.toDict(),
-      "bottom_right": self.bottomRight.toDict(),
-      "top_left": self.topLeft.toDict(),
-      "top_right": self.topRight.toDict(),
+      "bottom_left": self.bottomLeft.reversedY().toDict(),
+      "bottom_right": self.bottomRight.reversedY().toDict(),
+      "top_left": self.topLeft.reversedY().toDict(),
+      "top_right": self.topRight.reversedY().toDict(),
     ].merging(super.toDict()) { (old, _) in old }
   }
 }

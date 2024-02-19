@@ -6,6 +6,8 @@ import 'package:unified_apple_vision/src/utility/json.dart';
 import 'detected_object.dart';
 
 /// An object that represents the four vertices of a detected rectangle.
+///
+/// The Offsets are normalized to the dimensions of the processed image, with the origin at the upper-left corner of the image.
 class VisionRectangleObservation extends VisionDetectedObjectObservation {
   /// The coordinates of the upper-left corner of the observation bounding box.
   final Offset topLeft;

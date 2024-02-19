@@ -22,4 +22,13 @@ extension RectEx on Rect {
       'size': size.toMap(),
     };
   }
+
+  Rect scale(Size size) {
+    return Rect.fromLTWH(
+      left * size.width,
+      top * size.height,
+      width * size.width,
+      height * size.height,
+    );
+  }
 }

@@ -10,6 +10,11 @@ class Json {
     return Json(json);
   }
 
+  @override
+  String toString() {
+    return data.toString();
+  }
+
   /// Generic value fetcher that throws a detailed exception if a required key is missing.
   T? _value<T>(String key, bool require) {
     final value = data[key] as T?;

@@ -33,23 +33,23 @@ class VisionResults {
   }
 
   List<VisionDetectedObjectObservation> get ofTrackObjectRequest =>
-      observations.cast<VisionDetectedObjectObservation>();
+      observations.whereType<VisionDetectedObjectObservation>().toList();
 
   List<VisionRectangleObservation> get ofTrackRectangleRequest =>
-      observations.cast<VisionRectangleObservation>();
+      observations.whereType<VisionRectangleObservation>().toList();
 
   List<VisionBarcodeObservation> get ofDetectBarcodesRequest =>
-      observations.cast<VisionBarcodeObservation>();
+      observations.whereType<VisionBarcodeObservation>().toList();
 
   List<VisionRectangleObservation> get ofDetectRectanglesRequest =>
-      observations.cast<VisionRectangleObservation>();
+      observations.whereType<VisionRectangleObservation>().toList();
 
   List<VisionTextObservation> get ofDetectTextRectanglesRequest =>
-      observations.cast<VisionTextObservation>();
+      observations.whereType<VisionTextObservation>().toList();
 
   List<VisionRecognizedObjectObservation> get ofRecognizeAnimalsRequest =>
-      observations.cast<VisionRecognizedObjectObservation>();
+      observations.whereType<VisionRecognizedObjectObservation>().toList();
 
   List<VisionRecognizedTextObservation> get ofRecognizeTextRequest =>
-      observations.cast<VisionRecognizedTextObservation>();
+      observations.whereType<VisionRecognizedTextObservation>().toList();
 }

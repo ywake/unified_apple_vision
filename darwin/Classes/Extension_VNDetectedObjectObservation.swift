@@ -1,6 +1,7 @@
 import Foundation
 import Vision
 
+@available(iOS 11.0, macOS 10.13, *)
 extension VNDetectedObjectObservation {
   // NOTE: These cannot be overridden by VNRectangleObservation.
   // convenience init(json: Json) throws {}
@@ -19,8 +20,7 @@ extension VNDetectedObjectObservation {
     // Convert the lower left origin to the upper left origin
     let newOrigin = CGPoint(
       x: self.boundingBox.origin.x,
-      y: self.boundingBox.origin.y + self.boundingBox.size.height
-        // y: 1 - self.boundingBox.origin.y - self.boundingBox.size.height
+      y: 1 - self.boundingBox.origin.y - self.boundingBox.size.height
     )
     let boundingBox = CGRect(
       origin: newOrigin,

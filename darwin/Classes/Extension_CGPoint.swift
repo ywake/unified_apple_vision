@@ -13,6 +13,10 @@ extension CGPoint {
     self.init(x: CGFloat(x), y: CGFloat(y))
   }
 
+  func reversedY() -> CGPoint {
+    return CGPoint(x: self.x, y: 1 - self.y)
+  }
+
   func toDict() -> [String: Any] {
     return [
       "x": self.x,

@@ -28,7 +28,7 @@ class AnalyzeInput {
       image: try InputImage(json: json.json("image")),
       mode: RequestMode(mode),
       requests: try json.jsonArray("requests").compactMap { json -> AnalyzeRequest? in
-        Logger.debug("Comming Request: \(json)", "AnalyzeInput")
+        Logger.debug("Comming Request: \(json.dictData)", "AnalyzeInput")
         let requestType = RequestType(try json.str("request_type"))
         return try requestType?.jsonToRequest(json)
       }

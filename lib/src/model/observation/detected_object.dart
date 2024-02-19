@@ -10,6 +10,9 @@ import 'observation.dart';
 ///
 /// This class is the observation type that [VisionTrackObjectRequest] generates. It represents an object that the Vision request detects and tracks.
 class VisionDetectedObjectObservation extends VisionObservation {
+  /// The bounding box of the object that the request detects.
+  ///
+  /// The system normalizes the coordinates to the dimensions of the processed image, with the origin at the upper-left corner of the image.
   final Rect boundingBox;
 
   VisionDetectedObjectObservation.withParent({
@@ -52,5 +55,9 @@ class VisionDetectedObjectObservation extends VisionObservation {
         confidence: confidence,
       ),
     );
+  }
+
+  Rect scaledBoundingBox(Size size) {
+    return boundingBox.scale(size);
   }
 }

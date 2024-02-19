@@ -4,23 +4,12 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'vision_observation.dart';
 
 extension VisionRectangleEx on VisionRectangleObservation {
-  VisionRectangleObservation reverse(Offset offset) {
-    abs(Offset offset) => Offset(offset.dx.abs(), offset.dy.abs());
-
-    return copyWith(
-      topLeft: abs(offset - topLeft),
-      topRight: abs(offset - topRight),
-      bottomLeft: abs(offset - bottomLeft),
-      bottomRight: abs(offset - bottomRight),
-    );
-  }
-
   void drawRect({
     required Canvas canvas,
     required Size size,
     Color color = Colors.black,
   }) {
-    final rect = scale(size).reverse(Offset(0, size.height));
+    final rect = scale(size);
     final path = Path()
       ..moveTo(rect.topLeft.dx, rect.topLeft.dy)
       ..lineTo(rect.topRight.dx, rect.topRight.dy)
@@ -34,7 +23,28 @@ extension VisionRectangleEx on VisionRectangleObservation {
     canvas.drawPath(path, paint);
   }
 
-  Widget build() => builder(_Painter(this));
+  void drawText({
+    required String text,
+    required Canvas canvas,
+    required Size size,
+    Color color = Colors.white,
+    TextStyle style = const TextStyle(fontSize: 10),
+  }) {
+    final scaledRect = scale(size);
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: style.copyWith(color: color),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(
+        minWidth: 0,
+        maxWidth: size.width,
+      );
+    textPainter.paint(canvas, scaledRect.topLeft);
+  }
+
+  Widget build() => customPaint(_Painter(this));
 }
 
 class _Painter extends CustomPainter {

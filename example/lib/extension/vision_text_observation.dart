@@ -5,7 +5,7 @@ import 'vision_observation.dart';
 import 'vision_rectangle_observation.dart';
 
 extension VisionTextObservationEx on VisionTextObservation {
-  Widget build() => builder(_Painter(this));
+  Widget build() => customPaint(_Painter(this));
 }
 
 class _Painter extends CustomPainter {

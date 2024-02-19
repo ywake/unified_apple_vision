@@ -9,6 +9,7 @@ extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
     required Size size,
     Color color = Colors.black,
   }) {
+    final boundingBox = scaledBoundingBox(size);
     final path = Path()
       ..moveTo(boundingBox.topLeft.dx, boundingBox.topLeft.dy)
       ..lineTo(boundingBox.topRight.dx, boundingBox.topRight.dy)
@@ -22,7 +23,28 @@ extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
     canvas.drawPath(path, paint);
   }
 
-  Widget build() => builder(_Painter(this));
+  void drawText({
+    required String text,
+    required Canvas canvas,
+    required Size size,
+    Color color = Colors.white,
+    TextStyle style = const TextStyle(fontSize: 10),
+  }) {
+    final boundingBox = scaledBoundingBox(size);
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: style.copyWith(color: color),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(
+        minWidth: 0,
+        maxWidth: size.width,
+      );
+    textPainter.paint(canvas, boundingBox.topLeft);
+  }
+
+  Widget build() => customPaint(_Painter(this));
 }
 
 class _Painter extends CustomPainter {

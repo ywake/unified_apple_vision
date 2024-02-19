@@ -1,5 +1,6 @@
 import Vision
 
+@available(iOS 11.0, macOS 10.13, *)
 extension VNTextObservation {
   @objc override func toDict() -> [String: Any] {
     return [
