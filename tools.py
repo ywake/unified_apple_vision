@@ -15,12 +15,20 @@ def main():
         '--ios', default='11.0', help='Require version of iOS. e.g. "11.0"')
     parser.add_argument(
         '--macos', default='10.13', help='Require version of macOS. e.g. "10.13"')
+    parser.add_argument(
+        '--extends', help='(for observation only) Name of the parent class. e.g. "VNDetectedObjectObservation"'
+    )
     # Command
     args = parser.parse_args()
     if args.command == 'request':
         request_creation(args.name, args.ios, args.macos)
     elif args.command == 'observation':
-        observation_creation(args.name, args.ios, args.macos)
+        if args.extends:
+            observation_creation(args.name, args.ios, args.macos, args.extends)
+        else:
+            print('Missing `--extends` argument')
+            return
+    print('Done! 🎉')
 
 
 def request_creation(class_name: str, ios: str, macos: str):
@@ -30,33 +38,44 @@ def request_creation(class_name: str, ios: str, macos: str):
         return
     # Removes 'VN' prefix and 'Request' suffix
     request_pascal = class_name[2:-7]
+    dart_path = f'src/model/request/{pascal_to_snake_case(request_pascal)}.dart'
     create_file(
-        f'lib/src/model/request/{pascal_to_snake_case(request_pascal)}.dart',
-        dart_request_template(request_pascal)
+        f'lib/{dart_path}',
+        dart_request_template(request_pascal, ios, macos)
     )
+    append_export(dart_path)
     create_file(
         f'darwin/Classes/Model_Request_{request_pascal}.swift',
         swift_request_template(request_pascal, ios, macos)
     )
-    print('Files created')
+    append_to_swift_enum(request_pascal)
 
 
-def observation_creation(class_name: str, ios: str, macos: str):
+def observation_creation(class_name: str, ios: str, macos: str, extends: str):
     # Extract the meaningful part of the class name
     if not class_name.startswith('VN') or not class_name.endswith('Observation'):
         print('Invalid class name. e.g. "VNRectangleObservation"')
         return
+    if not extends.startswith('VN') or not extends.endswith('Observation'):
+        print('Invalid parent class name. e.g. "VNDetectedObjectObservation"')
+        return
     # Removes 'VN' prefix and 'Observation' suffix
     observation_pascal = class_name[2:-11]
+    extends_pascal = extends[2:-11]
+    dart_path = f'src/model/observation/{pascal_to_snake_case(observation_pascal)}.dart'
     create_file(
-        f'lib/src/model/observation/{pascal_to_snake_case(observation_pascal)}.dart',
-        dart_observation_template(observation_pascal)
+        f'lib/{dart_path}',
+        dart_observation_template(observation_pascal, extends_pascal)
+    )
+    append_export(dart_path)
+    create_file(
+        f'example/lib/extension/vision_{pascal_to_snake_case(observation_pascal)}_observation.dart',
+        dart_observation_extension_template(observation_pascal)
     )
     create_file(
         f'darwin/Classes/Extension_{class_name}.swift',
         swift_observation_template(class_name, ios, macos)
     )
-    print('Files created')
 
 
 def create_file(path: str, content: str):
@@ -64,6 +83,9 @@ def create_file(path: str, content: str):
     file_path.parent.mkdir(parents=True, exist_ok=True)
     if not file_path.exists():
         file_path.write_text(content)
+        print(f'File created: {file_path}')
+    else:
+        print(f'File already exists: {file_path}')
 
 
 def pascal_to_snake_case(name: str):
@@ -74,15 +96,73 @@ def pascal_to_camel_case(name: str):
     return name[0].lower() + name[1:]
 
 
+def append_export(file_path: str):
+    lib_path = 'lib/unified_apple_vision.dart'
+    with open(lib_path, 'r') as file:
+        lines = file.readlines()
+    if f"export '{file_path}';\n" in lines:
+        print(f'Already exported: {file_path}')
+        return
+    with open(lib_path, 'a') as file:
+        file.write(f"export '{file_path}';\n")
+    print(f'Exported: {file_path}')
+
+
+def append_to_swift_enum(request_pascal: str):
+    swift_enum_path = 'darwin/Classes/Enum_RequestType.swift'
+    with open(swift_enum_path, 'r') as file:
+        lines = file.readlines()
+    states = [
+        ModeState("start", "enum"),
+        ModeState("case1", "  case"),
+        ModeState("between", "\n"),
+        ModeState("case2", "    case "),
+        ModeState("end", "    }")
+    ]
+    current_states = 0
+    def isLastState(): return current_states + 1 >= len(states)
+    def isNewStateComing(
+        line: str): return line.startswith(states[current_states + 1].startSign)
+    new_lines = []
+    define_enum_value = f'  case {pascal_to_camel_case(request_pascal)} = "{pascal_to_snake_case(request_pascal)}"\n'
+    case_this = f'    case .{pascal_to_camel_case(request_pascal)}:\n'
+    return_request = f'      return try {request_pascal}Request(json: json)\n'
+    for line in lines:
+        # state machine
+        if not isLastState() and isNewStateComing(line):
+            if states[current_states].mode == "case1":  # last of the case1
+                new_lines.append(define_enum_value)
+            elif states[current_states].mode == "case2":  # last of the case2
+                new_lines.append(case_this)
+                new_lines.append(return_request)
+            current_states += 1  # increment the state
+        new_lines.append(line)
+    # write the new lines to the file
+    with open(swift_enum_path, 'w') as file:
+        file.writelines(new_lines)
+    if new_lines.__len__() == lines.__len__() + 3:
+        print(f'Appended to: {swift_enum_path}')
+    else:
+        print(f'Failed to append to: {swift_enum_path}')
+
+
+class ModeState:
+    def __init__(self, mode: str, startSign: str):
+        self.mode = mode
+        self.startSign = startSign
+
+
 def dart_request_template(request_pascal: str, ios: str, macos: str) -> str:
     return f"""
 import 'package:unified_apple_vision/src/enum/request_type.dart';
-import 'package:unified_apple_vision/src/model/request/analysis_request.dart';
+
+import 'request.dart';
 
 /// **iOS {ios}+, macOS {macos}+**
-class Vision{request_pascal}Request extends AnalysisRequest {{
-  const Vision{request_pascal}Request()
-    : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
+class Vision{request_pascal}Request extends VisionRequest {{
+  const Vision{request_pascal}Request({{
+    required super.onResults,
+  }}) : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
 
   @override
   Map<String, dynamic> toMap() {{
@@ -102,12 +182,12 @@ class {request_pascal}Request: AnalyzeRequest {{
   init(
     requestId: String
   ) {{
-    self.requestId = requestId 
+    self.requestId = requestId
   }}
 
-  convenience init(json: Json) {{
+  convenience init(json: Json) throws {{
     self.init(
-      requestId: json.str("request_id")
+      requestId: try json.str("request_id")
     )
   }}
 
@@ -141,17 +221,21 @@ class {request_pascal}Request: AnalyzeRequest {{
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {{
     Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
-    return result.map {{ ($0 as? VN_Observation).toDict() ?? [:] }}
+    return result.map {{ ($0 as? VN/* FIXME */Observation)?.toDict() ?? [:] }}
   }}
 }}
 """.strip()
 
 
-def dart_observation_template(observation_pascal: str) -> str:
+def dart_observation_template(observation_pascal: str, extends_pascal: str) -> str:
     return f"""
-class Vision{observation_pascal}Observation extends VisionObservation {{
+import 'package:unified_apple_vision/src/utility/json.dart';
+
+import '{pascal_to_snake_case(extends_pascal)}.dart';
+
+class Vision{observation_pascal}Observation extends Vision{extends_pascal}Observation {{
   Vision{observation_pascal}Observation.withParent({{
-    required VisionObservation parent,
+    required Vision{extends_pascal}Observation parent,
   }}) : super.clone(parent);
 
   Vision{observation_pascal}Observation.clone(Vision{observation_pascal}Observation other)
@@ -159,8 +243,36 @@ class Vision{observation_pascal}Observation extends VisionObservation {{
 
   factory Vision{observation_pascal}Observation.fromJson(Json json) {{
     return Vision{observation_pascal}Observation.withParent(
-      parent: VisionObservation.fromJson(json),
+      parent: Vision{extends_pascal}Observation.fromJson(json),
     );
+  }}
+}}
+""".strip()
+
+
+def dart_observation_extension_template(observation_pascal: str) -> str:
+    return f"""
+import 'package:flutter/material.dart';
+import 'package:unified_apple_vision/unified_apple_vision.dart';
+
+import 'vision_observation.dart';
+
+extension Vision{observation_pascal}ObservationEx on Vision{observation_pascal}Observation {{
+  Widget build() => customPaint(_Painter(this));
+}}
+
+class _Painter extends CustomPainter {{
+  final Vision{observation_pascal}Observation observation;
+
+  _Painter(this.observation);
+
+  @override
+  void paint(Canvas canvas, Size size) {{
+  }}
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {{
+    return false;
   }}
 }}
 """.strip()
@@ -170,6 +282,7 @@ def swift_observation_template(class_name: str, ios: str, macos: str) -> str:
     return f"""
 import Vision
 
+@available(iOS {ios}, macOS {macos}, *)
 extension {class_name} {{
   @objc override func toDict() -> [String: Any] {{
     return [
