@@ -30,20 +30,17 @@ class RecognizeTextRequest: AnalyzeRequest {
     self.maxCandidates = maxCandidates ?? 1
   }
 
-  convenience init?(_ arg: [String: Any]?) {
-    guard let arg = arg else { return nil }
-    guard let requestId = arg["request_id"] as? String else { return nil }
-
-    let level = arg["recognition_level"] as? String ?? "accurate"
+  convenience init(json: Json) throws {
+    let level = try json.strOr("recognition_level") ?? "accurate"
     self.init(
-      requestId: requestId,
-      minimumTextHeight: arg["minimum_text_height"] as? Float,
+      requestId: try json.str("request_id"),
+      minimumTextHeight: json.floatOr("minimum_text_height"),
       recognitionLevel: VNRequestTextRecognitionLevel(level),
-      automaticallyDetectsLanguage: arg["automatically_detects_language"] as? Bool,
-      recognitionLanguages: arg["recognition_languages"] as? [String],
-      usesLanguageCorrection: arg["uses_language_correction"] as? Bool,
-      customWords: arg["custom_words"] as? [String],
-      maxCandidates: arg["max_candidates"] as? Int
+      automaticallyDetectsLanguage: json.boolOr("automatically_detects_language"),
+      recognitionLanguages: json.arrayOr("recognition_languages"),
+      usesLanguageCorrection: json.boolOr("uses_language_correction"),
+      customWords: json.arrayOr("custom_words"),
+      maxCandidates: json.intOr("max_candidates")
     )
   }
 

@@ -1,21 +1,18 @@
 import Vision
 
 extension VNRectangleObservation {
-  @objc convenience init?(dict: [String: Any]?) {
-    guard let dict = dict else { return nil }
-    guard
-      let bottomLeft = dict["bottom_left"] as? [String: CGFloat],
-      let bottomRight = dict["bottom_right"] as? [String: CGFloat],
-      let topLeft = dict["top_left"] as? [String: CGFloat],
-      let topRight = dict["top_right"] as? [String: CGFloat]
-    else { return nil }
-
+  @objc convenience init(dict: [String: Any]) throws {
+    let json = Json(dict)
+    let bottomLeft = try json.json("bottom_left")
+    let bottomRight = try json.json("bottom_right")
+    let topLeft = try json.json("top_left")
+    let topRight = try json.json("top_right")
     self.init(
       requestRevision: VNDetectRectanglesRequestRevision1,
-      topLeft: CGPoint(x: topLeft["x"]!, y: topLeft["y"]!),
-      bottomLeft: CGPoint(x: bottomLeft["x"]!, y: bottomLeft["y"]!),
-      bottomRight: CGPoint(x: bottomRight["x"]!, y: bottomRight["y"]!),
-      topRight: CGPoint(x: topRight["x"]!, y: topRight["y"]!)
+      topLeft: try CGPoint(json: topLeft),
+      bottomLeft: try CGPoint(json: bottomLeft),
+      bottomRight: try CGPoint(json: bottomRight),
+      topRight: try CGPoint(json: topRight)
     )
   }
 

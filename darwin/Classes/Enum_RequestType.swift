@@ -11,22 +11,22 @@ enum RequestType: String {
     self.init(rawValue: string)
   }
 
-  func mapToRequest(_ map: [String: Any]) -> AnalyzeRequest? {
+  func jsonToRequest(_ json: Json) throws -> AnalyzeRequest {
     switch self {
     case .recognizeText:
-      return RecognizeTextRequest(map)
+      return try RecognizeTextRequest(json: json)
     case .detectRectangles:
-      return DetectRectanglesRequest(map)
+      return try DetectRectanglesRequest(json: json)
     case .trackObject:
-      return TrackObjectRequest(map)
+      return try TrackObjectRequest(json: json)
     case .trackRectangle:
-      return TrackRectangleRequest(map)
+      return try TrackRectangleRequest(json: json)
     case .recognizeAnimals:
-      return RecognizeAnimalsRequest(map)
+      return try RecognizeAnimalsRequest(json: json)
     case .detectTextRectangles:
-      return DetectTextRectanglesRequest(map)
+      return try DetectTextRectanglesRequest(json: json)
     case .detectBarcodes:
-      return DetectBarcodesRequest(map)
+      return try DetectBarcodesRequest(json: json)
     }
   }
 }

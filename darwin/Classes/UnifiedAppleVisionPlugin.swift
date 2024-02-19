@@ -53,7 +53,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     DispatchQueue.global(qos: qos).async {
       var output: Any?
       do {
-        let input = try AnalyzeInput(arg)
+        let input = try AnalyzeInput(json: Json(arg))
         try self.analyze(input) { results in
           let json = try! JSONSerialization.data(withJSONObject: results, options: [])
           let data = String(data: json, encoding: .utf8)!

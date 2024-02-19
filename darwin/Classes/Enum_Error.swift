@@ -9,6 +9,8 @@ enum PluginError: Error {
   case analyzeError(msg: String)
   case unsupportedPlatform
   case unexpectedError(msg: String = "Unexpected Errors")
+  case missingRequiredKey(String)
+  case invalidValue(String)
 
   func toFlutterError() -> FlutterError {
     switch self {
@@ -34,6 +36,18 @@ enum PluginError: Error {
       return FlutterError(
         code: "UNEXPECTED_ERROR",
         message: msg,
+        details: nil
+      )
+    case .missingRequiredKey(let key):
+      return FlutterError(
+        code: "MISSING_REQUIRED_KEY",
+        message: key,
+        details: nil
+      )
+    case .invalidValue(let key):
+      return FlutterError(
+        code: "INVALID_VALUE",
+        message: key,
         details: nil
       )
     }

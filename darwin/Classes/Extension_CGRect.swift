@@ -17,6 +17,15 @@ extension CGRect {
     self.init(origin: origin, size: size)
   }
 
+  init(json: Json) throws {
+    let origin = try json.json("origin")
+    let size = try json.json("size")
+    self.init(
+      origin: try CGPoint(json: origin),
+      size: try CGSize(json: size)
+    )
+  }
+
   func toDict() -> [String: Any] {
     return [
       "origin": origin.toDict(),

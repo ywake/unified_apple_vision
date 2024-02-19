@@ -15,28 +15,19 @@ class InputImage {
     self.orientation = orientation
   }
 
-  convenience init(_ arg: [String: Any]?) throws {
+  convenience init(json: Json) throws {
     let funcName = "InputImage.init"
-    guard let arg = arg else {
-      Logger.error("arg[\"image\"] is nil", funcName)
-      throw PluginError.invalidImageData
-    }
+    let bytes = try json.bytes("data")
+    let width = try json.int("width")
+    let height = try json.int("height")
+    let orientation = json.strOr("orientation") ?? "down"
 
-    let bytes = arg["data"] as? FlutterStandardTypedData
-    let width = arg["width"] as? Int ?? 0
-    let height = arg["height"] as? Int ?? 0
-    let orientation = arg["orientation"] as? String ?? "down"
-
-    guard let bytes = bytes else {
-      Logger.error("bytes is nil", funcName)
-      throw PluginError.invalidImageData
-    }
     let data = Data(bytes.data)
+    let size = CGSize(width: width, height: height)
     if data.count != height * width * 4 {
       Logger.error("invalid data size", funcName)
       throw PluginError.invalidImageData
     }
-    let size = CGSize(width: width, height: height)
     let ciImage = CIImage(
       bitmapData: data,
       bytesPerRow: width * 4,
@@ -46,7 +37,7 @@ class InputImage {
     )
     self.init(
       ciImage: ciImage,
-      orientation: Orientation(orientation).toCGImagePropertyOrientation()
+      orientation: CGImagePropertyOrientation(orientation)
     )
   }
 }

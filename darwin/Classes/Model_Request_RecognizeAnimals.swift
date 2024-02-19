@@ -7,10 +7,8 @@ class RecognizeAnimalsRequest: AnalyzeRequest {
     self.requestId = requestId
   }
 
-  convenience init?(_ arg: [String: Any]?) {
-    guard let arg = arg else { return nil }
-    guard let requestId = arg["request_id"] as? String else { return nil }
-    self.init(requestId: requestId)
+  convenience init(json: Json) throws {
+    self.init(requestId: try json.str("request_id"))
   }
 
   func type() -> RequestType {

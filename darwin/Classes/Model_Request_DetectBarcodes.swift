@@ -15,16 +15,11 @@ class DetectBarcodesRequest: AnalyzeRequest {
     self.coalesceCompositeSymbologies = coalesceCompositeSymbologies
   }
 
-  convenience init?(_ arg: [String: Any]?) {
-    guard let arg = arg else { return nil }
-    guard let requestId = arg["request_id"] as? String else { return nil }
-
-    let symbologiesStr = arg["symbologies"] as? [String]
-    let symbologies = symbologiesStr?.compactMap { VNBarcodeSymbology(rawValue: $0) }
+  convenience init(json: Json) throws {
     self.init(
-      requestId: requestId,
-      symbologies: symbologies,
-      coalesceCompositeSymbologies: arg["coalesceCompositeSymbologies"] as? Bool
+      requestId: try json.str("request_id"),
+      symbologies: json.arrayOr("symbologies")?.compactMap { VNBarcodeSymbology(rawValue: $0) },
+      coalesceCompositeSymbologies: json.boolOr("coalesceCompositeSymbologies")
     )
   }
 

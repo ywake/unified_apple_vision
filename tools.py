@@ -105,9 +105,10 @@ class {request_pascal}Request: AnalyzeRequest {{
     self.requestId = requestId 
   }}
 
-  convenience init?(_ arg: [String: Any]?) {{
-    guard let arg = arg else {{ return nil }}
-    self.init()
+  convenience init(json: Json) {{
+    self.init(
+      requestId: json.str("request_id")
+    )
   }}
 
   func type() -> RequestType {{

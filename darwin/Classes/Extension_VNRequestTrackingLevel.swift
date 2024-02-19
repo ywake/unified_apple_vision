@@ -1,7 +1,7 @@
 import Vision
 
 extension VNRequestTrackingLevel {
-  init(_ value: String?) {
+  init(_ value: String) {
     switch value {
     case "fast":
       self = .fast

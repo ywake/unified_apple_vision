@@ -18,19 +18,14 @@ class TrackObjectRequest: AnalyzeRequest {
     self.isLastFrame = isLastFrame
   }
 
-  convenience init?(_ arg: [String: Any]?) {
-    guard let arg = arg else { return nil }
-    guard let requestId = arg["request_id"] as? String else { return nil }
-
-    let input = arg["input"] as? [String: Any]
-    let inputObservation = VNDetectedObjectObservation(dict: input)
-    guard let inputObservation = inputObservation else { return nil }
-    let level = arg["tracking_level"] as? String
+  convenience init(json: Json) throws {
+    let level = try json.strOr("tracking_level") ?? ""
+    let input = try json.json("input")
     self.init(
-      requestId: requestId,
-      inputObservation: inputObservation,
+      requestId: try json.str("request_id"),
+      inputObservation: try VNDetectedObjectObservation(dict: input.dictData),
       trackingLevel: VNRequestTrackingLevel(level),
-      isLastFrame: arg["is_last_frame"] as? Bool
+      isLastFrame: json.boolOr("is_last_frame")
     )
   }
 

@@ -7,6 +7,12 @@ extension CGPoint {
     self.init(x: x, y: y)
   }
 
+  init(json: Json) throws {
+    let x = try json.float("x")
+    let y = try json.float("y")
+    self.init(x: CGFloat(x), y: CGFloat(y))
+  }
+
   func toDict() -> [String: Any] {
     return [
       "x": self.x,

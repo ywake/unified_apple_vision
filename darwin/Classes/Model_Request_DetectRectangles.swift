@@ -27,17 +27,15 @@ class DetectRectanglesRequest: AnalyzeRequest {
     self.maxObservations = maxObservations
   }
 
-  convenience init?(_ arg: [String: Any]?) {
-    guard let arg = arg else { return nil }
-    guard let requestId = arg["request_id"] as? String else { return nil }
+  convenience init(json: Json) throws {
     self.init(
-      requestId: requestId,
-      minAspectRatio: arg["min_aspect_ratio"] as? VNAspectRatio,
-      maxAspectRatio: arg["max_aspect_ratio"] as? VNAspectRatio,
-      quadratureTolerance: arg["quadrature_tolerance"] as? VNDegrees,
-      minSize: arg["min_size"] as? Float,
-      minConfidence: arg["min_confidence"] as? Float,
-      maxObservations: arg["max_observations"] as? Int
+      requestId: try json.str("request_id"),
+      minAspectRatio: json.floatOr("min_aspect_ratio"),
+      maxAspectRatio: json.floatOr("max_aspect_ratio"),
+      quadratureTolerance: json.floatOr("quadrature_tolerance"),
+      minSize: json.floatOr("min_size"),
+      minConfidence: json.floatOr("min_confidence"),
+      maxObservations: json.intOr("max_observations")
     )
   }
 

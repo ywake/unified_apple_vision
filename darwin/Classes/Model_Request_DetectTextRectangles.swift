@@ -12,12 +12,10 @@ class DetectTextRectanglesRequest: AnalyzeRequest {
     self.reportCharacterBoxes = reportCharacterBoxes
   }
 
-  convenience init?(_ arg: [String: Any]?) {
-    guard let arg = arg else { return nil }
-    guard let requestId = arg["request_id"] as? String else { return nil }
+  convenience init(json: Json) throws {
     self.init(
-      requestId: requestId,
-      reportCharacterBoxes: arg["reportCharacterBoxes"] as? Bool
+      requestId: try json.str("request_id"),
+      reportCharacterBoxes: json.boolOr("reportCharacterBoxes")
     )
   }
 
