@@ -92,5 +92,16 @@ vision.analyze(
 
 ### [Documents 📘](doc/README.md)
 
+## Contributing 🤝
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Adding New Request or Observation
+If you want to add a new request or observation class, you can use the `tools.py` script to generate the boilerplate code for you.
+
+```bash
+python3 tools.py request --name VNDetectRectanglesRequest --ios 11.0 --macos 10.13
+python3 tools.py observation --name VNRectangleObservation
+```
+
 ## License 📜
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/ywake/unified_apple_vision/blob/main/LICENSE) file for details.
