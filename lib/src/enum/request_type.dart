@@ -10,6 +10,7 @@ enum VisionRequestType {
   recognizeAnimals,
   detectTextRectangles,
   detectBarcodes,
+  detectHumanRectangles,
   ;
 
   String get key => switch (this) {
@@ -20,5 +21,6 @@ enum VisionRequestType {
         VisionRequestType.recognizeAnimals => 'recognize_animals',
         VisionRequestType.detectTextRectangles => 'detect_text_rectangles',
         VisionRequestType.detectBarcodes => 'detect_barcodes',
+        VisionRequestType.detectHumanRectangles => 'detect_human_rectangles',
       };
 }

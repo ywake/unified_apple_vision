@@ -28,6 +28,8 @@ class VisionResults {
             VisionTextObservation.fromJson(json),
           VisionRequestType.detectBarcodes =>
             VisionBarcodeObservation.fromJson(json),
+          VisionRequestType.detectHumanRectangles =>
+            VisionHumanObservation.fromJson(json),
         }
     ]);
   }
@@ -52,4 +54,7 @@ class VisionResults {
 
   List<VisionRecognizedTextObservation> get ofRecognizeTextRequest =>
       observations.whereType<VisionRecognizedTextObservation>().toList();
+
+  List<VisionHumanObservation> get ofDetectHumanRectanglesRequest =>
+      observations.whereType<VisionHumanObservation>().toList();
 }

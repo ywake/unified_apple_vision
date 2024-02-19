@@ -21,6 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _unifiedAppleVision = UnifiedAppleVision()
+    ..xcodeLogLevel = VisionLogLevel.debug
     ..executionPriority = VisionExecutionPriority.veryHigh;
 
   VisionRequestType selectedType = VisionRequestType.recognizeText;
@@ -37,7 +38,7 @@ class _MyAppState extends State<MyApp> {
             topActionsBuilder: (state) => AwesomeTopActions(
               state: state,
               children: [
-                const Spacer(),
+                AwesomeCameraSwitchButton(state: state, scale: 1.0),
                 DropdownMenu<VisionRequestType>(
                   initialSelection: selectedType,
                   onSelected: (value) => setState(() {
