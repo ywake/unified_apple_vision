@@ -73,7 +73,7 @@ def observation_creation(class_name: str, ios: str, macos: str, extends: str):
         dart_observation_extension_template(observation_pascal)
     )
     create_file(
-        f'darwin/Classes/Extension_{class_name}.swift',
+        f'darwin/Classes/Extension_Observation_{class_name}.swift',
         swift_observation_template(class_name, ios, macos)
     )
 
