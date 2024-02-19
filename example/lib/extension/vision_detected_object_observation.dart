@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
-extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
-  Widget build() {
-    return Positioned.fill(
-      child: CustomPaint(
-        painter: _ObjectPainter(this),
-      ),
-    );
-  }
+import 'vision_observation.dart';
 
+extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
   void drawBoundingBox({
     required Canvas canvas,
     required Size size,
@@ -27,12 +21,14 @@ extension VisionDetectedObjectObservationEx on VisionDetectedObjectObservation {
       ..strokeWidth = 2;
     canvas.drawPath(path, paint);
   }
+
+  Widget build() => builder(_Painter(this));
 }
 
-class _ObjectPainter extends CustomPainter {
+class _Painter extends CustomPainter {
   final VisionDetectedObjectObservation object;
 
-  _ObjectPainter(this.object);
+  _Painter(this.object);
 
   @override
   void paint(Canvas canvas, Size size) {

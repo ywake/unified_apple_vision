@@ -29,6 +29,7 @@ export 'src/model/request/detect_rectangles.dart';
 export 'src/model/request/detect_text_rectangles.dart';
 export 'src/model/request/recognize_animals.dart';
 export 'src/model/request/recognize_text.dart';
+export 'src/model/request/request.dart';
 // export 'src/model/request/object_tracking/track_object_request.dart';
 // export 'src/model/request/object_tracking/track_rectangle_request.dart';
 // export 'src/model/request/object_tracking/tracking_request.dart';

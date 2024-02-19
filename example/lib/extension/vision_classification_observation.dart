@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
+import 'vision_observation.dart';
+
 extension VisionRecognizedObjectObservationEx
     on VisionRecognizedObjectObservation {
-  Widget build() {
-    return Positioned.fill(
-      child: CustomPaint(
-        painter: _ObjectPainter(this),
-      ),
-    );
-  }
+  Widget build() => builder(_Painter(this));
 }
 
-class _ObjectPainter extends CustomPainter {
+class _Painter extends CustomPainter {
   final VisionRecognizedObjectObservation object;
 
-  _ObjectPainter(this.object);
+  _Painter(this.object);
 
   @override
   void paint(Canvas canvas, Size size) {

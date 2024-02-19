@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
-import 'package:unified_apple_vision_example/extension/vision_rectangle_observation.dart';
+
+import 'vision_observation.dart';
+import 'vision_rectangle_observation.dart';
 
 extension VisionRecognizedTextObservationEx on VisionRecognizedTextObservation {
-  Widget build() {
-    return Positioned.fill(
-      child: CustomPaint(
-        painter: _Painter(this),
-      ),
-    );
-  }
+  Widget build() => builder(_Painter(this));
 }
 
 class _Painter extends CustomPainter {

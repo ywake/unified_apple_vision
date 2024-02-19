@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
+import 'vision_observation.dart';
+
 extension VisionRectangleEx on VisionRectangleObservation {
   VisionRectangleObservation reverse(Offset offset) {
     abs(Offset offset) => Offset(offset.dx.abs(), offset.dy.abs());
@@ -32,19 +34,13 @@ extension VisionRectangleEx on VisionRectangleObservation {
     canvas.drawPath(path, paint);
   }
 
-  Widget build() {
-    return Positioned.fill(
-      child: CustomPaint(
-        painter: _RectanglePainter(this),
-      ),
-    );
-  }
+  Widget build() => builder(_Painter(this));
 }
 
-class _RectanglePainter extends CustomPainter {
+class _Painter extends CustomPainter {
   final VisionRectangleObservation rectangle;
 
-  _RectanglePainter(this.rectangle);
+  _Painter(this.rectangle);
 
   @override
   void paint(Canvas canvas, Size size) {

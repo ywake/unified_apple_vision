@@ -2,11 +2,7 @@ import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
-import 'extension/vision_barcode_observation.dart';
-import 'extension/vision_classification_observation.dart';
-import 'extension/vision_recognized_text_observation.dart';
-import 'extension/vision_rectangle_observation.dart';
-import 'extension/vision_text_observation.dart';
+import 'extension/vision_request_type.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +23,8 @@ class _MyAppState extends State<MyApp> {
   final _unifiedAppleVision = UnifiedAppleVision()
     ..executionPriority = VisionExecutionPriority.veryHigh;
 
-  List<VisionRecognizedTextObservation>? recognizedTexts;
-  List<VisionRectangleObservation>? detectedRectangles;
-  List<VisionRecognizedObjectObservation>? recognizedAnimals;
-  List<VisionTextObservation>? detectedTextRectangles;
-  List<VisionBarcodeObservation>? detectedBarcodes;
+  VisionRequestType selectedType = VisionRequestType.recognizeText;
+  VisionResults? results;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +34,25 @@ class _MyAppState extends State<MyApp> {
           CameraAwesomeBuilder.awesome(
             saveConfig: SaveConfig.photo(),
             imageAnalysisConfig: AnalysisConfig(maxFramesPerSecond: 1),
+            topActionsBuilder: (state) => AwesomeTopActions(
+              state: state,
+              children: [
+                const Spacer(),
+                DropdownMenu<VisionRequestType>(
+                  initialSelection: selectedType,
+                  onSelected: (value) => setState(() {
+                    results = null;
+                    if (value != null) selectedType = value;
+                  }),
+                  dropdownMenuEntries: [
+                    for (final type in VisionRequestType.values)
+                      type.dropdownMenuEntry,
+                  ],
+                ),
+              ],
+            ),
+            middleContentBuilder: (_) => const SizedBox(),
+            bottomActionsBuilder: (_) => const SizedBox(),
             onImageForAnalysis: (image) async {
               image.when(
                 bgra8888: (image) {
@@ -51,21 +63,9 @@ class _MyAppState extends State<MyApp> {
                   try {
                     _unifiedAppleVision.analyze(
                       image: input,
-                      requests: [
-                        VisionRecognizeTextRequest(
-                          automaticallyDetectsLanguage: true,
-                          onResults: (results) {
-                            setState(() {
-                              recognizedTexts = results.ofRecognizeTextRequest;
-                            });
-                          },
-                        ),
-                        VisionDetectBarcodesRequest(
-                          onResults: (results) => setState(() {
-                            detectedBarcodes = results.ofDetectBarcodesRequest;
-                          }),
-                        ),
-                      ],
+                      requests: selectedType.requests(
+                        (res) => setState(() => results = res),
+                      ),
                     );
                   } catch (e) {
                     debugPrint('$e');
@@ -74,18 +74,7 @@ class _MyAppState extends State<MyApp> {
               );
             },
           ),
-          ...[
-            if (recognizedTexts != null)
-              for (final text in recognizedTexts!) text.build(),
-            if (detectedRectangles != null)
-              for (final rect in detectedRectangles!) rect.build(),
-            if (recognizedAnimals != null)
-              for (final animal in recognizedAnimals!) animal.build(),
-            if (detectedTextRectangles != null)
-              for (final text in detectedTextRectangles!) text.build(),
-            if (detectedBarcodes != null)
-              for (final barcode in detectedBarcodes!) barcode.build(),
-          ]
+          ...?selectedType.widgets(results),
         ],
       ),
     );
