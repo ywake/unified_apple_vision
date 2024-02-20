@@ -1,3 +1,6 @@
+## 1.1.0
+* Feat: Add Face and Body Detection API
+
 ## 1.0.0
 * Feat: Change design to receive results in callbacks.
 
