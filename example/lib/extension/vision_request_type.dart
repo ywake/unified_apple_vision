@@ -40,7 +40,9 @@ extension VisionRequestTypeEx on VisionRequestType {
           VisionRequestType.detectFaceCaptureQuality =>
             VisionDetectFaceCaptureQualityRequest(onResults: onResults),
           VisionRequestType.classifyImage =>
-            VisionClassifyImageRequest(onResults: onResults)
+            VisionClassifyImageRequest(onResults: onResults),
+          VisionRequestType.generateImageFeaturePrint =>
+            VisionGenerateImageFeaturePrintRequest(onResults: onResults),
         }
       ].nonNulls.toList();
 
@@ -49,6 +51,8 @@ extension VisionRequestTypeEx on VisionRequestType {
       case VisionRequestType.trackObject:
       case VisionRequestType.trackRectangle:
         return [const Center(child: Text('Not available yet.'))];
+      case VisionRequestType.generateImageFeaturePrint:
+        return [const Center(child: Text('Widget not available.'))];
       case VisionRequestType.recognizeText:
         return result?.ofRecognizeTextRequest.map((e) => e.build()).toList();
       case VisionRequestType.detectRectangles:

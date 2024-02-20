@@ -38,6 +38,8 @@ class VisionResults {
             VisionFaceObservation.fromJson(json),
           VisionRequestType.classifyImage =>
             VisionClassificationObservation.fromJson(json),
+          VisionRequestType.generateImageFeaturePrint =>
+            VisionFeaturePrintObservation.fromJson(json),
         }
     ]);
   }
@@ -77,4 +79,7 @@ class VisionResults {
 
   List<VisionClassificationObservation> get ofClassifyImageRequest =>
       observations.whereType<VisionClassificationObservation>().toList();
+
+  List<VisionFeaturePrintObservation> get ofGenerateImageFeaturePrintRequest =>
+      observations.whereType<VisionFeaturePrintObservation>().toList();
 }

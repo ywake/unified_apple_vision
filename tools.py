@@ -29,10 +29,14 @@ def main():
         else:
             print('Missing `--extends` argument')
             return
-    print('Do you want to delete the cache? (Y/n)')
-    if input().lower() == 'y' or input() == '':
+    # allow empty input
+    res = input('Do you want to delete the cache? (Y/n)')
+    if res.lower() == 'y' or res == '':
         delete_cache()
     print('Done! 🎉')
+
+    # if input().lower() == 'y' or input() == '':
+    #     delete_cache()
 
 
 def request_creation(class_name: str, ios: str, macos: str):
@@ -250,7 +254,7 @@ def dart_observation_template(observation_pascal: str, extends_pascal: str) -> s
     return f"""
 import 'package:unified_apple_vision/src/utility/json.dart';
 
-import '{pascal_to_snake_case(extends_pascal)}.dart';
+import '{pascal_to_snake_case(extends_pascal) if extends_pascal else 'observation'}.dart';
 
 class Vision{observation_pascal}Observation extends Vision{extends_pascal}Observation {{
   Vision{observation_pascal}Observation.withParent({{

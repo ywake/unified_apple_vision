@@ -11,6 +11,7 @@ enum RequestType: String {
   case detectFaceLandmarks = "detect_face_landmarks"
   case detectFaceCaptureQuality = "detect_face_capture_quality"
   case classifyImage = "classify_image"
+  case generateImageFeaturePrint = "generate_image_feature_print"
 
   init?(_ string: String) {
     self.init(rawValue: string)
@@ -42,6 +43,8 @@ enum RequestType: String {
       return try DetectFaceCaptureQualityRequest(json: json)
     case .classifyImage:
       return try ClassifyImageRequest(json: json)
+    case .generateImageFeaturePrint:
+      return try GenerateImageFeaturePrintRequest(json: json)
     }
   }
 }
