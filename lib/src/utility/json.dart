@@ -82,6 +82,18 @@ class Json {
   /// Optionally fetches a list of Json values for [key], returning null if [key] is not found.
   List<Json>? jsonListOr(String key) => _jsonList(key, false);
 
+  T? _obj<T>(String key, T Function(Json) fromJson, bool require) {
+    final json = _json(key, require);
+    return json == null ? null : fromJson(json);
+  }
+
+  /// Fetches an object for [key]. Throws an exception if [key] is not found.
+  T obj<T>(String key, T Function(Json) fromJson) => _obj(key, fromJson, true)!;
+
+  /// Optionally fetches an object for [key], returning null if [key] is not found.
+  T? objOr<T>(String key, T Function(Json) fromJson) =>
+      _obj(key, fromJson, false);
+
   List<T>? _objList<T>(String key, T Function(Json) fromJson, bool require) {
     final list = _jsonList(key, require);
     return list?.map((e) => fromJson(e)).toList();

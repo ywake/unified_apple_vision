@@ -32,3 +32,5 @@ export 'src/model/request/detect_text_rectangles.dart';
 export 'src/model/request/recognize_animals.dart';
 export 'src/model/request/recognize_text.dart';
 export 'src/model/request/request.dart';
+export 'src/model/request/detect_face_rectangles.dart';
+export 'src/model/observation/face/observation.dart';

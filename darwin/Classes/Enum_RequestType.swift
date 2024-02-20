@@ -7,6 +7,7 @@ enum RequestType: String {
   case detectTextRectangles = "detect_text_rectangles"
   case detectBarcodes = "detect_barcodes"
   case detectHumanRectangles = "detect_human_rectangles"
+  case detectFaceRectangles = "detect_face_rectangles"
 
   init?(_ string: String) {
     self.init(rawValue: string)
@@ -30,6 +31,8 @@ enum RequestType: String {
       return try DetectBarcodesRequest(json: json)
     case .detectHumanRectangles:
       return try DetectHumanRectanglesRequest(json: json)
+    case .detectFaceRectangles:
+      return try DetectFaceRectanglesRequest(json: json)
     }
   }
 }

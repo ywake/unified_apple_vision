@@ -3,6 +3,7 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'vision_barcode_observation.dart';
 import 'vision_classification_observation.dart';
+import 'vision_face_observation.dart';
 import 'vision_human_observation.dart';
 import 'vision_recognized_text_observation.dart';
 import 'vision_rectangle_observation.dart';
@@ -28,6 +29,8 @@ extension VisionRequestTypeEx on VisionRequestType {
           VisionRequestType.detectHumanRectangles =>
             VisionDetectHumanRectanglesRequest(
                 upperBodyOnly: true, onResults: onResults),
+          VisionRequestType.detectFaceRectangles =>
+            VisionDetectFaceRectanglesRequest(onResults: onResults),
           VisionRequestType.trackObject ||
           VisionRequestType.trackRectangle =>
             null,
@@ -50,6 +53,10 @@ extension VisionRequestTypeEx on VisionRequestType {
         return result?.ofDetectBarcodesRequest.map((e) => e.build()).toList();
       case VisionRequestType.detectHumanRectangles:
         return result?.ofDetectHumanRectanglesRequest
+            .map((e) => e.build())
+            .toList();
+      case VisionRequestType.detectFaceRectangles:
+        return result?.ofDetectFaceRectanglesRequest
             .map((e) => e.build())
             .toList();
       case VisionRequestType.trackObject:
