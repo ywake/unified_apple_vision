@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'observations/vision_barcode_observation.dart';
-import 'observations/vision_classification_observation.dart';
+import 'observations/vision_recognized_observation.dart';
 import 'observations/vision_face_observation.dart';
 import 'observations/vision_human_observation.dart';
 import 'observations/vision_recognized_text_observation.dart';
