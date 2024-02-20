@@ -72,8 +72,13 @@ class _Painter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     observation.drawBoundingBox(canvas: canvas, size: size);
+    var text = 'confidence: ${observation.confidence.toStringAsFixed(2)}';
+    if (observation.faceCaptureQuality != null) {
+      text += '\n';
+      text += 'quality: ${observation.faceCaptureQuality!.toStringAsFixed(2)}';
+    }
     observation.drawText(
-      text: '${observation.confidence}',
+      text: text,
       canvas: canvas,
       size: size,
     );

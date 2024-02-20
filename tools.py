@@ -44,6 +44,7 @@ def request_creation(class_name: str, ios: str, macos: str):
         dart_request_template(request_pascal, ios, macos)
     )
     append_export(dart_path)
+    add_getter(request_pascal)
     create_file(
         f'darwin/Classes/Model_Request_{request_pascal}.swift',
         swift_request_template(request_pascal, ios, macos)
@@ -106,6 +107,15 @@ def append_export(file_path: str):
     with open(lib_path, 'a') as file:
         file.write(f"export '{file_path}'; Sort this!\n")
     print(f'Exported: {file_path}')
+
+
+def add_getter(request_pascal: str):
+    results_path = 'lib/src/model/results.dart'
+    with open(results_path, 'a') as file:
+        file.write(f"""
+  List<VisionSomeObservation> get of{request_pascal}Request =>
+      observations.whereType<VisionSomeObservation>().toList();
+""")
 
 
 def append_to_swift_enum(request_pascal: str):

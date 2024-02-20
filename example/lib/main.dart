@@ -21,7 +21,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _unifiedAppleVision = UnifiedAppleVision()
-    ..xcodeLogLevel = VisionLogLevel.debug
     ..executionPriority = VisionExecutionPriority.veryHigh;
 
   VisionRequestType selectedType = VisionRequestType.recognizeText;
@@ -39,16 +38,18 @@ class _MyAppState extends State<MyApp> {
               state: state,
               children: [
                 AwesomeCameraSwitchButton(state: state, scale: 1.0),
-                DropdownMenu<VisionRequestType>(
-                  initialSelection: selectedType,
-                  onSelected: (value) => setState(() {
-                    results = null;
-                    if (value != null) selectedType = value;
-                  }),
-                  dropdownMenuEntries: [
-                    for (final type in VisionRequestType.values)
-                      type.dropdownMenuEntry,
-                  ],
+                Expanded(
+                  child: DropdownMenu<VisionRequestType>(
+                    initialSelection: selectedType,
+                    onSelected: (value) => setState(() {
+                      results = null;
+                      if (value != null) selectedType = value;
+                    }),
+                    dropdownMenuEntries: [
+                      for (final type in VisionRequestType.values)
+                        type.dropdownMenuEntry,
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -33,6 +33,8 @@ extension VisionRequestTypeEx on VisionRequestType {
             VisionDetectFaceRectanglesRequest(onResults: onResults),
           VisionRequestType.detectFaceLandmarks =>
             VisionDetectFaceLandmarksRequest(onResults: onResults),
+          VisionRequestType.detectFaceCaptureQuality =>
+            VisionDetectFaceCaptureQualityRequest(onResults: onResults),
           VisionRequestType.trackObject ||
           VisionRequestType.trackRectangle =>
             null,
@@ -58,11 +60,10 @@ extension VisionRequestTypeEx on VisionRequestType {
             .map((e) => e.build())
             .toList();
       case VisionRequestType.detectFaceRectangles:
-        return result?.ofDetectFaceRectanglesRequest
-            .map((e) => e.build())
-            .toList();
       case VisionRequestType.detectFaceLandmarks:
-        return result?.ofDetectFaceLandmarksRequest
+      case VisionRequestType.detectFaceCaptureQuality:
+        return result?.observations
+            .whereType<VisionFaceObservation>()
             .map((e) => e.build())
             .toList();
       case VisionRequestType.trackObject:

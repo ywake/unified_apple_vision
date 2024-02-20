@@ -29,7 +29,7 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 |||||||
 | [Rectangle Detection](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | [Detect Rectangle](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | ✅ | 11.0+ | 10.13+ | Finds projected rectangular regions in an image. |
 |||||||
-| [Face and Body Detection](https://developer.apple.com/documentation/vision/selecting_a_selfie_based_on_capture_quality) | [Detect Face Capture Quality](https://developer.apple.com/documentation/vision/vndetectfacecapturequalityrequest) | ❌ | 13.0+ | 10.15+ | Produces a floating-point number that represents the capture quality of a face in a photo. |
+| [Face and Body Detection](https://developer.apple.com/documentation/vision/selecting_a_selfie_based_on_capture_quality) | [Detect Face Capture Quality](https://developer.apple.com/documentation/vision/vndetectfacecapturequalityrequest) | ✅ | 13.0+ | 10.15+ | Produces a floating-point number that represents the capture quality of a face in a photo. |
 || [Detect Face Landmarks](https://developer.apple.com/documentation/vision/vndetectfacelandmarksrequest) | ✅ | 11.0+ | 10.13+ | Finds facial features like eyes and mouth in an image. |
 || [Detect Face Rectangles](https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest) | ✅ | 11.0+ | 10.13+ | Finds faces within an image. |
 || [Detect Human Rectangles](https://developer.apple.com/documentation/vision/vndetecthumanrectanglesrequest) | ✅ | 13.0+ | 10.15+ | Finds rectangular regions that contain people in an image.|

@@ -6,14 +6,14 @@ extension VNFaceObservation {
     var optional: [String: Any] = [:]
     // if #available(iOS 12.0, macOS 10.14, *) {  // in docs
     if #available(iOS 15.0, macOS 12.0, *) {  // actual
-      [
+      optional = [
         "roll": self.roll,
         "yaw": self.yaw,
         "pitch": self.pitch,
       ].merging(optional) { (old, _) in old }
     }
     if #available(iOS 13.0, macOS 10.15, *) {
-      [
+      optional = [
         "face_capture_quality": self.faceCaptureQuality
       ].merging(optional) { (old, _) in old }
     }
