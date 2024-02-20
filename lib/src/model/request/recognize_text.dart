@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:unified_apple_vision/src/enum/request_type.dart';
-import 'package:unified_apple_vision/src/enum/text_recognition_level.dart';
 import 'package:unified_apple_vision/src/model/observation/recognized_text.dart';
 
 import 'request.dart';
@@ -66,4 +65,13 @@ class VisionRecognizeTextRequest extends VisionRequest {
       'max_candidates': maxCandidates,
     };
   }
+}
+
+/// Constants that identify the performance and accuracy of the text recognition.
+enum VisionTextRecognitionLevel {
+  /// Fast text recognition returns results more quickly at the expense of accuracy.
+  fast,
+
+  /// Accurate text recognition takes more time to produce a more comprehensive result.
+  accurate,
 }

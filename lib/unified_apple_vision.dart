@@ -2,15 +2,12 @@ library unified_apple_vision;
 
 export 'src/unified_apple_vision.dart';
 
-export 'src/enum/barcode_composite_type.dart';
 export 'src/enum/barcode_symbology.dart';
 export 'src/enum/execution_priority.dart';
 export 'src/enum/image_orientation.dart';
 export 'src/enum/log_level.dart';
 export 'src/enum/operation_mode.dart';
 export 'src/enum/request_type.dart';
-export 'src/enum/text_recognition_level.dart';
-export 'src/enum/tracking_level.dart';
 
 export 'src/model/input_image.dart';
 export 'src/model/results.dart';
