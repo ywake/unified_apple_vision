@@ -1,12 +1,13 @@
 import 'package:unified_apple_vision/src/model/observation/detected_object.dart';
 import 'package:unified_apple_vision/src/model/request/detect_face_rectangles.dart';
+import 'package:unified_apple_vision/src/model/request/detect_face_landmarks.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 
 import 'landmarks_2d.dart';
 
 /// Face or facial-feature information that an image analysis request detects.
 ///
-/// This type of observation results from a VNDetectFaceRectanglesRequest. It contains information about facial landmarks and regions it finds in the image.
+/// This type of observation results from [VisionDetectFaceRectanglesRequest] or [VisionDetectFaceLandmarksRequest]. It contains information about facial landmarks and regions it finds in the image.
 class VisionFaceObservation extends VisionDetectedObjectObservation {
   /// The facial features of the detected face.
   ///

@@ -18,12 +18,14 @@ extension VNDetectedObjectObservation {
 
   @objc override func toDict() -> [String: Any] {
     // Convert the lower left origin to the upper left origin
-    let newOrigin = CGPoint(
-      x: self.boundingBox.origin.x,
-      y: 1 - self.boundingBox.origin.y - self.boundingBox.size.height
+    let newOrigin = self.boundingBox.origin.reversedY()
+    // bottomLeft to topLeft
+    let topLeft = CGPoint(
+      x: newOrigin.x,
+      y: newOrigin.y - self.boundingBox.size.height
     )
     let boundingBox = CGRect(
-      origin: newOrigin,
+      origin: topLeft,
       size: self.boundingBox.size
     )
     return [

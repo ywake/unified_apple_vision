@@ -21,13 +21,16 @@ export 'src/model/observation/recognized_object.dart';
 export 'src/model/observation/recognized_text.dart';
 export 'src/model/observation/rectangle.dart';
 export 'src/model/observation/text.dart';
+export 'src/model/observation/face/landmark_region_2d.dart';
+export 'src/model/observation/face/landmarks_2d.dart';
+export 'src/model/observation/face/observation.dart';
 
 export 'src/model/request/detect_barcodes.dart';
+export 'src/model/request/detect_face_landmarks.dart';
+export 'src/model/request/detect_face_rectangles.dart';
 export 'src/model/request/detect_human_rectangles.dart';
 export 'src/model/request/detect_rectangles.dart';
 export 'src/model/request/detect_text_rectangles.dart';
 export 'src/model/request/recognize_animals.dart';
 export 'src/model/request/recognize_text.dart';
 export 'src/model/request/request.dart';
-export 'src/model/request/detect_face_rectangles.dart';
-export 'src/model/observation/face/observation.dart';

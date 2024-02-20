@@ -13,6 +13,8 @@ extension CGPoint {
     self.init(x: CGFloat(x), y: CGFloat(y))
   }
 
+  /// Convert the lower left origin to the upper left origin
+  /// - Returns:
   func reversedY() -> CGPoint {
     return CGPoint(x: self.x, y: 1 - self.y)
   }

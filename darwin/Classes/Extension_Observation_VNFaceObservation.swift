@@ -77,7 +77,7 @@ extension VNFaceLandmarkRegion2D {
       ].merging(optional) { (old, _) in old }
     }
     return [
-      "normalized_points": self.normalizedPoints.map { $0.toDict() }
+      "normalized_points": self.normalizedPoints.map { $0.reversedY().toDict() }
     ].merging(optional) { (old, _) in old }
       .merging(super.toDict()) { (old, _) in old }
   }

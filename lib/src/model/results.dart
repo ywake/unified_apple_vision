@@ -32,6 +32,8 @@ class VisionResults {
             VisionHumanObservation.fromJson(json),
           VisionRequestType.detectFaceRectangles =>
             VisionFaceObservation.fromJson(json),
+          VisionRequestType.detectFaceLandmarks =>
+            VisionFaceObservation.fromJson(json),
         }
     ]);
   }
@@ -61,5 +63,8 @@ class VisionResults {
       observations.whereType<VisionHumanObservation>().toList();
 
   List<VisionFaceObservation> get ofDetectFaceRectanglesRequest =>
+      observations.whereType<VisionFaceObservation>().toList();
+
+  List<VisionFaceObservation> get ofDetectFaceLandmarksRequest =>
       observations.whereType<VisionFaceObservation>().toList();
 }

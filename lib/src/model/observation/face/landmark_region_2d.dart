@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:unified_apple_vision/src/extension/offset.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 
+/// 2D geometry information for a specific facial feature.
+///
+/// This class represents the set of all facial landmark regions in 2D, exposed as properties.
 class VisionFaceLandmarkRegion2D extends VisionFaceLandmarkRegion {
   /// **iOS 16.0+, macOS 13.0+**
   /// An enumeration that describes how to interpret the points the region provides.
@@ -25,7 +28,7 @@ class VisionFaceLandmarkRegion2D extends VisionFaceLandmarkRegion {
   factory VisionFaceLandmarkRegion2D.fromJson(Json json) {
     return VisionFaceLandmarkRegion2D.withParent(
       parent: VisionFaceLandmarkRegion.fromJson(json),
-      pointsClassification: json.enum_(
+      pointsClassification: json.enumOr(
         'points_classification',
         VisionPointsClassification.values,
       ),
