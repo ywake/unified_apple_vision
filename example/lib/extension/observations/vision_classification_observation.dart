@@ -1,38 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
-import 'vision_detected_object_observation.dart';
-import 'vision_observation.dart';
-
-extension VisionRecognizedObjectObservationEx
-    on VisionRecognizedObjectObservation {
-  Widget build() => customPaint(_Painter(this));
-}
-
-class _Painter extends CustomPainter {
-  final VisionRecognizedObjectObservation object;
-
-  _Painter(this.object);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    object.drawBoundingBox(canvas: canvas, size: size, color: Colors.amber);
-    // Draw the text
-    final candidate = object.labels.firstOrNull;
-    if (candidate == null) {
-      return;
+extension VisionClassificationObservationEx
+    on Iterable<VisionClassificationObservation> {
+  Widget build(int displayCount) {
+    if (displayCount < 1 || isEmpty) {
+      return const SizedBox();
     }
-    final text = candidate.identifier;
-    final confidence = candidate.confidence;
-    object.drawText(
-      text: '$text (${confidence.toStringAsFixed(1)})',
-      canvas: canvas,
-      size: size,
+    final filter = toList().sublist(0, displayCount);
+    return Positioned.fill(
+      bottom: 0,
+      child: IgnorePointer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final o in filter)
+              Text(
+                '${o.identifier} (${o.confidence.toStringAsFixed(2)})',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+          ],
+        ),
+      ),
     );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }

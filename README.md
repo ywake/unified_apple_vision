@@ -15,8 +15,8 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 
 | Vision API | Request | Status | iOS | macOS | description |
 |------------|---------|:------:|:---:|:-----:|-------------|
-| [Still Image Analysis](https://developer.apple.com/documentation/vision/detecting_objects_in_still_images) | [Classify Image](https://developer.apple.com/documentation/vision/vnclassifyimagerequest) | ❌ | 13.0+ | 10.15+ | A request to classify an image. |
-|| [Generate Image Feature Print](https://developer.apple.com/documentation/vision/vngenerateimagefeatureprintrequest) | ❌ | 13.0+ | 10.15+ | An image-based request to generate feature prints from an image. |
+| [Still Image Analysis](https://developer.apple.com/documentation/vision/detecting_objects_in_still_images) | [Classify Image](https://developer.apple.com/documentation/vision/vnclassifyimagerequest) | ✅ | 13.0+ | 10.15+ | A request to classify an image. |
+|| [Generate Image Feature Print](https://developer.apple.com/documentation/vision/vngenerateimagefeatureprintrequest) | ✅ | 13.0+ | 10.15+ | An image-based request to generate feature prints from an image. (FeaturePrint — vector image descriptor similar to a word vector) |
 ||||||
 | [Image Sequence Analysis](https://developer.apple.com/documentation/vision/applying_matte_effects_to_people_in_images_and_video) | [Generate Person Segmentation](https://developer.apple.com/documentation/vision/vngeneratepersonsegmentationrequest) | ❌ | 15.0+ | 12.0+ | Produces a matte image for a person it finds in the input image. |
 || [Generate Person Instance Mask](https://developer.apple.com/documentation/vision/vngeneratepersoninstancemaskrequest) | ❌ | 17.0+ | 14.0+ | Produces a mask of individual people it finds in the input image. |

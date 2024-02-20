@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 import argparse
+import shutil
 
 
 def main():
@@ -28,7 +29,14 @@ def main():
         else:
             print('Missing `--extends` argument')
             return
+    # allow empty input
+    res = input('Do you want to delete the cache? (Y/n)')
+    if res.lower() == 'y' or res == '':
+        delete_cache()
     print('Done! 🎉')
+
+    # if input().lower() == 'y' or input() == '':
+    #     delete_cache()
 
 
 def request_creation(class_name: str, ios: str, macos: str):
@@ -77,6 +85,11 @@ def observation_creation(class_name: str, ios: str, macos: str, extends: str):
         f'darwin/Classes/Extension_Observation_{class_name}.swift',
         swift_observation_template(class_name, ios, macos)
     )
+
+
+def delete_cache():
+    cache_dir = 'example/build'
+    shutil.rmtree(cache_dir, ignore_errors=True)
 
 
 def create_file(path: str, content: str):
@@ -241,7 +254,7 @@ def dart_observation_template(observation_pascal: str, extends_pascal: str) -> s
     return f"""
 import 'package:unified_apple_vision/src/utility/json.dart';
 
-import '{pascal_to_snake_case(extends_pascal)}.dart';
+import '{pascal_to_snake_case(extends_pascal) if extends_pascal else 'observation'}.dart';
 
 class Vision{observation_pascal}Observation extends Vision{extends_pascal}Observation {{
   Vision{observation_pascal}Observation.withParent({{

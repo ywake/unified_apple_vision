@@ -3,6 +3,7 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'observations/vision_barcode_observation.dart';
 import 'observations/vision_classification_observation.dart';
+import 'observations/vision_recognized_observation.dart';
 import 'observations/vision_face_observation.dart';
 import 'observations/vision_human_observation.dart';
 import 'observations/vision_recognized_text_observation.dart';
@@ -16,6 +17,9 @@ extension VisionRequestTypeEx on VisionRequestType {
 
   List<VisionRequest> requests(void Function(VisionResults) onResults) => [
         switch (this) {
+          VisionRequestType.trackObject ||
+          VisionRequestType.trackRectangle =>
+            null,
           VisionRequestType.recognizeText => VisionRecognizeTextRequest(
               automaticallyDetectsLanguage: true, onResults: onResults),
           VisionRequestType.detectRectangles =>
@@ -35,14 +39,20 @@ extension VisionRequestTypeEx on VisionRequestType {
             VisionDetectFaceLandmarksRequest(onResults: onResults),
           VisionRequestType.detectFaceCaptureQuality =>
             VisionDetectFaceCaptureQualityRequest(onResults: onResults),
-          VisionRequestType.trackObject ||
-          VisionRequestType.trackRectangle =>
-            null,
+          VisionRequestType.classifyImage =>
+            VisionClassifyImageRequest(onResults: onResults),
+          VisionRequestType.generateImageFeaturePrint =>
+            VisionGenerateImageFeaturePrintRequest(onResults: onResults),
         }
       ].nonNulls.toList();
 
   List<Widget>? widgets(VisionResults? result) {
     switch (this) {
+      case VisionRequestType.trackObject:
+      case VisionRequestType.trackRectangle:
+        return [const Center(child: Text('Not available yet.'))];
+      case VisionRequestType.generateImageFeaturePrint:
+        return [const Center(child: Text('Widget not available.'))];
       case VisionRequestType.recognizeText:
         return result?.ofRecognizeTextRequest.map((e) => e.build()).toList();
       case VisionRequestType.detectRectangles:
@@ -66,9 +76,12 @@ extension VisionRequestTypeEx on VisionRequestType {
             .whereType<VisionFaceObservation>()
             .map((e) => e.build())
             .toList();
-      case VisionRequestType.trackObject:
-      case VisionRequestType.trackRectangle:
-        return [const Center(child: Text('Not available yet.'))];
+      case VisionRequestType.classifyImage:
+        return [
+          result?.observations
+              .whereType<VisionClassificationObservation>()
+              .build(1)
+        ].nonNulls.toList();
     }
   }
 }
