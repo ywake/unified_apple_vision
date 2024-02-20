@@ -6,6 +6,10 @@ enum RequestType: String {
   case recognizeAnimals = "recognize_animals"
   case detectTextRectangles = "detect_text_rectangles"
   case detectBarcodes = "detect_barcodes"
+  case detectHumanRectangles = "detect_human_rectangles"
+  case detectFaceRectangles = "detect_face_rectangles"
+  case detectFaceLandmarks = "detect_face_landmarks"
+  case detectFaceCaptureQuality = "detect_face_capture_quality"
 
   init?(_ string: String) {
     self.init(rawValue: string)
@@ -27,6 +31,14 @@ enum RequestType: String {
       return try DetectTextRectanglesRequest(json: json)
     case .detectBarcodes:
       return try DetectBarcodesRequest(json: json)
+    case .detectHumanRectangles:
+      return try DetectHumanRectanglesRequest(json: json)
+    case .detectFaceRectangles:
+      return try DetectFaceRectanglesRequest(json: json)
+    case .detectFaceLandmarks:
+      return try DetectFaceLandmarksRequest(json: json)
+    case .detectFaceCaptureQuality:
+      return try DetectFaceCaptureQualityRequest(json: json)
     }
   }
 }

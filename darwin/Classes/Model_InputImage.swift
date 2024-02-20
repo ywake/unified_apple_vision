@@ -37,7 +37,23 @@ class InputImage {
     )
     self.init(
       ciImage: ciImage,
-      orientation: CGImagePropertyOrientation(orientation)
+      orientation: CGImagePropertyOrientation(byName: orientation)
     )
+  }
+}
+
+extension CGImagePropertyOrientation {
+  init(byName name: String) {
+    switch name {
+    case "up": self = .up
+    case "upMirrored": self = .upMirrored
+    case "down": self = .down
+    case "downMirrored": self = .downMirrored
+    case "left": self = .left
+    case "leftMirrored": self = .leftMirrored
+    case "right": self = .right
+    case "rightMirrored": self = .rightMirrored
+    default: self = .down
+    }
   }
 }

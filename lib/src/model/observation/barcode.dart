@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:unified_apple_vision/src/enum/barcode_composite_type.dart';
 import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
 import 'package:unified_apple_vision/src/model/request/detect_barcodes.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
@@ -84,4 +83,22 @@ class VisionBarcodeObservation extends VisionRectangleObservation {
       isColorInverted: json.boolOr('is_color_inverted'),
     );
   }
+}
+
+enum VisionBarcodeCompositeType {
+  /// A type that represents trade items in bulk.
+  gs1TypeA,
+
+  /// A type that represents trade items by piece.
+  gs1TypeB,
+
+  /// A type that represents trade items in varying quantity.
+  gs1TypeC,
+
+  /// A type that represents a linked composite type.
+  linked,
+
+  /// A type that represents no composite type.
+  none,
+  ;
 }

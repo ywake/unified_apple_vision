@@ -28,6 +28,14 @@ class VisionResults {
             VisionTextObservation.fromJson(json),
           VisionRequestType.detectBarcodes =>
             VisionBarcodeObservation.fromJson(json),
+          VisionRequestType.detectHumanRectangles =>
+            VisionHumanObservation.fromJson(json),
+          VisionRequestType.detectFaceRectangles =>
+            VisionFaceObservation.fromJson(json),
+          VisionRequestType.detectFaceLandmarks =>
+            VisionFaceObservation.fromJson(json),
+          VisionRequestType.detectFaceCaptureQuality =>
+            VisionFaceObservation.fromJson(json),
         }
     ]);
   }
@@ -52,4 +60,16 @@ class VisionResults {
 
   List<VisionRecognizedTextObservation> get ofRecognizeTextRequest =>
       observations.whereType<VisionRecognizedTextObservation>().toList();
+
+  List<VisionHumanObservation> get ofDetectHumanRectanglesRequest =>
+      observations.whereType<VisionHumanObservation>().toList();
+
+  List<VisionFaceObservation> get ofDetectFaceRectanglesRequest =>
+      observations.whereType<VisionFaceObservation>().toList();
+
+  List<VisionFaceObservation> get ofDetectFaceLandmarksRequest =>
+      observations.whereType<VisionFaceObservation>().toList();
+
+  List<VisionFaceObservation> get ofDetectFaceCaptureQualityRequest =>
+      observations.whereType<VisionFaceObservation>().toList();
 }

@@ -24,7 +24,7 @@ class TrackObjectRequest: AnalyzeRequest {
     self.init(
       requestId: try json.str("request_id"),
       inputObservation: try VNDetectedObjectObservation(dict: input.dictData),
-      trackingLevel: VNRequestTrackingLevel(level),
+      trackingLevel: VNRequestTrackingLevel(byName: level),
       isLastFrame: json.boolOr("is_last_frame")
     )
   }

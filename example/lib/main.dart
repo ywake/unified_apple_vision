@@ -37,17 +37,19 @@ class _MyAppState extends State<MyApp> {
             topActionsBuilder: (state) => AwesomeTopActions(
               state: state,
               children: [
-                const Spacer(),
-                DropdownMenu<VisionRequestType>(
-                  initialSelection: selectedType,
-                  onSelected: (value) => setState(() {
-                    results = null;
-                    if (value != null) selectedType = value;
-                  }),
-                  dropdownMenuEntries: [
-                    for (final type in VisionRequestType.values)
-                      type.dropdownMenuEntry,
-                  ],
+                AwesomeCameraSwitchButton(state: state, scale: 1.0),
+                Expanded(
+                  child: DropdownMenu<VisionRequestType>(
+                    initialSelection: selectedType,
+                    onSelected: (value) => setState(() {
+                      results = null;
+                      if (value != null) selectedType = value;
+                    }),
+                    dropdownMenuEntries: [
+                      for (final type in VisionRequestType.values)
+                        type.dropdownMenuEntry,
+                    ],
+                  ),
                 ),
               ],
             ),

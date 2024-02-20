@@ -36,8 +36,8 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "analyze":
       self.callAnalyze(arg, result)
-    case "supportedRecognitionLanguages":
-      self.supportedRecognitionLanguages(arg, result)
+    // case "supportedRecognitionLanguages":
+    //   self.supportedRecognitionLanguages(arg, result)
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -114,24 +114,24 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  func supportedRecognitionLanguages(_ arg: [String: Any], _ result: @escaping FlutterResult) {
-    let funcName = "supportedRecognitionLanguages"
+  // func supportedRecognitionLanguages(_ arg: [String: Any], _ result: @escaping FlutterResult) {
+  //   let funcName = "supportedRecognitionLanguages"
 
-    if #available(iOS 15.0, macOS 12.0, *) {
-      Logger.debug("platform available", funcName)
-      let request = VNRecognizeTextRequest()
-      let levelStr = arg["recognition_level"] as? String ?? "accurate"
-      request.recognitionLevel = VNRequestTextRecognitionLevel(levelStr)
-      do {
-        let langs = try request.supportedRecognitionLanguages()
-        Logger.debug("langs: \(langs)", funcName)
-        result(["supported_recognition_languages": langs])
-      } catch {
-        result(PluginError.unexpectedError(msg: error.localizedDescription).toFlutterError())
-      }
-    } else {
-      Logger.debug("platform unavailable", funcName)
-      result(PluginError.unsupportedPlatform.toFlutterError())
-    }
-  }
+  //   if #available(iOS 15.0, macOS 12.0, *) {
+  //     Logger.debug("platform available", funcName)
+  //     let request = VNRecognizeTextRequest()
+  //     let levelStr = arg["recognition_level"] as? String ?? "accurate"
+  //     request.recognitionLevel = VNRequestTextRecognitionLevel(byName: levelStr)
+  //     do {
+  //       let langs = try request.supportedRecognitionLanguages()
+  //       Logger.debug("langs: \(langs)", funcName)
+  //       result(["supported_recognition_languages": langs])
+  //     } catch {
+  //       result(PluginError.unexpectedError(msg: error.localizedDescription).toFlutterError())
+  //     }
+  //   } else {
+  //     Logger.debug("platform unavailable", funcName)
+  //     result(PluginError.unsupportedPlatform.toFlutterError())
+  //   }
+  // }
 }

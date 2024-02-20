@@ -6,7 +6,6 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:uuid/uuid.dart';
 
 import 'api.dart';
-import 'model/request/request.dart';
 import 'utility/json.dart';
 
 typedef _UUID = String;

@@ -31,11 +31,11 @@ class RecognizeTextRequest: AnalyzeRequest {
   }
 
   convenience init(json: Json) throws {
-    let level = try json.strOr("recognition_level") ?? "accurate"
+    let level = try json.strOr("recognition_level") ?? ""
     self.init(
       requestId: try json.str("request_id"),
       minimumTextHeight: json.floatOr("minimum_text_height"),
-      recognitionLevel: VNRequestTextRecognitionLevel(level),
+      recognitionLevel: VNRequestTextRecognitionLevel(byName: level),
       automaticallyDetectsLanguage: json.boolOr("automatically_detects_language"),
       recognitionLanguages: json.arrayOr("recognition_languages"),
       usesLanguageCorrection: json.boolOr("uses_language_correction"),
@@ -95,5 +95,16 @@ class RecognizeTextRequest: AnalyzeRequest {
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
     Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map { ($0 as? VNRecognizedTextObservation)?.toDict(self.maxCandidates) ?? [:] }
+  }
+}
+
+extension VNRequestTextRecognitionLevel {
+  init(byName name: String) {
+    switch name {
+    case "fast":
+      self = .fast
+    default:
+      self = .accurate
+    }
   }
 }

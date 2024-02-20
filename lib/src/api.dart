@@ -5,7 +5,7 @@ import 'utility/json.dart';
 
 enum Method {
   analyze,
-  supportedRecognitionLanguages,
+  // supportedRecognitionLanguages,
   ;
 
   static const channel = MethodChannel('unified_apple_vision/method');
