@@ -25,6 +25,7 @@ export 'src/model/observation/face/landmark_region_2d.dart';
 export 'src/model/observation/face/landmarks_2d.dart';
 export 'src/model/observation/face/observation.dart';
 
+export 'src/model/request/classify_image.dart';
 export 'src/model/request/detect_barcodes.dart';
 export 'src/model/request/detect_face_capture_quality.dart';
 export 'src/model/request/detect_face_landmarks.dart';

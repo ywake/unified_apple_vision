@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 import argparse
+import shutil
 
 
 def main():
@@ -28,6 +29,9 @@ def main():
         else:
             print('Missing `--extends` argument')
             return
+    print('Do you want to delete the cache? (Y/n)')
+    if input().lower() == 'y' or input() == '':
+        delete_cache()
     print('Done! 🎉')
 
 
@@ -77,6 +81,11 @@ def observation_creation(class_name: str, ios: str, macos: str, extends: str):
         f'darwin/Classes/Extension_Observation_{class_name}.swift',
         swift_observation_template(class_name, ios, macos)
     )
+
+
+def delete_cache():
+    cache_dir = 'example/build'
+    shutil.rmtree(cache_dir, ignore_errors=True)
 
 
 def create_file(path: str, content: str):

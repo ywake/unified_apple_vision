@@ -14,6 +14,7 @@ enum VisionRequestType {
   detectFaceRectangles,
   detectFaceLandmarks,
   detectFaceCaptureQuality,
+  classifyImage,
   ;
 
   String get key => switch (this) {
@@ -29,5 +30,6 @@ enum VisionRequestType {
         VisionRequestType.detectFaceLandmarks => 'detect_face_landmarks',
         VisionRequestType.detectFaceCaptureQuality =>
           'detect_face_capture_quality',
+        VisionRequestType.classifyImage => 'classify_image',
       };
 }
