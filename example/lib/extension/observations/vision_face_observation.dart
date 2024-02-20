@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
-import 'package:unified_apple_vision_example/extension/vision_detected_object_observation.dart';
 
+import 'vision_detected_object_observation.dart';
 import 'vision_observation.dart';
 
 extension VisionFaceLandmarkRegion2DEx on VisionFaceLandmarkRegion2D {

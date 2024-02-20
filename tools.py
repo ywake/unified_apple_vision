@@ -69,7 +69,7 @@ def observation_creation(class_name: str, ios: str, macos: str, extends: str):
     )
     append_export(dart_path)
     create_file(
-        f'example/lib/extension/vision_{pascal_to_snake_case(observation_pascal)}_observation.dart',
+        f'example/lib/extension/observations/vision_{pascal_to_snake_case(observation_pascal)}_observation.dart',
         dart_observation_extension_template(observation_pascal)
     )
     create_file(
@@ -104,7 +104,7 @@ def append_export(file_path: str):
         print(f'Already exported: {file_path}')
         return
     with open(lib_path, 'a') as file:
-        file.write(f"export '{file_path}';\n")
+        file.write(f"export '{file_path}'; Sort this!\n")
     print(f'Exported: {file_path}')
 
 

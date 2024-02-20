@@ -16,7 +16,7 @@ class DetectFaceLandmarksRequest: AnalyzeRequest {
     self.init(
       requestId: try json.str("request_id"),
       constellation: json.strOr("constellation").map {
-        VNRequestFaceLandmarksConstellation($0)
+        VNRequestFaceLandmarksConstellation(byName: $0)
       }
     )
   }
@@ -55,5 +55,15 @@ class DetectFaceLandmarksRequest: AnalyzeRequest {
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
     Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map { ($0 as? VNFaceObservation)?.toDict() ?? [:] }
+  }
+}
+
+extension VNRequestFaceLandmarksConstellation {
+  init(byName name: String) {
+    switch name {
+    case "constellation65Points": self = .constellation65Points
+    case "constellation76Points": self = .constellation76Points
+    default: self = .constellationNotDefined
+    }
   }
 }
