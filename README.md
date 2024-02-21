@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Pub Version](https://img.shields.io/pub/v/unified_apple_vision)](https://pub.dev/packages/unified_apple_vision)
-[![License: MIT](https://img.shields.io/badge/Completed_Feature-9/32-g.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/Completed_Feature-11/32-g.svg)](https://opensource.org/licenses/MIT)
 
 A plugin for using [Apple Vision Framework](https://developer.apple.com/documentation/vision) with Flutter, designed to integrate multiple APIs into one plugin and process multiple analysis requests at once.
 

@@ -5,9 +5,18 @@ class Json {
   final Map<String, dynamic> data;
 
   Json(this.data);
+
   factory Json.fromString(String payload) {
     final json = jsonDecode(payload);
     return Json(json);
+  }
+
+  factory Json.fromResponse(dynamic response) {
+    final map = (response as Map).map((key, value) {
+      final strKey = key as String;
+      return MapEntry(strKey, value);
+    });
+    return Json(map);
   }
 
   @override
