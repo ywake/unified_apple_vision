@@ -54,32 +54,36 @@ extension VisionRequestTypeEx on VisionRequestType {
       case VisionRequestType.generateImageFeaturePrint:
         return [const Center(child: Text('Widget not available.'))];
       case VisionRequestType.recognizeText:
-        return result?.ofRecognizeTextRequest.map((e) => e.build()).toList();
+        return result?.ofRecognizeTextRequest?.map((e) => e.build()).toList();
       case VisionRequestType.detectRectangles:
-        return result?.ofDetectRectanglesRequest.map((e) => e.build()).toList();
+        return result?.ofDetectRectanglesRequest
+            ?.map((e) => e.build())
+            .toList();
       case VisionRequestType.recognizeAnimals:
-        return result?.ofRecognizeAnimalsRequest.map((e) => e.build()).toList();
+        return result?.ofRecognizeAnimalsRequest
+            ?.map((e) => e.build())
+            .toList();
       case VisionRequestType.detectTextRectangles:
         return result?.ofDetectTextRectanglesRequest
-            .map((e) => e.build())
+            ?.map((e) => e.build())
             .toList();
       case VisionRequestType.detectBarcodes:
-        return result?.ofDetectBarcodesRequest.map((e) => e.build()).toList();
+        return result?.ofDetectBarcodesRequest?.map((e) => e.build()).toList();
       case VisionRequestType.detectHumanRectangles:
         return result?.ofDetectHumanRectanglesRequest
-            .map((e) => e.build())
+            ?.map((e) => e.build())
             .toList();
       case VisionRequestType.detectFaceRectangles:
       case VisionRequestType.detectFaceLandmarks:
       case VisionRequestType.detectFaceCaptureQuality:
         return result?.observations
-            .whereType<VisionFaceObservation>()
+            ?.whereType<VisionFaceObservation>()
             .map((e) => e.build())
             .toList();
       case VisionRequestType.classifyImage:
         return [
           result?.observations
-              .whereType<VisionClassificationObservation>()
+              ?.whereType<VisionClassificationObservation>()
               .build(1)
         ].nonNulls.toList();
     }

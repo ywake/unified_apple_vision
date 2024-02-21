@@ -14,7 +14,7 @@ class Json {
   private func value<T>(_ key: String, _ require: Bool) throws -> T? {
     let value = dictData[key] as? T
     if require && value == nil {
-      throw PluginError.missingRequiredKey("Missing required key: \(key)")
+      throw PluginError.missingRequiredKey(key)
     }
     return value
   }
@@ -58,28 +58,6 @@ class Json {
   }
   func jsonArray(_ key: String) throws -> [Json] { try _jsonArray(key, true)! }
   func jsonArrayOr(_ key: String) -> [Json]? { try? _jsonArray(key, false) }
-
-  //   private func _enum<T: RawRepresentable>(_ key: String, _ require: Bool) throws -> T?
-  //   where T.RawValue == String {
-  //     let str: String? = try value(key, require)
-  //     if let str = str {
-  //       let value = T(rawValue: str)
-  //       if require && value == nil {
-  //         throw PluginError.invalidValue("Enum \(T.self) has no case \(str)")
-  //       }
-  //       return value
-  //     } else {
-  //       return nil
-  //     }
-  //   }
-  //   func enum_<T: RawRepresentable>(_ key: String) throws -> T
-  //   where T.RawValue == String {
-  //     try _enum(key, true)!
-  //   }
-  //   func enumOr<T: RawRepresentable>(_ key: String) -> T?
-  //   where T.RawValue == String {
-  //     try? _enum(key, false)
-  //   }
 
   func bytes(_ key: String) throws -> FlutterStandardTypedData { try value(key, true)! }
   func bytesOr(_ key: String) -> FlutterStandardTypedData? { try? value(key, false) }

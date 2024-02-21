@@ -1,6 +1,6 @@
 import Vision
 
-typealias OnResultHandler = ([String: Any]) -> Void
+typealias OnResultHandler = ([[String: Any]]) -> Void
 
 protocol AnalyzeRequest {
   func type() -> RequestType
@@ -10,24 +10,22 @@ protocol AnalyzeRequest {
 }
 
 extension AnalyzeRequest {
-  func getCompletionHandler(_ onResult: @escaping OnResultHandler)
-    -> VNRequestCompletionHandler
-  {
-    return { (req: VNRequest, err: Error?) in
-      let funcName = "\(self.type().rawValue)>getCompletionHandler"
-      Logger.debug("Request completed: \(self.type())", funcName)
+  func getResults(_ req: VNRequest, _ err: Error?) throws -> [[String: Any]] {
+    let funcName = "\(self.type().rawValue)>getResults"
+    Logger.debug("Request completed: \(self.type())", funcName)
 
-      let isGood = err == nil && req.results != nil
-      if !isGood {
-        Logger.error("Failed to analyze \(self.type()) Request.", funcName)
-        return
-      }
-      Logger.debug("Request results: \(req.results!)", funcName)
-      let res = [
-        "request_id": self.id(),
-        "results": self.encodeResult(req.results!),
-      ]
-      onResult(res)
+    var error: PluginError?
+    if let err = err {
+      error = PluginError.analyzeRequestError(msg: err.localizedDescription)
+    } else if req.results == nil {
+      error = PluginError.resultsNotFound(self)
     }
+    if let error = error {
+      Logger.error(error.message(), funcName)
+      throw error
+    }
+
+    Logger.debug("Request results: \(req.results!)", funcName)
+    return self.encodeResult(req.results!)
   }
 }

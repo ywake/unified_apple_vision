@@ -14,7 +14,7 @@ class UnifiedAppleVision {
 
   Future<void> _methodCallHandler(MethodCall call) async {
     final method = Method.values.byName(call.method);
-    final json = Json.fromResponse(call.arguments);
+    final json = Json.fromString(call.arguments.toString());
     switch (method) {
       case Method.analyze:
         _analyzeApi.onResults(json);

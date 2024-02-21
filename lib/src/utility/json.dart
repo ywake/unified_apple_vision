@@ -11,14 +11,6 @@ class Json {
     return Json(json);
   }
 
-  factory Json.fromResponse(dynamic response) {
-    final map = (response as Map).map((key, value) {
-      final strKey = key as String;
-      return MapEntry(strKey, value);
-    });
-    return Json(map);
-  }
-
   @override
   String toString() {
     return data.toString();
@@ -150,4 +142,18 @@ class Json {
 
   /// Optionally fetches a base64 encoded bytes value for [key], returning null if [key] is not found.
   Uint8List? bytesOr(String key) => _bytes(key, false);
+}
+
+extension MapEx on Map<String, dynamic> {
+  // _Map<Object?, Object?>
+  static Map<String, dynamic> fromResponse(dynamic response) {
+    final map = (response as Map).map((key, value) {
+      final strKey = key as String;
+      if (value is Map) {
+        return MapEntry(strKey, MapEx.fromResponse(value));
+      }
+      return MapEntry(strKey, value);
+    });
+    return map;
+  }
 }

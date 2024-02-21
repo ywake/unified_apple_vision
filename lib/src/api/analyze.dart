@@ -47,14 +47,22 @@ class AnalyzeApi {
 
   void onResults(Json json) {
     try {
-      // final json = Json.fromString(arguments.toString());
-      final data = _ResponseData.fromJson(json);
-      final req = _requests.remove(data.requestId);
-      if (req != null) {
-        final result = VisionResults.fromJsonList(
+      final isSuccess = json.bool_('is_success');
+      if (isSuccess) {
+        final data = _SuccessData.fromJson(json);
+        final req = _requests.remove(data.requestId);
+        if (req == null) return;
+        final result = VisionResults.onSuccess(
           type: req.request.type,
           data: data.observations,
         );
+        req.completer.complete(result);
+      } else {
+        final data = _FailureData.fromJson(json);
+        if (data.requestId == null) return;
+        final req = _requests.remove(data.requestId);
+        if (req == null) return;
+        final result = VisionResults.onFailure(data: json);
         req.completer.complete(result);
       }
     } catch (e, st) {
@@ -83,18 +91,39 @@ class _ManagingRequest {
   }
 }
 
-class _ResponseData {
+class _SuccessData {
   final String requestId;
   final List<Json> observations;
 
-  _ResponseData({
+  _SuccessData({
     required this.requestId,
     required this.observations,
   });
 
-  factory _ResponseData.fromJson(Json json) {
+  factory _SuccessData.fromJson(Json json) {
     final requestId = json.str('request_id');
     final observations = json.jsonList('results');
-    return _ResponseData(requestId: requestId, observations: observations);
+    return _SuccessData(requestId: requestId, observations: observations);
+  }
+}
+
+class _FailureData {
+  final String? requestId;
+  final String code;
+  final String message;
+
+  _FailureData({
+    required this.requestId,
+    required this.code,
+    required this.message,
+  });
+
+  factory _FailureData.fromJson(Json json) {
+    final error = json.json('error');
+    return _FailureData(
+      requestId: json.strOr('request_id'),
+      code: error.str('code'),
+      message: error.str('message'),
+    );
   }
 }
