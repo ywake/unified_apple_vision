@@ -35,7 +35,7 @@ class DetectBarcodesRequest: AnalyzeRequest {
     if #available(iOS 11.0, macOS 10.13, *) {
       return _makeRequest(handler)
     } else {
-      Logger.error(
+      Logger.e(
         "DetectBarcodesRequest requires iOS 11.0+ or macOS 10.13+",
         "\(self.type().rawValue)>makeRequest"
       )
@@ -52,7 +52,7 @@ class DetectBarcodesRequest: AnalyzeRequest {
   }
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
-    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    Logger.d("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map { ($0 as? VNBarcodeObservation)?.toDict() ?? [:] }
   }
 }

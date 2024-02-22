@@ -30,8 +30,9 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    let funcName = "handle"
     let arg = Json(call.arguments as! [String: Any])
-    Logger.debug("method: \(call.method)", "handle")
+    Logger.d("method: \(call.method)", funcName)
     let api: PluginApi = PluginApi(byName: call.method)
     switch api {
     case .analyze:
@@ -39,6 +40,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     // case "supportedRecognitionLanguages":
     //   self.supportedRecognitionLanguages(arg, result)
     default:
+      Logger.e("NotImplemented", funcName)
       result(FlutterMethodNotImplemented)
     }
   }
@@ -52,7 +54,7 @@ enum PluginApi {
     switch name {
     case "setLogLevel":
       self = .setLogLevel
-    case AnalyzeApi.key:
+    case AnalyzeApi.methodKey:
       self = .analyze
     default:
       self = .setLogLevel

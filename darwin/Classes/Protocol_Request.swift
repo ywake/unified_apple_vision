@@ -12,7 +12,7 @@ protocol AnalyzeRequest {
 extension AnalyzeRequest {
   func getResults(_ req: VNRequest, _ err: Error?) throws -> [[String: Any]] {
     let funcName = "\(self.type().rawValue)>getResults"
-    Logger.debug("Request completed: \(self.type())", funcName)
+    Logger.d("Request completed: \(self.type())", funcName)
 
     var error: PluginError?
     if let err = err {
@@ -21,11 +21,11 @@ extension AnalyzeRequest {
       error = PluginError.resultsNotFound(self)
     }
     if let error = error {
-      Logger.error(error.message(), funcName)
+      Logger.e(error.message(), funcName)
       throw error
     }
 
-    Logger.debug("Request results: \(req.results!)", funcName)
+    Logger.d("Request results: \(req.results!)", funcName)
     return self.encodeResult(req.results!)
   }
 }

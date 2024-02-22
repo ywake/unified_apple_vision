@@ -8,7 +8,7 @@ import Vision
 #endif
 
 class AnalyzeApi {
-  static let key = "analyze"
+  static let methodKey = "analyze"
   let channel: FlutterMethodChannel
   private let sequence = VNSequenceRequestHandler()
 
@@ -19,15 +19,14 @@ class AnalyzeApi {
   func execute(_ args: Json) {
     let qos = DispatchQoS.QoSClass(byNameOr: args.strOr("qos"))
     DispatchQueue.global(qos: qos).async {
-      var output: Any?
       do {
         let input: AnalyzeInput = try AnalyzeInput(json: args)
         try self.analyze(input)
       } catch let err as PluginError {
-        Logger.error(err.message(), "AnalyzeApi.execute")
+        Logger.e(err.message(), "AnalyzeApi.execute")
         self.failure(nil, err)
       } catch {
-        Logger.error(error.localizedDescription, "AnalyzeApi.execute")
+        Logger.e(error.localizedDescription, "AnalyzeApi.execute")
         let err = PluginError.unexpectedError(msg: error.localizedDescription)
         self.failure(nil, err)
       }
@@ -35,17 +34,23 @@ class AnalyzeApi {
   }
 
   private func success(_ requestId: String, _ results: [[String: Any]]) {
-    let data = [
-      "results": results
-    ]
-    self.response(isSuccess: true, requestId: requestId, data: data)
+    self.response(
+      isSuccess: true,
+      requestId: requestId,
+      data: [
+        "results": results
+      ]
+    )
   }
 
   private func failure(_ requestId: String? = nil, _ error: PluginError) {
-    let data = [
-      "error": error.toDict()
-    ]
-    self.response(isSuccess: false, requestId: requestId, data: data)
+    self.response(
+      isSuccess: false,
+      requestId: requestId,
+      data: [
+        "error": error.toDict()
+      ]
+    )
   }
 
   /// Send response to Flutter
@@ -56,17 +61,29 @@ class AnalyzeApi {
     requestId: String?,
     data: [String: Any]
   ) {
-    let res =
-      [
+    var payload = self.serialize(
+      isSuccess: isSuccess,
+      requestId: requestId,
+      data: [
         "request_id": requestId,
         "is_success": isSuccess,
       ] + data
-    var serialized: String
+    )
+    DispatchQueue.main.async {
+      self.channel.invokeMethod(AnalyzeApi.methodKey, arguments: payload)
+    }
+  }
+
+  private func serialize(
+    isSuccess: Bool,
+    requestId: String?,
+    data: [String: Any]
+  ) -> String {
     do {
-      let json = try JSONSerialization.data(withJSONObject: res, options: [])
-      serialized = String(data: json, encoding: .utf8)!
+      let json = try JSONSerialization.data(withJSONObject: data, options: [])
+      return String(data: json, encoding: .utf8)!
     } catch {
-      serialized = """
+      return """
         {
           "request_id": "\(requestId)",
           "is_success": \(isSuccess),
@@ -76,9 +93,6 @@ class AnalyzeApi {
           }
         }
         """
-    }
-    DispatchQueue.main.async {
-      self.channel.invokeMethod(AnalyzeApi.key, arguments: serialized)
     }
   }
 
@@ -99,21 +113,21 @@ class AnalyzeApi {
           } else {
             err = PluginError.unexpectedError(msg: error.localizedDescription)
           }
-          Logger.error(err.message(), "\(funcName)>onResult")
+          Logger.e(err.message(), "\(funcName)>onResult")
           self.failure(request.id(), err)
         }
       }
       if vnRequest == nil {
         let err = PluginError.failedToCreateRequest(request)
-        Logger.error(err.message(), funcName)
+        Logger.e(err.message(), funcName)
         self.failure(request.id(), err)
       }
       return vnRequest
     }
-    Logger.debug("build requests: \(requests.count)", funcName)
+    Logger.d("build requests: \(requests.count)", funcName)
 
     // perform requests
-    Logger.debug("perform requests: \(input.mode)", funcName)
+    Logger.d("perform requests: \(input.mode)", funcName)
     do {
       switch input.mode {
       case .image:
@@ -130,7 +144,7 @@ class AnalyzeApi {
         )
       }
     } catch {
-      Logger.debug("perform: \(error)", funcName)
+      Logger.d("perform: \(error)", funcName)
       throw PluginError.analyzePerformError(msg: error.localizedDescription)
     }
   }
@@ -169,7 +183,7 @@ private class AnalyzeInput {
       image: try InputImage(json: json.json("image")),
       mode: RequestMode(json.strOr("mode")),
       requests: try json.jsonArray("requests").compactMap { json -> AnalyzeRequest? in
-        Logger.debug("Comming Request: \(json.dictData)", funcName)
+        Logger.d("Comming Request: \(json.dictData)", funcName)
         let requestType = RequestType(try json.str("request_type"))
         return try requestType?.jsonToRequest(json)
       }

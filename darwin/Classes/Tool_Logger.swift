@@ -36,19 +36,19 @@ class Logger {
     print("[\(prefix)] \(message)")
   }
 
-  static func debug(_ message: String, _ symbol: String? = nil) {
+  static func d(_ message: String, _ symbol: String? = nil) {
     _log(.debug, message, symbol)
   }
 
-  static func info(_ message: String, _ symbol: String? = nil) {
+  static func i(_ message: String, _ symbol: String? = nil) {
     _log(.info, message, symbol)
   }
 
-  static func warning(_ message: String, _ symbol: String? = nil) {
+  static func w(_ message: String, _ symbol: String? = nil) {
     _log(.warning, message, symbol)
   }
 
-  static func error(_ message: String, _ symbol: String? = nil) {
+  static func e(_ message: String, _ symbol: String? = nil) {
     _log(.error, message, symbol)
   }
 }
