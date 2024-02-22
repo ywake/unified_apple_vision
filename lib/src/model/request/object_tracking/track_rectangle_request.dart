@@ -15,15 +15,15 @@ class VisionTrackRectangleRequest extends VisionTrackingRequest {
     required this.target,
     super.trackingLevel,
     super.isLastFrame,
+    super.regionOfInterest,
     required super.onResults,
   }) : super(type: VisionRequestType.trackRectangle);
 
   @override
   Map<String, dynamic> toMap() {
     return {
+      ...super.toMap(),
       'input': target.toMap(),
-      'tracking_level': trackingLevel.name,
-      'is_last_frame': isLastFrame,
     };
   }
 }

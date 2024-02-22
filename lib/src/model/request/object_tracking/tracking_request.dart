@@ -1,7 +1,7 @@
-import 'package:unified_apple_vision/src/model/request/request.dart';
+import 'package:unified_apple_vision/src/model/request/image_based.dart';
 
 /// The abstract superclass for image analysis requests that track unique features across multiple images or video frames.
-abstract class VisionTrackingRequest extends VisionRequest {
+abstract class VisionTrackingRequest extends VisionImageBasedRequest {
   /// A value for specifying whether to prioritize speed or location accuracy.
   final VisionTrackingLevel trackingLevel;
 
@@ -9,11 +9,21 @@ abstract class VisionTrackingRequest extends VisionRequest {
   final bool isLastFrame;
 
   const VisionTrackingRequest({
-    required super.type,
-    required super.onResults,
     this.trackingLevel = VisionTrackingLevel.accurate,
     this.isLastFrame = false,
+    required super.type,
+    required super.regionOfInterest,
+    required super.onResults,
   });
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      ...super.toMap(),
+      'tracking_level': trackingLevel.name,
+      'is_last_frame': isLastFrame,
+    };
+  }
 }
 
 /// A value for specifying whether to prioritize speed or location accuracy.

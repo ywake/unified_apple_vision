@@ -27,10 +27,9 @@ class VisionDetectedObjectObservation extends VisionObservation {
         );
 
   factory VisionDetectedObjectObservation.fromJson(Json json) {
-    final boundingBox = json.json('bounding_box');
     return VisionDetectedObjectObservation.withParent(
       parent: VisionObservation.fromJson(json),
-      boundingBox: RectEx.fromJson(boundingBox),
+      boundingBox: json.obj('bounding_box', RectEx.fromJson),
     );
   }
 

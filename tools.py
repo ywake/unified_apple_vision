@@ -179,17 +179,20 @@ def dart_request_template(request_pascal: str, ios: str, macos: str) -> str:
     return f"""
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 
-import 'request.dart';
+import 'image_based.dart';
 
 /// **iOS {ios}+, macOS {macos}+**
-class Vision{request_pascal}Request extends VisionRequest {{
+class Vision{request_pascal}Request extends VisionImageBasedRequest {{
   const Vision{request_pascal}Request({{
+    super.regionOfInterest,
     required super.onResults,
   }}) : super(type: VisionRequestType.{pascal_to_camel_case(request_pascal)});
 
   @override
   Map<String, dynamic> toMap() {{
-    throw UnimplementedError();
+    return {{
+      ...super.toMap(),
+    }};
   }}
 }}
 """.strip()

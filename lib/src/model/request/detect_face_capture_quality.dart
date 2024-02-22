@@ -1,7 +1,7 @@
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/observation/face/observation.dart';
 
-import 'request.dart';
+import 'image_based.dart';
 
 /// **iOS 13.0+, macOS 10.15+**
 ///
@@ -10,13 +10,16 @@ import 'request.dart';
 /// This request produces or updates a [VisionFaceObservation] object’s property [VisionFaceObservation.faceCaptureQuality] with a floating-point value. The value ranges from 0 to 1. Faces with quality closer to 1 are better lit, sharper, and more centrally positioned than faces with quality closer to 0.
 ///
 /// If you don’t execute the request, or the request fails, the property [VisionFaceObservation.faceCaptureQuality] is nil.
-class VisionDetectFaceCaptureQualityRequest extends VisionRequest {
+class VisionDetectFaceCaptureQualityRequest extends VisionImageBasedRequest {
   const VisionDetectFaceCaptureQualityRequest({
+    super.regionOfInterest,
     required super.onResults,
   }) : super(type: VisionRequestType.detectFaceCaptureQuality);
 
   @override
   Map<String, dynamic> toMap() {
-    return {};
+    return {
+      ...super.toMap(),
+    };
   }
 }

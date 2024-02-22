@@ -2,7 +2,7 @@ import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/observation/barcode.dart';
 
-import 'request.dart';
+import 'image_based.dart';
 
 /// **iOS 11.0+, macOS 10.13+**
 ///
@@ -10,7 +10,7 @@ import 'request.dart';
 ///
 /// This request returns an array of [VisionBarcodeObservation] objects, one for each barcode it detects.
 ///
-class VisionDetectBarcodesRequest extends VisionRequest {
+class VisionDetectBarcodesRequest extends VisionImageBasedRequest {
   /// The barcode symbologies that the request detects in an image.
   ///
   /// By default, a request scans for all symbologies. Specify a subset of symbologies to limit the request’s detection range.
@@ -24,6 +24,7 @@ class VisionDetectBarcodesRequest extends VisionRequest {
   const VisionDetectBarcodesRequest({
     this.symbologies,
     this.coalesceCompositeSymbologies,
+    super.regionOfInterest,
     required super.onResults,
   }) : super(type: VisionRequestType.detectBarcodes);
 
@@ -34,6 +35,7 @@ class VisionDetectBarcodesRequest extends VisionRequest {
   @override
   Map<String, dynamic> toMap() {
     return {
+      ...super.toMap(),
       'symbologies': symbologies?.map((e) => e.name).toList(),
       'coalesce_composite_symbologies': coalesceCompositeSymbologies,
     };
