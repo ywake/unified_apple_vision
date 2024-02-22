@@ -1,5 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:unified_apple_vision/src/api/methods.dart';
+import 'package:unified_apple_vision/src/extension/optional.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
@@ -17,7 +18,7 @@ class LoggingApi {
     final log = _LogData.fromJson(json);
     _logger.log(
       log.level.loggerLevel,
-      '[unified_apple_vision${log.symbol == null ? '' : '>${log.symbol}'}]\n'
+      '[unified_apple_vision${log.symbol.maybe((s) => '>$s') ?? ''}]\n'
       '${log.message}',
     );
   }
