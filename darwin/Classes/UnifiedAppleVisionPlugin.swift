@@ -38,7 +38,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     do {
       switch api {
       case .analyze:
-        self.analyzeApi.execute(arg)
+        try self.analyzeApi.execute(arg)
         result(true)
       case .logging:
         try Logger.setLogLevel(arg)

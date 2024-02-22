@@ -9,7 +9,8 @@ enum Method {
 
   static const channel = MethodChannel('unified_apple_vision/method');
 
-  Future<bool?> invoke([Map<String, dynamic>? arg]) async {
-    return channel.invokeMethod<bool>(name, arg);
+  Future<bool> invoke([Map<String, dynamic>? arg]) async {
+    final res = await channel.invokeMethod<bool>(name, arg);
+    return res ?? false;
   }
 }

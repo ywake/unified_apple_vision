@@ -16,19 +16,24 @@ class AnalyzeApi {
     self.channel = channel
   }
 
-  func execute(_ args: Json) {
+  func execute(_ args: Json) throws {
+    self._execute(args) { err in
+      Logger.e(err.message(), funcName)
+      throw err
+    }
+  }
+
+  private func _execute(_ args: Json, _ onError: @escaping (PluginError) -> Void) {
     let qos = DispatchQoS.QoSClass(byNameOr: args.strOr("qos"))
     DispatchQueue.global(qos: qos).async {
       do {
         let input: AnalyzeInput = try AnalyzeInput(json: args)
         try self.analyze(input)
       } catch let err as PluginError {
-        Logger.e(err.message(), "AnalyzeApi.execute")
-        self.failure(nil, err)
+        onError(err)
       } catch {
-        Logger.e(error.localizedDescription, "AnalyzeApi.execute")
         let err = PluginError.unexpectedError(msg: error.localizedDescription)
-        self.failure(nil, err)
+        onError(err)
       }
     }
   }
@@ -43,7 +48,7 @@ class AnalyzeApi {
     )
   }
 
-  private func failure(_ requestId: String? = nil, _ error: PluginError) {
+  private func failure(_ requestId: String, _ error: PluginError) {
     self.response(
       isSuccess: false,
       requestId: requestId,
@@ -58,7 +63,7 @@ class AnalyzeApi {
   /// Even if it fails, it must always return a result for each request.
   private func response(
     isSuccess: Bool,
-    requestId: String?,
+    requestId: String,
     data: [String: Any]
   ) {
     var payload = self.serialize(
