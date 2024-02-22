@@ -7,6 +7,6 @@ extension VNTextObservation {
       "character_boxes": self.characterBoxes?.map { (characterBox: VNRectangleObservation) in
         return characterBox.toDict()
       }
-    ].merging(super.toDict()) { (old, _) in old }
+    ] + super.toDict()
   }
 }

@@ -1,8 +1,8 @@
 # unified_apple_vision 🍎
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
-[![Pub Version](https://img.shields.io/pub/v/unified_apple_vision)](https://pub.dev/packages/unified_apple_vision)
-[![License: MIT](https://img.shields.io/badge/Completed_Feature-9/32-g.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/github/license/ywake/unified_apple_vision?logo=open-source-initiative&color=purple)](https://github.com/ywake/unified_apple_vision/blob/main/LICENSE)
+[![Pub Version](https://img.shields.io/pub/v/unified_apple_vision?logo=dart&logoColor=0175C2)](https://pub.dev/packages/unified_apple_vision)
+[![Completed Feature](https://img.shields.io/badge/Completed-11/32-g.svg?logo=cachet)](https://opensource.org/licenses/MIT)
 
 A plugin for using [Apple Vision Framework](https://developer.apple.com/documentation/vision) with Flutter, designed to integrate multiple APIs into one plugin and process multiple analysis requests at once.
 
@@ -17,11 +17,11 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 |------------|---------|:------:|:---:|:-----:|-------------|
 | [Still Image Analysis](https://developer.apple.com/documentation/vision/detecting_objects_in_still_images) | [Classify Image](https://developer.apple.com/documentation/vision/vnclassifyimagerequest) | ✅ | 13.0+ | 10.15+ | A request to classify an image. |
 || [Generate Image Feature Print](https://developer.apple.com/documentation/vision/vngenerateimagefeatureprintrequest) | ✅ | 13.0+ | 10.15+ | An image-based request to generate feature prints from an image. (FeaturePrint — vector image descriptor similar to a word vector) |
-||||||
+|||||||
 | [Image Sequence Analysis](https://developer.apple.com/documentation/vision/applying_matte_effects_to_people_in_images_and_video) | [Generate Person Segmentation](https://developer.apple.com/documentation/vision/vngeneratepersonsegmentationrequest) | ❌ | 15.0+ | 12.0+ | Produces a matte image for a person it finds in the input image. |
 || [Generate Person Instance Mask](https://developer.apple.com/documentation/vision/vngeneratepersoninstancemaskrequest) | ❌ | 17.0+ | 14.0+ | Produces a mask of individual people it finds in the input image. |
 || [Detect Document Segmentation](https://developer.apple.com/documentation/vision/vndetectdocumentsegmentationrequest) | ❌ | 15.0+ | 12.0+ | Detects rectangular regions that contain text in the input image. |
-||||||
+|||||||
 | [Saliency Analysis](https://developer.apple.com/documentation/vision/cropping_images_using_saliency) | [Generate Attention Based Saliency Image](https://developer.apple.com/documentation/vision/vngenerateattentionbasedsaliencyimagerequest) | ❌ | 13.0+ | 10.15+ | Produces a heat map that identifies the parts of an image most likely to draw attention. |
 || [Generate Objectness Based Saliency Image](https://developer.apple.com/documentation/vision/vngenerateobjectnessbasedsaliencyimagerequest) | ❌ | 13.0+ | 10.15+ | Generates a heat map that identifies the parts of an image most likely to represent objects. |
 |||||||

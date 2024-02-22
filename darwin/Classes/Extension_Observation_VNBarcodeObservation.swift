@@ -8,7 +8,7 @@ extension VNBarcodeObservation {
       "symbology": self.symbology.toString(),
     ]
     if #available(iOS 17.0, macOS 14.0, *) {
-      let additionalData: [String: Any] = [
+      dict += [
         "payload_data": self.payloadData?.base64EncodedString(),
         "supplemental_payload_string_value": self.supplementalPayloadString,
         "supplemental_payload_data": self.supplementalPayloadData?.base64EncodedString(),
@@ -17,10 +17,9 @@ extension VNBarcodeObservation {
         "is_gs1_data_carrier": self.isGS1DataCarrier,
         "is_color_inverted": self.isColorInverted,
       ]
-      dict.merge(additionalData) { (old, _) in old }
     }
 
-    return dict.merging(super.toDict()) { (old, _) in old }
+    return dict + super.toDict()
   }
 }
 

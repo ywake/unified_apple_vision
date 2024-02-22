@@ -31,7 +31,7 @@ class DetectHumanRectanglesRequest: AnalyzeRequest {
     if #available(iOS 13.0, macOS 10.15, *) {
       return _makeRequest(handler)
     } else {
-      Logger.error(
+      Logger.e(
         "DetectHumanRectanglesRequest requires iOS 13.0+ or macOS 10.15+",
         "\(self.type().rawValue)>makeRequest"
       )
@@ -53,7 +53,7 @@ class DetectHumanRectanglesRequest: AnalyzeRequest {
   }
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
-    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    Logger.d("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map { observation in
       if #available(iOS 15.0, macOS 12.0, *) {
         return (observation as? VNHumanObservation)?.toDict() ?? [:]

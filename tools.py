@@ -226,7 +226,7 @@ class {request_pascal}Request: AnalyzeRequest {{
     if #available(iOS {ios}, macOS {macos}, *) {{
       return _makeRequest(handler)
     }} else {{
-      Logger.error(
+      Logger.e(
         "{request_pascal}Request requires iOS {ios}+ or macOS {macos}+",
         "\(self.type().rawValue)>makeRequest"
       )
@@ -243,7 +243,7 @@ class {request_pascal}Request: AnalyzeRequest {{
   }}
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {{
-    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    Logger.d("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map {{ ($0 as? VN/* FIXME */Observation)?.toDict() ?? [:] }}
   }}
 }}
@@ -309,7 +309,7 @@ import Vision
 extension {class_name} {{
   @objc override func toDict() -> [String: Any] {{
     return [
-    ].merging(super.toDict()) {{ (old, _) in old }}
+    ] + super.toDict()
   }}
 }}
 """.strip()

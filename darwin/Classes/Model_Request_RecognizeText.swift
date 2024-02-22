@@ -56,7 +56,7 @@ class RecognizeTextRequest: AnalyzeRequest {
     if #available(iOS 13.0, macOS 10.15, *) {
       return _makeRequest(handler)
     } else {
-      Logger.error(
+      Logger.e(
         "RecognizeTextRequest requires iOS 13.0+ or macOS 10.15+",
         "\(self.type().rawValue)>makeRequest"
       )
@@ -78,7 +78,7 @@ class RecognizeTextRequest: AnalyzeRequest {
         request.automaticallyDetectsLanguage = automaticallyDetectsLanguage
       }
     } else if self.automaticallyDetectsLanguage != nil {
-      Logger.warning("automaticallyDetectsLanguage is available on iOS 16.0+ and macOS 13.0+")
+      Logger.w("automaticallyDetectsLanguage is available on iOS 16.0+ and macOS 13.0+")
     }
     if let recognitionLanguages = self.recognitionLanguages {
       request.recognitionLanguages = recognitionLanguages
@@ -93,7 +93,7 @@ class RecognizeTextRequest: AnalyzeRequest {
   }
 
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]] {
-    Logger.debug("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
+    Logger.d("Encoding: \(self.type().rawValue)", "\(self.type().rawValue)>encodeResult")
     return result.map { ($0 as? VNRecognizedTextObservation)?.toDict(self.maxCandidates) ?? [:] }
   }
 }

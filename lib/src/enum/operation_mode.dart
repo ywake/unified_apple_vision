@@ -2,19 +2,13 @@
 enum VisionAnalyzeMode {
   /// Analyze a single still image.
   /// Processed using VNImageRequestHandler.
-  still,
+  still('image'),
 
   /// Analyze a continuous image sequence.
   /// Processed using VNSequenceRequestHandler.
-  sequential,
+  sequential('sequence'),
   ;
 
-  String get modeName {
-    switch (this) {
-      case VisionAnalyzeMode.still:
-        return 'image';
-      case VisionAnalyzeMode.sequential:
-        return 'sequence';
-    }
-  }
+  final String modeName;
+  const VisionAnalyzeMode(this.modeName);
 }

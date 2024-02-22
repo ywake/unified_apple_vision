@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:unified_apple_vision/src/extension/optional.dart';
+
 class Json {
   final Map<String, dynamic> data;
 
   Json(this.data);
+
   factory Json.fromString(String payload) {
     final json = jsonDecode(payload);
     return Json(json);
@@ -62,7 +65,7 @@ class Json {
 
   Json? _json(String key, bool require) {
     final map = _value<Map<String, dynamic>>(key, require);
-    return map != null ? Json(map) : null;
+    return map.maybe((m) => Json(m));
   }
 
   /// Fetches a Json value for [key]. Throws an exception if [key] is not found.
@@ -84,7 +87,7 @@ class Json {
 
   T? _obj<T>(String key, T Function(Json) fromJson, bool require) {
     final json = _json(key, require);
-    return json == null ? null : fromJson(json);
+    return json.maybe((j) => fromJson(j));
   }
 
   /// Fetches an object for [key]. Throws an exception if [key] is not found.
@@ -133,7 +136,7 @@ class Json {
 
   Uint8List? _bytes(String key, bool require) {
     final s = _value<String>(key, require);
-    return s != null ? base64Decode(s) : null;
+    return s.maybe((s) => base64Decode(s));
   }
 
   /// Fetches a base64 encoded bytes value for [key]. Throws an exception if [key] is not found.
@@ -141,4 +144,18 @@ class Json {
 
   /// Optionally fetches a base64 encoded bytes value for [key], returning null if [key] is not found.
   Uint8List? bytesOr(String key) => _bytes(key, false);
+}
+
+extension MapEx on Map<String, dynamic> {
+  // _Map<Object?, Object?>
+  static Map<String, dynamic> fromResponse(dynamic response) {
+    final map = (response as Map).map((key, value) {
+      final strKey = key as String;
+      if (value is Map) {
+        return MapEntry(strKey, MapEx.fromResponse(value));
+      }
+      return MapEntry(strKey, value);
+    });
+    return map;
+  }
 }
