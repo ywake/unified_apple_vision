@@ -309,7 +309,7 @@ import Vision
 extension {class_name} {{
   @objc override func toDict() -> [String: Any] {{
     return [
-    ].merging(super.toDict()) {{ (old, _) in old }}
+    ] + super.toDict()
   }}
 }}
 """.strip()

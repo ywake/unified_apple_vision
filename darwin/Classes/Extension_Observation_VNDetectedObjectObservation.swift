@@ -30,6 +30,6 @@ extension VNDetectedObjectObservation {
     )
     return [
       "bounding_box": boundingBox.toDict()
-    ].merging(super.toDict()) { (old, _) in old }
+    ] + super.toDict()
   }
 }

@@ -24,6 +24,6 @@ extension VNRectangleObservation {
       "bottom_right": self.bottomRight.reversedY().toDict(),
       "top_left": self.topLeft.reversedY().toDict(),
       "top_right": self.topRight.reversedY().toDict(),
-    ].merging(super.toDict()) { (old, _) in old }
+    ] + super.toDict()
   }
 }

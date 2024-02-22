@@ -7,6 +7,6 @@ extension VNRecognizedObjectObservation {
       "labels": self.labels.map { (label: VNClassificationObservation) in
         return label.toDict()
       }
-    ].merging(super.toDict()) { (old, _) in old }
+    ] + super.toDict()
   }
 }

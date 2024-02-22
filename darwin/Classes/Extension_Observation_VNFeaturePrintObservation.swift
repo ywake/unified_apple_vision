@@ -7,7 +7,7 @@ extension VNFeaturePrintObservation {
       "data": self.data.base64EncodedString(),
       "element_count": self.elementCount,
       "element_type": self.elementType.name(),
-    ].merging(super.toDict()) { (old, _) in old }
+    ] + super.toDict()
   }
 }
 

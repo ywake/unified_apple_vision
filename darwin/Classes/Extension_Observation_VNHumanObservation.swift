@@ -5,6 +5,6 @@ extension VNHumanObservation {
   @objc override func toDict() -> [String: Any] {
     return [
       "upper_body_only": self.upperBodyOnly
-    ].merging(super.toDict()) { (old, _) in old }
+    ] + super.toDict()
   }
 }
