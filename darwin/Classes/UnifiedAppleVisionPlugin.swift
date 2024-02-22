@@ -13,6 +13,7 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   public init(channel: FlutterMethodChannel) {
     self.channel = channel
     self.analyzeApi = AnalyzeApi(channel: channel)
+    Logger.shared.channel = channel
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -33,31 +34,44 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
     let funcName = "handle"
     let arg = Json(call.arguments as! [String: Any])
     Logger.d("method: \(call.method)", funcName)
-    let api: PluginApi = PluginApi(byName: call.method)
-    switch api {
-    case .analyze:
-      self.analyzeApi.execute(arg)
-    // case "supportedRecognitionLanguages":
-    //   self.supportedRecognitionLanguages(arg, result)
-    default:
-      Logger.e("NotImplemented", funcName)
-      result(FlutterMethodNotImplemented)
+    let api: PluginApi? = PluginApi(byNameOr: call.method)
+    do {
+      switch api {
+      case .analyze:
+        self.analyzeApi.execute(arg)
+        result(true)
+      case .logging:
+        try Logger.setLogLevel(arg)
+        result(true)
+      // case "supportedRecognitionLanguages":
+      //   self.supportedRecognitionLanguages(arg, result)
+      default:
+        Logger.e("NotImplemented \(call.method)", funcName)
+        result(FlutterMethodNotImplemented)
+      }
+    } catch let err as PluginError {
+      Logger.e(err.message(), funcName)
+      result(err.toFlutterError())
+    } catch {
+      Logger.e(error.localizedDescription, funcName)
+      let err = PluginError.unexpectedError(msg: error.localizedDescription)
+      result(err.toFlutterError())
     }
   }
 }
 
 enum PluginApi {
-  case setLogLevel
+  case logging
   case analyze
 
-  init(byName name: String) {
+  init?(byNameOr name: String) {
     switch name {
-    case "setLogLevel":
-      self = .setLogLevel
+    case Logger.methodKey:
+      self = .logging
     case AnalyzeApi.methodKey:
       self = .analyze
     default:
-      self = .setLogLevel
+      return nil
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 enum Method {
-  setLogLevel,
+  logging,
   analyze,
   // supportedRecognitionLanguages,
   // computeDistance,
@@ -9,7 +9,7 @@ enum Method {
 
   static const channel = MethodChannel('unified_apple_vision/method');
 
-  Future<Map<String, dynamic>?> invoke([Map<String, dynamic>? arg]) async {
-    return channel.invokeMapMethod<String, dynamic>(name, arg);
+  Future<bool?> invoke([Map<String, dynamic>? arg]) async {
+    return channel.invokeMethod<bool>(name, arg);
   }
 }

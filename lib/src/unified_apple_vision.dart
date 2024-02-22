@@ -1,32 +1,49 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'api/analyze.dart';
+import 'api/logging.dart';
 import 'api/methods.dart';
 import 'utility/json.dart';
 
 class UnifiedAppleVision {
+  static final _logger = Logger(
+    printer: PrettyPrinter(
+      stackTraceBeginIndex: 1 << 63 - 1,
+      colors: false,
+    ),
+  );
+
   UnifiedAppleVision() {
     Method.channel.setMethodCallHandler(_methodCallHandler);
   }
 
   Future<void> _methodCallHandler(MethodCall call) async {
     final method = Method.values.byName(call.method);
-    final json = Json.fromString(call.arguments.toString());
-    switch (method) {
-      case Method.analyze:
-        _analyzeApi.onResults(json);
-      default:
-        throw UnimplementedError('Response method $method is not implemented');
+    try {
+      final json = Json.fromString(call.arguments.toString());
+      switch (method) {
+        case Method.analyze:
+          _analyzeApi.onResults(json);
+          break;
+        case Method.logging:
+          _loggingApi.onResults(json);
+          break;
+      }
+    } catch (e, st) {
+      _logger.e("Failed to handle method call: $call",
+          error: e, stackTrace: st);
+      return;
     }
   }
 
   ///
   /// Analyze API
   ///
-  final _analyzeApi = AnalyzeApi();
+  final _analyzeApi = AnalyzeApi(_logger);
 
   /// Specify whether to analyze a single still image or a continuous image sequence, such as a video frame.
   set analyzeMode(VisionAnalyzeMode mode) {
@@ -48,9 +65,10 @@ class UnifiedAppleVision {
   ///
   /// setLogLevel
   ///
+  final _loggingApi = LoggingApi(_logger);
 
   /// Set the log level for Unified Apple Vision.
   Future<void> setLogLevel(VisionLogLevel level) async {
-    await Method.setLogLevel.invoke({'log_level': level.name});
+    await _loggingApi.setLogLevel(level);
   }
 }

@@ -1,3 +1,9 @@
+#if os(iOS)
+  import Flutter
+#elseif os(macOS)
+  import FlutterMacOS
+#endif
+
 enum PluginError: Error {
   /// InpuImage.init failed
   case invalidImageData
@@ -63,5 +69,13 @@ enum PluginError: Error {
       "code": self.code(),
       "message": self.message(),
     ]
+  }
+
+  func toFlutterError() -> FlutterError {
+    return FlutterError(
+      code: self.code(),
+      message: self.message(),
+      details: nil
+    )
   }
 }

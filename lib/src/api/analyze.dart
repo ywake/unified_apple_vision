@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:uuid/uuid.dart';
@@ -10,6 +10,9 @@ import 'methods.dart';
 typedef _UUID = String;
 
 class AnalyzeApi {
+  final Logger _logger;
+  AnalyzeApi(this._logger);
+
   var analyzeMode = VisionAnalyzeMode.still;
   var executionPriority = VisionExecutionPriority.unspecified;
   final _requests = <_UUID, _ManagingRequest>{};
@@ -38,8 +41,7 @@ class AnalyzeApi {
         try {
           req.request.onResults(data);
         } catch (e, st) {
-          debugPrint('error: $e');
-          debugPrint('stacktrace: $st');
+          _logger.e("Error VisionRequest.onResults", error: e, stackTrace: st);
         }
       });
     }
@@ -66,8 +68,7 @@ class AnalyzeApi {
         req.completer.complete(result);
       }
     } catch (e, st) {
-      debugPrint('error: $e');
-      debugPrint('stacktrace: $st');
+      _logger.e("Error on receiving results", error: e, stackTrace: st);
     }
   }
 }
