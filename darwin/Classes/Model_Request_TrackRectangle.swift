@@ -1,28 +1,27 @@
 import Vision
 
-class TrackRectangleRequest: AnalyzeRequest {
-  let requestId: String
+class TrackRectangleRequest: ImageBasedRequest, AnalyzeRequest {
   let inputObservation: VNRectangleObservation
   let trackingLevel: VNRequestTrackingLevel?
   let isLastFrame: Bool?
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     inputObservation: VNRectangleObservation,
     trackingLevel: VNRequestTrackingLevel?,
     isLastFrame: Bool?
   ) {
-    self.requestId = requestId
     self.inputObservation = inputObservation
     self.trackingLevel = trackingLevel
     self.isLastFrame = isLastFrame
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     let level = try json.strOr("tracking_level") ?? ""
     let input = try json.json("input")
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       inputObservation: try VNRectangleObservation(dict: input.dictData),
       trackingLevel: VNRequestTrackingLevel(byName: level),
       isLastFrame: json.boolOr("is_last_frame")
