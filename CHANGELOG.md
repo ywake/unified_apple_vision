@@ -1,3 +1,6 @@
+## 1.2.1
+* Fix: Bugs
+
 ## 1.2.0
 * Feat: Still Image Analysis API
 * Fix: Error handling
