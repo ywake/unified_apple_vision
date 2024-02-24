@@ -5,7 +5,7 @@ typealias OnResultHandler = ([[String: Any]]) -> Void
 protocol AnalyzeRequest {
   func type() -> RequestType
   func id() -> String
-  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest?
+  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) throws -> VNRequest
   func encodeResult(_ result: [VNObservation]) -> [[String: Any]]
 }
 
@@ -21,7 +21,6 @@ extension AnalyzeRequest {
       error = PluginError.resultsNotFound(self)
     }
     if let error = error {
-      Logger.e(error.message(), funcName)
       throw error
     }
 

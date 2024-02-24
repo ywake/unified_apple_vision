@@ -25,7 +25,6 @@ class InputImage {
     let data = Data(bytes.data)
     let size = CGSize(width: width, height: height)
     if data.count != height * width * 4 {
-      Logger.e("invalid data size", funcName)
       throw PluginError.invalidImageData
     }
     let ciImage = CIImage(

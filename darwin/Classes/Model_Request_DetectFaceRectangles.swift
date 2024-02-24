@@ -21,15 +21,11 @@ class DetectFaceRectanglesRequest: ImageBasedRequest, AnalyzeRequest {
     return self.requestId
   }
 
-  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
+  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) throws -> VNRequest {
     if #available(iOS 11.0, macOS 10.13, *) {
       return _makeRequest(handler)
     } else {
-      Logger.e(
-        "DetectFaceRectanglesRequest requires iOS 11.0+ or macOS 10.13+",
-        "\(self.type().rawValue)>makeRequest"
-      )
-      return nil
+      throw PluginError.unsupportedPlatform(iOS: "11.0", macOS: "10.13")
     }
   }
 
