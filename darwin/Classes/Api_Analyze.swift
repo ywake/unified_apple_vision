@@ -18,8 +18,8 @@ class AnalyzeApi {
 
   func execute(_ args: Json) throws {
     self._execute(args) { err in
-      Logger.e(err.message(), funcName)
-      throw err
+      Logger.e(err.message(), "AnalyzeApi.execute")
+      // throw err
     }
   }
 
