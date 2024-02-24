@@ -32,46 +32,36 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     let funcName = "handle"
-    let arg = Json(call.arguments as! [String: Any])
     Logger.d("method: \(call.method)", funcName)
-    let api: PluginApi? = PluginApi(byNameOr: call.method)
-    do {
-      switch api {
-      case .analyze:
-        try self.analyzeApi.execute(arg)
-        result(true)
-      case .logging:
-        try Logger.setLogLevel(arg)
-        result(true)
-      // case "supportedRecognitionLanguages":
-      //   self.supportedRecognitionLanguages(arg, result)
-      default:
-        Logger.e("NotImplemented \(call.method)", funcName)
-        result(FlutterMethodNotImplemented)
+    let arg = Json(call.arguments as! [String: Any])
+    Task(priority: TaskPriority(byNameOr: arg.strOr("priority"))) {
+      let res = { (obj: Any) -> Void in
+        Task { @MainActor in
+          return result(obj)
+        }
       }
-    } catch let err as PluginError {
-      Logger.e(err.message(), funcName)
-      result(err.toFlutterError())
-    } catch {
-      Logger.e(error.localizedDescription, funcName)
-      let err = PluginError.unexpectedError(msg: error.localizedDescription)
-      result(err.toFlutterError())
-    }
-  }
-}
-
-enum PluginApi {
-  case logging
-  case analyze
-
-  init?(byNameOr name: String) {
-    switch name {
-    case Logger.methodKey:
-      self = .logging
-    case AnalyzeApi.methodKey:
-      self = .analyze
-    default:
-      return nil
+      do {
+        switch Method(call.method as String) {
+        case .analyze:
+          try self.analyzeApi.execute(arg)
+          res(true)
+        case .logging:
+          try Logger.setLogLevel(arg)
+          res(true)
+        // case "supportedRecognitionLanguages":
+        //   self.supportedRecognitionLanguages(arg, result)
+        default:
+          Logger.e("NotImplemented \(call.method)", funcName)
+          res(FlutterMethodNotImplemented)
+        }
+      } catch let err as PluginError {
+        Logger.e(err.message(), funcName)
+        res(err.toFlutterError())
+      } catch {
+        Logger.e(error.localizedDescription, funcName)
+        let err = PluginError.unexpectedError(msg: error.localizedDescription)
+        res(err.toFlutterError())
+      }
     }
   }
 }

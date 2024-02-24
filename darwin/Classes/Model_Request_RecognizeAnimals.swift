@@ -21,15 +21,11 @@ class RecognizeAnimalsRequest: ImageBasedRequest, AnalyzeRequest {
     return self.requestId
   }
 
-  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {
+  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) throws -> VNRequest {
     if #available(iOS 13.0, macOS 10.15, *) {
       return _makeRequest(handler)
     } else {
-      Logger.e(
-        "RecognizeAnimalsRequest requires iOS 13.0+ or macOS 10.15+",
-        "\(self.type().rawValue)>makeRequest"
-      )
-      return nil
+      throw PluginError.unsupportedPlatform(iOS: "13.0", macOS: "10.15")
     }
   }
 

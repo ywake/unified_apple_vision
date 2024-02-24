@@ -21,7 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _unifiedAppleVision = UnifiedAppleVision()
-    ..executionPriority = VisionExecutionPriority.veryHigh
+    ..executionPriority = VisionExecutionPriority.high
     ..setLogLevel(VisionLogLevel.error);
 
   VisionRequestType selectedType = VisionRequestType.recognizeText;

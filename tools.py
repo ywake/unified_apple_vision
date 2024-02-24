@@ -223,15 +223,11 @@ class {request_pascal}Request: ImageBasedRequest, AnalyzeRequest {{
     return self.requestId
   }}
 
-  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) -> VNRequest? {{
+  func makeRequest(_ handler: @escaping VNRequestCompletionHandler) throws -> VNRequest {{
     if #available(iOS {ios}, macOS {macos}, *) {{
       return _makeRequest(handler)
     }} else {{
-      Logger.e(
-        "{request_pascal}Request requires iOS {ios}+ or macOS {macos}+",
-        "\(self.type().rawValue)>makeRequest"
-      )
-      return nil
+      throw PluginError.unsupportedPlatform(iOS: "{ios}", macOS: "{macos}")
     }}
   }}
 

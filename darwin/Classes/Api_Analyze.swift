@@ -8,7 +8,7 @@ import Vision
 #endif
 
 class AnalyzeApi {
-  static let methodKey = "analyze"
+  let method = Method.analyze
   let channel: FlutterMethodChannel
   private let sequence = VNSequenceRequestHandler()
 
@@ -17,25 +17,8 @@ class AnalyzeApi {
   }
 
   func execute(_ args: Json) throws {
-    self._execute(args) { err in
-      Logger.e(err.message(), funcName)
-      throw err
-    }
-  }
-
-  private func _execute(_ args: Json, _ onError: @escaping (PluginError) -> Void) {
-    let qos = DispatchQoS.QoSClass(byNameOr: args.strOr("qos"))
-    DispatchQueue.global(qos: qos).async {
-      do {
-        let input: AnalyzeInput = try AnalyzeInput(json: args)
-        try self.analyze(input)
-      } catch let err as PluginError {
-        onError(err)
-      } catch {
-        let err = PluginError.unexpectedError(msg: error.localizedDescription)
-        onError(err)
-      }
-    }
+    let input: AnalyzeInput = try AnalyzeInput(json: args)
+    try self.analyze(input)
   }
 
   private func success(_ requestId: String, _ results: [[String: Any]]) {
@@ -66,7 +49,7 @@ class AnalyzeApi {
     requestId: String,
     data: [String: Any]
   ) {
-    var payload = self.serialize(
+    let payload = self.serialize(
       isSuccess: isSuccess,
       requestId: requestId,
       data: [
@@ -74,9 +57,7 @@ class AnalyzeApi {
         "is_success": isSuccess,
       ] + data
     )
-    DispatchQueue.main.async {
-      self.channel.invokeMethod(AnalyzeApi.methodKey, arguments: payload)
-    }
+    method.invoke(channel, payload)
   }
 
   private func serialize(
@@ -106,28 +87,21 @@ class AnalyzeApi {
 
     // build requests
     let requests = input.requests.compactMap { request -> VNRequest? in
-      let vnRequest = request.makeRequest { vnReq, err in
-        // *** Return the result to Flutter ***
+      let completion: VNRequestCompletionHandler = { vnReq, err in
         do {
           let results = try request.getResults(vnReq, err)
           self.success(request.id(), results)
         } catch {
-          var err: PluginError
-          if error is PluginError {
-            err = error as! PluginError
-          } else {
-            err = PluginError.unexpectedError(msg: error.localizedDescription)
-          }
-          Logger.e(err.message(), "\(funcName)>onResult")
-          self.failure(request.id(), err)
+          self.errorHandler(request.id(), error)
         }
       }
-      if vnRequest == nil {
-        let err = PluginError.failedToCreateRequest(request)
-        Logger.e(err.message(), funcName)
-        self.failure(request.id(), err)
+      do {
+        let vnRequest = try request.makeRequest(completion)
+        return vnRequest
+      } catch {
+        self.errorHandler(request.id(), error)
+        return nil
       }
-      return vnRequest
     }
     Logger.d("build requests: \(requests.count)", funcName)
 
@@ -151,6 +125,18 @@ class AnalyzeApi {
     } catch {
       Logger.d("perform: \(error)", funcName)
       throw PluginError.analyzePerformError(msg: error.localizedDescription)
+    }
+  }
+
+  private func errorHandler(_ requestId: String, _ error: Error) {
+    let funcName = "analyze"
+    if let err = error as? PluginError {
+      Logger.e(err.message(), funcName)
+      self.failure(requestId, err)
+    } else {
+      let err = PluginError.unexpectedError(msg: error.localizedDescription)
+      Logger.e(err.message(), funcName)
+      self.failure(requestId, err)
     }
   }
 }

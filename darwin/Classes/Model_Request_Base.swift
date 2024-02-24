@@ -5,8 +5,8 @@ class BaseRequest {
     self.requestId = requestId
   }
 
-  convenience init(copy: BaseRequest) {
-    self.init(requestId: copy.requestId)
+  init(copy: BaseRequest) {
+    self.requestId = copy.requestId
   }
 
   convenience init(json: Json) throws {

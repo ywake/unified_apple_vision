@@ -14,7 +14,7 @@ class AnalyzeApi {
   AnalyzeApi(this._logger);
 
   var analyzeMode = VisionAnalyzeMode.still;
-  var executionPriority = VisionExecutionPriority.unspecified;
+  var executionPriority = VisionExecutionPriority.medium;
   final _requests = <_UUID, _ManagingRequest>{};
 
   Future<void> execute({
@@ -29,12 +29,16 @@ class AnalyzeApi {
       _requests[req.requestId] = req;
     }
 
-    Method.analyze.invoke({
-      'image': image.toMap(),
-      'qos': executionPriority.qos,
-      'mode': analyzeMode.modeName,
-      'requests': [for (var req in mReqs) req.toMap()]
-    });
+    try {
+      Method.analyze.invoke({
+        'image': image.toMap(),
+        'priority': executionPriority.taskPriority,
+        'mode': analyzeMode.modeName,
+        'requests': [for (var req in mReqs) req.toMap()]
+      });
+    } catch (e) {
+      rethrow;
+    }
 
     for (final req in mReqs) {
       req.completer.future.then((data) {

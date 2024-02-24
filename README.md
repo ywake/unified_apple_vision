@@ -8,10 +8,11 @@ A plugin for using [Apple Vision Framework](https://developer.apple.com/document
 
 ## Features ⚙️ & Requirements 🧩
 
-Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
+Minimum Requirements: **iOS: 13.0+, macOS: 15.0+**  
+> [!WARNING]  
+> [*] Note that this differs from the VisionAPI minimum requirements.
 
-> [!IMPORTANT]  
-> If you have a request, please make an [issue](https://github.com/ywake/unified_apple_vision/issues).
+Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 
 | Vision API | Request | Status | iOS | macOS | description |
 |------------|---------|:------:|:---:|:-----:|-------------|
@@ -25,14 +26,14 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 | [Saliency Analysis](https://developer.apple.com/documentation/vision/cropping_images_using_saliency) | [Generate Attention Based Saliency Image](https://developer.apple.com/documentation/vision/vngenerateattentionbasedsaliencyimagerequest) | ❌ | 13.0+ | 10.15+ | Produces a heat map that identifies the parts of an image most likely to draw attention. |
 || [Generate Objectness Based Saliency Image](https://developer.apple.com/documentation/vision/vngenerateobjectnessbasedsaliencyimagerequest) | ❌ | 13.0+ | 10.15+ | Generates a heat map that identifies the parts of an image most likely to represent objects. |
 |||||||
-| [Object Tracking](https://developer.apple.com/documentation/vision/tracking_multiple_objects_or_rectangles_in_video) | [Track Rectangle](https://developer.apple.com/documentation/vision/vntrackrectanglerequest) | ⚠️ | 11.0+ | 10.13+ | Tracks movement of a previously identified rectangular object across multiple images or video frames. |
-|| [Track Object](https://developer.apple.com/documentation/vision/vntrackobjectrequest) | ⚠️ | 11.0+ | 10.13+ | Tracks the movement of a previously identified object across multiple images or video frames. |
+| [Object Tracking](https://developer.apple.com/documentation/vision/tracking_multiple_objects_or_rectangles_in_video) | [Track Rectangle](https://developer.apple.com/documentation/vision/vntrackrectanglerequest) | ⚠️ | *11.0+ | *10.13+ | Tracks movement of a previously identified rectangular object across multiple images or video frames. |
+|| [Track Object](https://developer.apple.com/documentation/vision/vntrackobjectrequest) | ⚠️ | *11.0+ | *10.13+ | Tracks the movement of a previously identified object across multiple images or video frames. |
 |||||||
-| [Rectangle Detection](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | [Detect Rectangle](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | ✅ | 11.0+ | 10.13+ | Finds projected rectangular regions in an image. |
+| [Rectangle Detection](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | [Detect Rectangle](https://developer.apple.com/documentation/vision/vndetectrectanglesrequest) | ✅ | *11.0+ | *10.13+ | Finds projected rectangular regions in an image. |
 |||||||
 | [Face and Body Detection](https://developer.apple.com/documentation/vision/selecting_a_selfie_based_on_capture_quality) | [Detect Face Capture Quality](https://developer.apple.com/documentation/vision/vndetectfacecapturequalityrequest) | ✅ | 13.0+ | 10.15+ | Produces a floating-point number that represents the capture quality of a face in a photo. |
-|| [Detect Face Landmarks](https://developer.apple.com/documentation/vision/vndetectfacelandmarksrequest) | ✅ | 11.0+ | 10.13+ | Finds facial features like eyes and mouth in an image. |
-|| [Detect Face Rectangles](https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest) | ✅ | 11.0+ | 10.13+ | Finds faces within an image. |
+|| [Detect Face Landmarks](https://developer.apple.com/documentation/vision/vndetectfacelandmarksrequest) | ✅ | *11.0+ | *10.13+ | Finds facial features like eyes and mouth in an image. |
+|| [Detect Face Rectangles](https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest) | ✅ | *11.0+ | *10.13+ | Finds faces within an image. |
 || [Detect Human Rectangles](https://developer.apple.com/documentation/vision/vndetecthumanrectanglesrequest) | ✅ | 13.0+ | 10.15+ | Finds rectangular regions that contain people in an image.|
 |||||||
 | [Body and Hand Pose Detection](https://developer.apple.com/documentation/vision/detecting_human_body_poses_in_images) | [Detect Human Body Pose](https://developer.apple.com/documentation/vision/vndetecthumanbodyposerequest) | ❌ | 14.0+ | 11.0+ | Detects a human body pose. |
@@ -51,20 +52,23 @@ Status: ✅ Complete ⚠️ Problematic 👨‍💻 In Progress ❌ Not Yet
 | [Optical Flow](https://developer.apple.com/documentation/vision/vngenerateopticalflowrequest) | [Generate Optical Flow](https://developer.apple.com/documentation/vision/vngenerateopticalflowrequest) | ❌ | 14.0+ | 11.0+ | Generates directional change vectors for each pixel in the targeted image. |
 || [Track Optical Flow](https://developer.apple.com/documentation/vision/vntrackopticalflowrequest) | ❌ | 17.0+ | 14.0+ | Determines the direction change of vectors for each pixel from a previous to current image. |
 |||||||
-| [Barcode Detection](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | [Detect Barcodes](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | ✅ | 11.0+ | 10.13+ | Detects barcodes in an image. |
+| [Barcode Detection](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | [Detect Barcodes](https://developer.apple.com/documentation/vision/vndetectbarcodesrequest) | ✅ | *11.0+ | *10.13+ | Detects barcodes in an image. |
 |||||||
-| [Text Detection](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | [Detect Text Rectangles](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | ✅ | 11.0+ | 10.13+ | Finds regions of visible text in an image. |
+| [Text Detection](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | [Detect Text Rectangles](https://developer.apple.com/documentation/vision/vndetecttextrectanglesrequest) | ✅ | *11.0+ | *10.13+ | Finds regions of visible text in an image. |
 |||||||
 | [Text Recognition](https://developer.apple.com/documentation/vision/recognizing_text_in_images) | [Recognize Text](https://developer.apple.com/documentation/vision/vnrecognizetextrequest) | ✅ | 13.0+ | 10.15+ | Finds and recognizes text in an image. |
 |||||||
-| [Horizon Detection](https://developer.apple.com/documentation/vision/vndetecthorizonrequest) | [Detect Horizon](https://developer.apple.com/documentation/vision/vndetecthorizonrequest) | ❌ | 11.0+ | 10.13+ | Determines the horizon angle in an image. |
+| [Horizon Detection](https://developer.apple.com/documentation/vision/vndetecthorizonrequest) | [Detect Horizon](https://developer.apple.com/documentation/vision/vndetecthorizonrequest) | ❌ | *11.0+ | *10.13+ | Determines the horizon angle in an image. |
 |||||||
-| [Image Alignment](https://developer.apple.com/documentation/vision/aligning_similar_images) | [Translational Image Registration](https://developer.apple.com/documentation/vision/vntranslationalimageregistrationrequest) | ❌ | 11.0+ | 10.13+ | Determines the affine transform necessary to align the content of two images. |
+| [Image Alignment](https://developer.apple.com/documentation/vision/aligning_similar_images) | [Translational Image Registration](https://developer.apple.com/documentation/vision/vntranslationalimageregistrationrequest) | ❌ | *11.0+ | *10.13+ | Determines the affine transform necessary to align the content of two images. |
 || [Track Translational Image Registration](https://developer.apple.com/documentation/vision/vntracktranslationalimageregistrationrequest) | ❌ | 17.0+ | 14.0+ | An image analysis request, as a stateful request you track over time, that determines the affine transform necessary to align the content of two images. |
-|| [Homographic Image Registration](https://developer.apple.com/documentation/vision/vnhomographicimageregistrationrequest) | ❌ | 11.0+ | 10.13+ | Determines the perspective warp matrix necessary to align the content of two images. |
+|| [Homographic Image Registration](https://developer.apple.com/documentation/vision/vnhomographicimageregistrationrequest) | ❌ | *11.0+ | *10.13+ | Determines the perspective warp matrix necessary to align the content of two images. |
 || [Track Homographic Image Registration](https://developer.apple.com/documentation/vision/vntrackhomographicimageregistrationrequest) | ❌ | 17.0+ | 14.0+ | An image analysis request, as a stateful request you track over time, that determines the perspective warp matrix necessary to align the content of two images. |
 |||||||
 | [Image Background Removal](https://developer.apple.com/documentation/vision/applying_visual_effects_to_foreground_subjects) | [Generate Foreground Instance Mask](https://developer.apple.com/documentation/vision/vngenerateforegroundinstancemaskrequest) | ❌ | 17.0+ | 14.0+ | Generates an instance mask of noticable objects to separate from the background. |
+
+> [!IMPORTANT]  
+> If you have a request, please make an [issue](https://github.com/ywake/unified_apple_vision/issues).
 
 ## Install 📦
 Add this to your pubspec.yaml:
