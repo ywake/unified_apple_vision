@@ -11,7 +11,11 @@ class LoggingApi {
 
   Future<void> setLogLevel(VisionLogLevel level) async {
     Logger.level = level.loggerLevel;
-    await Method.logging.invoke({'level': level.name});
+    try {
+      await Method.logging.invoke({'level': level.name});
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void onResults(Json json) {

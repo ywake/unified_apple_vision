@@ -59,7 +59,11 @@ class UnifiedAppleVision {
     required VisionInputImage image,
     required List<VisionRequest> requests,
   }) async {
-    await _analyzeApi.execute(image: image, requests: requests);
+    try {
+      await _analyzeApi.execute(image: image, requests: requests);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   ///
@@ -69,6 +73,10 @@ class UnifiedAppleVision {
 
   /// Set the log level for Unified Apple Vision.
   Future<void> setLogLevel(VisionLogLevel level) async {
-    await _loggingApi.setLogLevel(level);
+    try {
+      await _loggingApi.setLogLevel(level);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

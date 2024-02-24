@@ -29,12 +29,16 @@ class AnalyzeApi {
       _requests[req.requestId] = req;
     }
 
-    Method.analyze.invoke({
-      'image': image.toMap(),
-      'priority': executionPriority.taskPriority,
-      'mode': analyzeMode.modeName,
-      'requests': [for (var req in mReqs) req.toMap()]
-    });
+    try {
+      Method.analyze.invoke({
+        'image': image.toMap(),
+        'priority': executionPriority.taskPriority,
+        'mode': analyzeMode.modeName,
+        'requests': [for (var req in mReqs) req.toMap()]
+      });
+    } catch (e) {
+      rethrow;
+    }
 
     for (final req in mReqs) {
       req.completer.future.then((data) {
