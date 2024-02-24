@@ -1,3 +1,8 @@
+## 1.2.0
+* Feat: Still Image Analysis API
+* Fix: Error handling
+* Refactor
+
 ## 1.1.0
 * Feat: Add Face and Body Detection API
 
