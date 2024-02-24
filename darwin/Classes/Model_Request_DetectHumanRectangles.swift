@@ -1,20 +1,19 @@
 import Vision
 
-class DetectHumanRectanglesRequest: AnalyzeRequest {
-  let requestId: String
+class DetectHumanRectanglesRequest: ImageBasedRequest, AnalyzeRequest {
   let upperBodyOnly: Bool?
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     upperBodyOnly: Bool?
   ) {
-    self.requestId = requestId
     self.upperBodyOnly = upperBodyOnly
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       upperBodyOnly: json.boolOr("upper_body_only")
     )
   }

@@ -16,15 +16,15 @@ class VisionTrackObjectRequest extends VisionTrackingRequest {
     required this.target,
     super.trackingLevel,
     super.isLastFrame,
+    super.regionOfInterest,
     required super.onResults,
   }) : super(type: VisionRequestType.trackObject);
 
   @override
   Map<String, dynamic> toMap() {
     return {
+      ...super.toMap(),
       'input': target.toMap(),
-      'tracking_level': trackingLevel.name,
-      'is_last_frame': isLastFrame,
     };
   }
 }

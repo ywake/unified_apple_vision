@@ -1,14 +1,16 @@
 import Vision
 
-class RecognizeAnimalsRequest: AnalyzeRequest {
-  let requestId: String
-
-  init(requestId: String) {
-    self.requestId = requestId
+class RecognizeAnimalsRequest: ImageBasedRequest, AnalyzeRequest {
+  init(
+    parent: ImageBasedRequest
+  ) {
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
-    self.init(requestId: try json.str("request_id"))
+    self.init(
+      parent: try ImageBasedRequest(json: json)
+    )
   }
 
   func type() -> RequestType {

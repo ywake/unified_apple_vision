@@ -1,20 +1,19 @@
 import Vision
 
-class DetectFaceLandmarksRequest: AnalyzeRequest {
-  let requestId: String
+class DetectFaceLandmarksRequest: ImageBasedRequest, AnalyzeRequest {
   let constellation: VNRequestFaceLandmarksConstellation?
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     constellation: VNRequestFaceLandmarksConstellation?
   ) {
-    self.requestId = requestId
     self.constellation = constellation
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       constellation: json.strOr("constellation").map {
         VNRequestFaceLandmarksConstellation(byName: $0)
       }

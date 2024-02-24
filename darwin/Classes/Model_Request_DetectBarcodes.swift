@@ -1,23 +1,22 @@
 import Vision
 
-class DetectBarcodesRequest: AnalyzeRequest {
-  let requestId: String
+class DetectBarcodesRequest: ImageBasedRequest, AnalyzeRequest {
   let symbologies: [VNBarcodeSymbology]?
   let coalesceCompositeSymbologies: Bool?
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     symbologies: [VNBarcodeSymbology]?,
     coalesceCompositeSymbologies: Bool?
   ) {
-    self.requestId = requestId
     self.symbologies = symbologies
     self.coalesceCompositeSymbologies = coalesceCompositeSymbologies
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       symbologies: json.arrayOr("symbologies")?.compactMap { VNBarcodeSymbology(rawValue: $0) },
       coalesceCompositeSymbologies: json.boolOr("coalesceCompositeSymbologies")
     )

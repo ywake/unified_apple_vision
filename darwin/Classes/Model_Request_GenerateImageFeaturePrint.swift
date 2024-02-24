@@ -1,20 +1,19 @@
 import Vision
 
-class GenerateImageFeaturePrintRequest: AnalyzeRequest {
-  let requestId: String
+class GenerateImageFeaturePrintRequest: ImageBasedRequest, AnalyzeRequest {
   let imageCropAndScaleOption: VNImageCropAndScaleOption?
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     imageCropAndScaleOption: VNImageCropAndScaleOption?
   ) {
-    self.requestId = requestId
     self.imageCropAndScaleOption = imageCropAndScaleOption
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       imageCropAndScaleOption: json.strOr("image_crop_and_scale_option").map {
         VNImageCropAndScaleOption(byName: $0)
       }

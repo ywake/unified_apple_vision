@@ -87,7 +87,7 @@ class _ManagingRequest {
   Map<String, dynamic> toMap() {
     return {
       'request_id': requestId,
-      ...request.encode(),
+      ...request.toMap(),
     };
   }
 }

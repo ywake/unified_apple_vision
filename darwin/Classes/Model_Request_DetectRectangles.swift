@@ -1,7 +1,6 @@
 import Vision
 
-class DetectRectanglesRequest: AnalyzeRequest {
-  let requestId: String
+class DetectRectanglesRequest: ImageBasedRequest, AnalyzeRequest {
   let minAspectRatio: VNAspectRatio?
   let maxAspectRatio: VNAspectRatio?
   let quadratureTolerance: VNDegrees?
@@ -10,7 +9,7 @@ class DetectRectanglesRequest: AnalyzeRequest {
   let maxObservations: Int?
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     minAspectRatio: VNAspectRatio?,
     maxAspectRatio: VNAspectRatio?,
     quadratureTolerance: VNDegrees?,
@@ -18,18 +17,18 @@ class DetectRectanglesRequest: AnalyzeRequest {
     minConfidence: Float?,
     maxObservations: Int?
   ) {
-    self.requestId = requestId
     self.minAspectRatio = minAspectRatio
     self.maxAspectRatio = maxAspectRatio
     self.quadratureTolerance = quadratureTolerance
     self.minSize = minSize
     self.minConfidence = minConfidence
     self.maxObservations = maxObservations
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       minAspectRatio: json.floatOr("min_aspect_ratio"),
       maxAspectRatio: json.floatOr("max_aspect_ratio"),
       quadratureTolerance: json.floatOr("quadrature_tolerance"),

@@ -1,17 +1,15 @@
 import Vision
 
-class ClassifyImageRequest: AnalyzeRequest {
-  let requestId: String
-
+class ClassifyImageRequest: ImageBasedRequest, AnalyzeRequest {
   init(
-    requestId: String
+    parent: ImageBasedRequest
   ) {
-    self.requestId = requestId
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     self.init(
-      requestId: try json.str("request_id")
+      parent: try ImageBasedRequest(json: json)
     )
   }
 

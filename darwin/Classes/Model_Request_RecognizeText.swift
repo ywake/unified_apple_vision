@@ -1,7 +1,6 @@
 import Vision
 
-class RecognizeTextRequest: AnalyzeRequest {
-  let requestId: String
+class RecognizeTextRequest: ImageBasedRequest, AnalyzeRequest {
   let minimumTextHeight: Float?
   let recognitionLevel: VNRequestTextRecognitionLevel
   let automaticallyDetectsLanguage: Bool?
@@ -11,7 +10,7 @@ class RecognizeTextRequest: AnalyzeRequest {
   let maxCandidates: Int
 
   init(
-    requestId: String,
+    parent: ImageBasedRequest,
     minimumTextHeight: Float?,
     recognitionLevel: VNRequestTextRecognitionLevel,
     automaticallyDetectsLanguage: Bool?,
@@ -20,7 +19,6 @@ class RecognizeTextRequest: AnalyzeRequest {
     customWords: [String]?,
     maxCandidates: Int?
   ) {
-    self.requestId = requestId
     self.minimumTextHeight = minimumTextHeight
     self.recognitionLevel = recognitionLevel
     self.automaticallyDetectsLanguage = automaticallyDetectsLanguage
@@ -28,12 +26,13 @@ class RecognizeTextRequest: AnalyzeRequest {
     self.usesLanguageCorrection = usesLanguageCorrection
     self.customWords = customWords
     self.maxCandidates = maxCandidates ?? 1
+    super.init(copy: parent)
   }
 
   convenience init(json: Json) throws {
     let level = try json.strOr("recognition_level") ?? ""
     self.init(
-      requestId: try json.str("request_id"),
+      parent: try ImageBasedRequest(json: json),
       minimumTextHeight: json.floatOr("minimum_text_height"),
       recognitionLevel: VNRequestTextRecognitionLevel(byName: level),
       automaticallyDetectsLanguage: json.boolOr("automatically_detects_language"),

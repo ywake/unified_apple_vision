@@ -3,7 +3,7 @@ import Vision
 @available(iOS 11.0, macOS 10.13, *)
 extension VNFaceObservation {
   @objc override func toDict() -> [String: Any] {
-    var dict = [
+    var dict: [String: Any] = [
       "landmarks": self.landmarks?.toDict()
     ]
     // if #available(iOS 12.0, macOS 10.14, *) {  // in docs
@@ -64,7 +64,7 @@ extension VNFaceLandmarkRegion {
 
 extension VNFaceLandmarkRegion2D {
   @objc override func toDict() -> [String: Any] {
-    var dict = [
+    var dict: [String: Any] = [
       "normalized_points": self.normalizedPoints.map { $0.reversedY().toDict() }
     ]
     if #available(iOS 13.0, macOS 10.15, *) {
