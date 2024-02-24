@@ -20,10 +20,10 @@ extension VNRectangleObservation {
   @objc override func toDict() -> [String: Any] {
     // Convert the lower left origin to the upper left origin
     return [
-      "bottom_left": self.bottomLeft.reversedY().toDict(),
-      "bottom_right": self.bottomRight.reversedY().toDict(),
-      "top_left": self.topLeft.reversedY().toDict(),
-      "top_right": self.topRight.reversedY().toDict(),
+      "bottom_left": self.bottomLeft.toDict(),
+      "bottom_right": self.bottomRight.toDict(),
+      "top_left": self.topLeft.toDict(),
+      "top_right": self.topRight.toDict(),
     ] + super.toDict()
   }
 }

@@ -32,7 +32,7 @@ class VisionFaceLandmarkRegion2D extends VisionFaceLandmarkRegion {
         'points_classification',
         VisionPointsClassification.values,
       ),
-      normalizedPoints: json.objList('normalized_points', OffsetEx.fromJson),
+      normalizedPoints: json.objList('normalized_points', OffsetEx.fromJsonRev),
       precisionEstimatesPerPoint: json.listOr<double>(
         'precision_estimates_per_point',
       ),
@@ -45,7 +45,7 @@ class VisionFaceLandmarkRegion2D extends VisionFaceLandmarkRegion {
 /// The set of classifications that describe how to interpret the points the region provides.
 enum VisionPointsClassification {
   closedPath,
-  dissconnected,
+  disconnected,
   openPath,
   ;
 }

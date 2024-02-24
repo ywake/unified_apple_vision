@@ -6,19 +6,19 @@ import 'offset.dart';
 import 'size.dart';
 
 extension RectEx on Rect {
+  /// Convert a json with lowerLeft origin to a Rect with upperLeft origin.
   static Rect fromJson(Json json) {
-    final origin = json.json('origin');
-    final sizeJson = json.json('size');
-    final topLeft = OffsetEx.fromJson(origin);
-    final size = SizeEx.fromJson(sizeJson);
-    final bottomRight =
-        Offset(topLeft.dx + size.width, topLeft.dy + size.height);
+    final bottomLeft = json.obj('origin', OffsetEx.fromJsonRev);
+    final size = json.obj('size', SizeEx.fromJson);
+    final topLeft = bottomLeft - Offset(0, size.height);
+    final bottomRight = bottomLeft + Offset(size.width, 0);
     return Rect.fromPoints(topLeft, bottomRight);
   }
 
+  /// Convert a Rect with upperLeft origin to a json with lowerLeft origin.
   Map<String, dynamic> toMap() {
     return {
-      'origin': topLeft.toMap(),
+      'origin': bottomLeft.reverseY(1).toMap(),
       'size': size.toMap(),
     };
   }

@@ -4,7 +4,7 @@ import 'landmark_region_2d.dart';
 
 /// A collection of facial features that a request detects.
 ///
-/// This class represents the set of all detectable 2D face landmarks and regions, exposed as properties. The coordinates of the face landmarks are normalized to the dimensions of the face observation’s boundingBox, with the origin at the bounding box’s lower-left corner. Use the VNImagePointForFaceLandmarkPoint(_:_:_:_:) function to convert normalized face landmark points into absolute points within the image’s coordinate system.
+/// This class represents the set of all detectable 2D face landmarks and regions, exposed as properties. The coordinates of the face landmarks are normalized to the dimensions of the face observation’s boundingBox, with the origin at the bounding box’s upper-left corner. Use the VNImagePointForFaceLandmarkPoint(_:_:_:_:) function to convert normalized face landmark points into absolute points within the image’s coordinate system.
 class VisionFaceLandmarks2D extends VisionFaceLandmarks {
   /// The region containing all face landmark points.
   final VisionFaceLandmarkRegion2D? allPoints;

@@ -65,7 +65,7 @@ extension VNFaceLandmarkRegion {
 extension VNFaceLandmarkRegion2D {
   @objc override func toDict() -> [String: Any] {
     var dict: [String: Any] = [
-      "normalized_points": self.normalizedPoints.map { $0.reversedY().toDict() }
+      "normalized_points": self.normalizedPoints.map { $0.toDict() }
     ]
     if #available(iOS 13.0, macOS 10.15, *) {
       dict += [

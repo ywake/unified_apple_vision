@@ -9,6 +9,14 @@ extension OffsetEx on Offset {
     );
   }
 
+  static Offset fromJsonRev(Json json) {
+    return fromJson(json).reverseY(1);
+  }
+
+  Offset reverseY(double height) {
+    return Offset(dx, height - dy);
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'x': dx,
