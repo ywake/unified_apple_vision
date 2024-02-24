@@ -14,7 +14,7 @@ class AnalyzeApi {
   AnalyzeApi(this._logger);
 
   var analyzeMode = VisionAnalyzeMode.still;
-  var executionPriority = VisionExecutionPriority.unspecified;
+  var executionPriority = VisionExecutionPriority.medium;
   final _requests = <_UUID, _ManagingRequest>{};
 
   Future<void> execute({
@@ -31,7 +31,7 @@ class AnalyzeApi {
 
     Method.analyze.invoke({
       'image': image.toMap(),
-      'qos': executionPriority.qos,
+      'priority': executionPriority.taskPriority,
       'mode': analyzeMode.modeName,
       'requests': [for (var req in mReqs) req.toMap()]
     });

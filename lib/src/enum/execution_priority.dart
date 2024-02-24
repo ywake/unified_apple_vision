@@ -1,13 +1,10 @@
-/// Compatible with quality of service (QoS) when running DispatchQueue
 enum VisionExecutionPriority {
-  veryHigh('userInteractive'),
-  high('userInitiated'),
-  normal('default'),
-  low('utility'),
+  high('high'),
+  medium('medium'),
+  low('low'),
   veryLow('background'),
-  unspecified('unspecified'),
   ;
 
-  final String qos;
-  const VisionExecutionPriority(this.qos);
+  final String taskPriority;
+  const VisionExecutionPriority(this.taskPriority);
 }

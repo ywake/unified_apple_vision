@@ -70,7 +70,7 @@ class Logger {
     if Thread.isMainThread {
       channel.invokeMethod(Logger.methodKey, arguments: payload)
     } else {
-      DispatchQueue.main.async {
+      Task { @MainActor in
         channel.invokeMethod(Logger.methodKey, arguments: payload)
       }
     }

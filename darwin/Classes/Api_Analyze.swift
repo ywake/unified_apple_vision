@@ -17,25 +17,8 @@ class AnalyzeApi {
   }
 
   func execute(_ args: Json) throws {
-    self._execute(args) { err in
-      Logger.e(err.message(), "AnalyzeApi.execute")
-      // throw err
-    }
-  }
-
-  private func _execute(_ args: Json, _ onError: @escaping (PluginError) -> Void) {
-    let qos = DispatchQoS.QoSClass(byNameOr: args.strOr("qos"))
-    DispatchQueue.global(qos: qos).async {
-      do {
-        let input: AnalyzeInput = try AnalyzeInput(json: args)
-        try self.analyze(input)
-      } catch let err as PluginError {
-        onError(err)
-      } catch {
-        let err = PluginError.unexpectedError(msg: error.localizedDescription)
-        onError(err)
-      }
-    }
+    let input: AnalyzeInput = try AnalyzeInput(json: args)
+    try self.analyze(input)
   }
 
   private func success(_ requestId: String, _ results: [[String: Any]]) {
@@ -66,7 +49,7 @@ class AnalyzeApi {
     requestId: String,
     data: [String: Any]
   ) {
-    var payload = self.serialize(
+    let payload = self.serialize(
       isSuccess: isSuccess,
       requestId: requestId,
       data: [
@@ -74,7 +57,7 @@ class AnalyzeApi {
         "is_success": isSuccess,
       ] + data
     )
-    DispatchQueue.main.async {
+    Task { @MainActor in
       self.channel.invokeMethod(AnalyzeApi.methodKey, arguments: payload)
     }
   }
