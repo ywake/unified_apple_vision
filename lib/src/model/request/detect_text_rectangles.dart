@@ -23,7 +23,7 @@ class VisionDetectTextRectanglesRequest extends VisionImageBasedRequest {
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),
-      'reportCharacterBoxes': reportCharacterBoxes,
+      'report_character_boxes': reportCharacterBoxes,
     };
   }
 }

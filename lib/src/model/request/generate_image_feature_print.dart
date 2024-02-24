@@ -25,7 +25,8 @@ class VisionGenerateImageFeaturePrintRequest extends VisionImageBasedRequest {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'imageCropAndScaleOption': imageCropAndScaleOption?.name,
+      ...super.toMap(),
+      'image_crop_and_scale_option': imageCropAndScaleOption?.name,
     };
   }
 }
