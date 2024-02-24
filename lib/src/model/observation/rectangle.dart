@@ -44,10 +44,10 @@ class VisionRectangleObservation extends VisionDetectedObjectObservation {
   factory VisionRectangleObservation.fromJson(Json json) {
     return VisionRectangleObservation.withParent(
       parent: VisionDetectedObjectObservation.fromJson(json),
-      topLeft: json.obj('top_left', OffsetEx.fromJson),
-      topRight: json.obj('top_right', OffsetEx.fromJson),
-      bottomLeft: json.obj('bottom_left', OffsetEx.fromJson),
-      bottomRight: json.obj('bottom_right', OffsetEx.fromJson),
+      topLeft: json.obj('top_left', OffsetEx.fromJsonRev),
+      topRight: json.obj('top_right', OffsetEx.fromJsonRev),
+      bottomLeft: json.obj('bottom_left', OffsetEx.fromJsonRev),
+      bottomRight: json.obj('bottom_right', OffsetEx.fromJsonRev),
     );
   }
 
