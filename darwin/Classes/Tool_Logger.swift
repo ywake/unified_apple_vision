@@ -1,4 +1,3 @@
-import Dispatch
 import Foundation
 
 #if os(iOS)
@@ -8,7 +7,7 @@ import Foundation
 #endif
 
 class Logger {
-  static let methodKey = "logging"
+  static let method = Method.logging
 
   // for singleton
   static let shared = Logger()
@@ -67,13 +66,7 @@ class Logger {
       "message": message,
       "symbol": symbol,
     ])
-    if Thread.isMainThread {
-      channel.invokeMethod(Logger.methodKey, arguments: payload)
-    } else {
-      Task { @MainActor in
-        channel.invokeMethod(Logger.methodKey, arguments: payload)
-      }
-    }
+    method.invoke(channel, payload)
   }
 
   private static func serialize(_ data: [String: Any?]) -> String {

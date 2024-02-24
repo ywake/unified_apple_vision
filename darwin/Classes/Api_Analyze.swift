@@ -8,7 +8,7 @@ import Vision
 #endif
 
 class AnalyzeApi {
-  static let methodKey = "analyze"
+  let method = Method.analyze
   let channel: FlutterMethodChannel
   private let sequence = VNSequenceRequestHandler()
 
@@ -57,9 +57,7 @@ class AnalyzeApi {
         "is_success": isSuccess,
       ] + data
     )
-    Task { @MainActor in
-      self.channel.invokeMethod(AnalyzeApi.methodKey, arguments: payload)
-    }
+    method.invoke(channel, payload)
   }
 
   private func serialize(
