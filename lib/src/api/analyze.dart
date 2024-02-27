@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:logger/logger.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
+import 'package:unified_apple_vision/src/utility/logger.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'package:uuid/uuid.dart';
 

@@ -1,21 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'api/analyze.dart';
 import 'api/logging.dart';
 import 'api/methods.dart';
 import 'utility/json.dart';
+import 'utility/logger.dart';
 
 class UnifiedAppleVision {
-  static final _logger = Logger(
-    printer: PrettyPrinter(
-      stackTraceBeginIndex: 1 << 63 - 1,
-      colors: false,
-    ),
-  );
+  static final _logger = Logger();
 
   UnifiedAppleVision() {
     Method.channel.setMethodCallHandler(_methodCallHandler);

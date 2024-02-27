@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  logger: ^2.0.2+1
   uuid: ^4.3.3
 
 dev_dependencies:
