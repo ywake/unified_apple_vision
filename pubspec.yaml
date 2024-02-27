@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  uuid: ^4.3.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0

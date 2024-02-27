@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:unified_apple_vision/src/extension/optional.dart';
+import 'package:unified_apple_vision/src/utility/unique_id.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 import 'package:unified_apple_vision/src/utility/logger.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
-import 'package:uuid/uuid.dart';
 
 import 'methods.dart';
-
-typedef _UUID = String;
 
 class AnalyzeApi {
   final Logger _logger;
@@ -15,7 +14,7 @@ class AnalyzeApi {
 
   var analyzeMode = VisionAnalyzeMode.still;
   var executionPriority = VisionExecutionPriority.medium;
-  final _requests = <_UUID, _ManagingRequest>{};
+  final _requests = <UniqueId, _ManagingRequest>{};
 
   Future<void> execute({
     required VisionInputImage image,
@@ -78,26 +77,24 @@ class AnalyzeApi {
 }
 
 class _ManagingRequest {
-  static const _uuid = Uuid();
-
-  final _UUID requestId;
+  final UniqueId requestId;
   final VisionRequest request;
   final Completer<VisionResults> completer;
 
   _ManagingRequest(this.request)
-      : requestId = _uuid.v7(),
+      : requestId = UniqueId.gen(),
         completer = Completer();
 
   Map<String, dynamic> toMap() {
     return {
-      'request_id': requestId,
+      'request_id': requestId.toString(),
       ...request.toMap(),
     };
   }
 }
 
 class _SuccessData {
-  final String requestId;
+  final UniqueId requestId;
   final List<Json> observations;
 
   _SuccessData({
@@ -108,12 +105,15 @@ class _SuccessData {
   factory _SuccessData.fromJson(Json json) {
     final requestId = json.str('request_id');
     final observations = json.jsonList('results');
-    return _SuccessData(requestId: requestId, observations: observations);
+    return _SuccessData(
+      requestId: UniqueId(requestId),
+      observations: observations,
+    );
   }
 }
 
 class _FailureData {
-  final String? requestId;
+  final UniqueId? requestId;
   final String code;
   final String message;
 
@@ -126,7 +126,7 @@ class _FailureData {
   factory _FailureData.fromJson(Json json) {
     final error = json.json('error');
     return _FailureData(
-      requestId: json.strOr('request_id'),
+      requestId: json.strOr('request_id').maybe((id) => UniqueId(id)),
       code: error.str('code'),
       message: error.str('message'),
     );
