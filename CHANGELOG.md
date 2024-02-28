@@ -1,3 +1,7 @@
+## 1.2.2
+* Fix: Bugs
+* Fix: Remove dependencies
+
 ## 1.2.1
 * Fix: Bugs
 
