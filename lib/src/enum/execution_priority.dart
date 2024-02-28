@@ -2,7 +2,7 @@ enum VisionExecutionPriority {
   high('high'),
   medium('medium'),
   low('low'),
-  veryLow('background'),
+  lowest('background'),
   ;
 
   final String taskPriority;
