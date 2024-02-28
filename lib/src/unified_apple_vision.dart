@@ -17,6 +17,8 @@ class UnifiedAppleVision {
   }
 
   Future<void> _methodCallHandler(MethodCall call) async {
+    const funcName = 'methodCallHandler';
+
     final method = Method.values.byName(call.method);
     try {
       final json = Json.fromString(call.arguments.toString());
@@ -29,8 +31,12 @@ class UnifiedAppleVision {
           break;
       }
     } catch (e, st) {
-      _logger.e("Failed to handle method call: $call",
-          error: e, stackTrace: st);
+      _logger.e(
+        "Failed to handle method call: $call",
+        error: e,
+        stackTrace: st,
+        symbol: funcName,
+      );
       return;
     }
   }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:unified_apple_vision/src/extension/optional.dart';
 import 'package:unified_apple_vision/src/utility/unique_id.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 import 'package:unified_apple_vision/src/utility/logger.dart';
@@ -44,19 +43,29 @@ class AnalyzeApi {
         try {
           req.request.onResults(data);
         } catch (e, st) {
-          _logger.e("Error VisionRequest.onResults", error: e, stackTrace: st);
+          _logger.e(
+            "Error VisionRequest.onResults",
+            error: e,
+            stackTrace: st,
+            symbol: '${req.request.type}>${req.requestId}>then',
+          );
         }
       });
     }
   }
 
   void onResults(Json json) {
+    const funcName = 'onResults';
+    _logger.d('$json', funcName);
+
     try {
       final isSuccess = json.bool_('is_success');
       if (isSuccess) {
         final data = _SuccessData.fromJson(json);
         final req = _requests.remove(data.requestId);
-        if (req == null) return;
+        if (req == null) {
+          throw Exception("Request not found. ${data.requestId}");
+        }
         final result = VisionResults.onSuccess(
           type: req.request.type,
           data: data.observations,
@@ -64,14 +73,18 @@ class AnalyzeApi {
         req.completer.complete(result);
       } else {
         final data = _FailureData.fromJson(json);
-        if (data.requestId == null) return;
         final req = _requests.remove(data.requestId);
         if (req == null) return;
         final result = VisionResults.onFailure(data: json);
         req.completer.complete(result);
       }
     } catch (e, st) {
-      _logger.e("Error on receiving results", error: e, stackTrace: st);
+      _logger.e(
+        "Error on receiving results",
+        error: e,
+        stackTrace: st,
+        symbol: funcName,
+      );
     }
   }
 }
@@ -113,7 +126,7 @@ class _SuccessData {
 }
 
 class _FailureData {
-  final UniqueId? requestId;
+  final UniqueId requestId;
   final String code;
   final String message;
 
@@ -126,7 +139,7 @@ class _FailureData {
   factory _FailureData.fromJson(Json json) {
     final error = json.json('error');
     return _FailureData(
-      requestId: json.strOr('request_id').maybe((id) => UniqueId(id)),
+      requestId: UniqueId(json.str('request_id')),
       code: error.str('code'),
       message: error.str('message'),
     );

@@ -1,5 +1,4 @@
 import 'package:unified_apple_vision/src/api/methods.dart';
-import 'package:unified_apple_vision/src/extension/optional.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 import 'package:unified_apple_vision/src/utility/logger.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
@@ -12,7 +11,10 @@ class LoggingApi {
   Future<void> setLogLevel(VisionLogLevel level) async {
     _logger.threshold = level;
     try {
-      await Method.logging.invoke({'level': level.name});
+      await Method.logging.invoke({
+        'level': level.name,
+        'priority': VisionExecutionPriority.medium.taskPriority,
+      });
     } catch (e) {
       rethrow;
     }
@@ -21,9 +23,10 @@ class LoggingApi {
   void onResults(Json json) {
     final log = _LogData.fromJson(json);
     _logger.log(
-      log.level,
-      '[unified_apple_vision${log.symbol.maybe((s) => '>$s') ?? ''}]\n'
-      '${log.message}',
+      level: log.level,
+      side: LogSide.swift,
+      msg: log.message,
+      symbol: log.symbol,
     );
   }
 }
