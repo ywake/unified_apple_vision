@@ -126,8 +126,8 @@ def add_getter(request_pascal: str):
     results_path = 'lib/src/model/results.dart'
     with open(results_path, 'a') as file:
         file.write(f"""
-  List<VisionSomeObservation> get of{request_pascal}Request =>
-      observations.whereType<VisionSomeObservation>().toList();
+  List<VisionSomeObservation>? get of{request_pascal}Request =>
+      observations?.whereType<VisionSomeObservation>().toList();
 """)
 
 
