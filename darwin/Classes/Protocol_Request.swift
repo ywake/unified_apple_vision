@@ -1,7 +1,5 @@
 import Vision
 
-typealias OnResultHandler = ([[String: Any]]) -> Void
-
 protocol AnalyzeRequest {
   func type() -> RequestType
   func id() -> String

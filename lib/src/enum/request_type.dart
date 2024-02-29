@@ -16,6 +16,7 @@ enum VisionRequestType {
   detectFaceCaptureQuality,
   classifyImage,
   generateImageFeaturePrint,
+  coreMlClassification,
   ;
 
   String get key {

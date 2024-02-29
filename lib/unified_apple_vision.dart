@@ -2,7 +2,6 @@ library unified_apple_vision;
 
 export 'src/unified_apple_vision.dart';
 
-export 'src/enum/barcode_symbology.dart';
 export 'src/enum/execution_priority.dart';
 export 'src/enum/image_orientation.dart';
 export 'src/enum/log_level.dart';
@@ -11,6 +10,9 @@ export 'src/enum/request_type.dart';
 
 export 'src/model/input_image.dart';
 export 'src/model/results.dart';
+
+export 'src/model/enum/barcode_symbology.dart';
+export 'src/model/enum/image_crop_and_scale_option.dart';
 
 export 'src/model/observation/barcode.dart';
 export 'src/model/observation/classification.dart';
@@ -27,6 +29,7 @@ export 'src/model/observation/face/landmarks_2d.dart';
 export 'src/model/observation/face/observation.dart';
 
 export 'src/model/request/classify_image.dart';
+export 'src/model/request/core_ml/classification.dart';
 export 'src/model/request/detect_barcodes.dart';
 export 'src/model/request/detect_face_capture_quality.dart';
 export 'src/model/request/detect_face_landmarks.dart';

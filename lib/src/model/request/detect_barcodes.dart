@@ -1,4 +1,4 @@
-import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
+import 'package:unified_apple_vision/src/model/enum/barcode_symbology.dart';
 import 'package:unified_apple_vision/src/enum/request_type.dart';
 import 'package:unified_apple_vision/src/model/observation/barcode.dart';
 

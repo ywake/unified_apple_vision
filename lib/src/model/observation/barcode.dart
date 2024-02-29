@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:unified_apple_vision/src/enum/barcode_symbology.dart';
+import 'package:unified_apple_vision/src/model/enum/barcode_symbology.dart';
 import 'package:unified_apple_vision/src/model/request/detect_barcodes.dart';
 import 'package:unified_apple_vision/src/utility/json.dart';
 
