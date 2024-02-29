@@ -1,3 +1,6 @@
+## 1.3.0-preview.1
+* Feat: CoreML support (Needs to be implemented in a separate plugin)
+
 ## 1.2.2
 * Fix: Bugs
 * Fix: Remove dependencies
