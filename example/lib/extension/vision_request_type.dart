@@ -18,7 +18,8 @@ extension VisionRequestTypeEx on VisionRequestType {
   List<VisionRequest> requests(void Function(VisionResults) onResults) => [
         switch (this) {
           VisionRequestType.trackObject ||
-          VisionRequestType.trackRectangle =>
+          VisionRequestType.trackRectangle ||
+          VisionRequestType.coreMlClassification =>
             null,
           VisionRequestType.recognizeText => VisionRecognizeTextRequest(
               automaticallyDetectsLanguage: true, onResults: onResults),
@@ -50,6 +51,7 @@ extension VisionRequestTypeEx on VisionRequestType {
     switch (this) {
       case VisionRequestType.trackObject:
       case VisionRequestType.trackRectangle:
+      case VisionRequestType.coreMlClassification:
         return [const Center(child: Text('Not available yet.'))];
       case VisionRequestType.generateImageFeaturePrint:
         return [const Center(child: Text('Widget not available.'))];

@@ -57,6 +57,8 @@ class VisionResults {
             VisionClassificationObservation.fromJson(json),
           VisionRequestType.generateImageFeaturePrint =>
             VisionFeaturePrintObservation.fromJson(json),
+          VisionRequestType.coreMlClassification =>
+            VisionClassificationObservation.fromJson(json),
         }
     ]);
   }

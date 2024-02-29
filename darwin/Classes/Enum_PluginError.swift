@@ -21,6 +21,8 @@ enum PluginError: Error {
   case missingRequiredKey(String)
   /// AnalyzeRequest.makeRequest returns nil
   case failedToCreateRequest(AnalyzeRequest)
+  /// Invalid request
+  case invalidRequest(msg: String)
 
   func code() -> String {
     switch self {
@@ -40,6 +42,8 @@ enum PluginError: Error {
       return "MISSING_REQUIRED_KEY"
     case .failedToCreateRequest:
       return "FAILED_TO_CREATE_REQUEST"
+    case .invalidRequest:
+      return "INVALID_REQUEST"
     }
   }
 
@@ -61,6 +65,8 @@ enum PluginError: Error {
       return "Missing required key: \(key)"
     case .failedToCreateRequest(let req):
       return "Failed to create Request. Skiped. type: \(req.type()), id: \(req.id())"
+    case .invalidRequest(let msg):
+      return msg
     }
   }
 
