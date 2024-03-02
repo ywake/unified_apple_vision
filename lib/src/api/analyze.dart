@@ -41,14 +41,27 @@ class AnalyzeApi {
     for (final req in mReqs) {
       req.completer.future.then((data) {
         try {
-          req.request.onResults(data);
-        } catch (e, st) {
+          if (data.isSuccess) {
+            final results = VisionResults.fromJsonList(
+              type: req.request.type,
+              data: data.observations!,
+            );
+            req.request.onResults(results);
+          } else {
+            final error = VisionRequestError.fromJson(data.error!);
+            if (req.request.onError != null) {
+              req.request.onError!(error);
+            }
+          }
+        } on JsonException catch (e, st) {
           _logger.e(
             "Error VisionRequest.onResults",
             error: e,
             stackTrace: st,
             symbol: '${req.request.type}>${req.requestId}>then',
           );
+        } catch (e) {
+          rethrow;
         }
       });
     }
@@ -59,25 +72,12 @@ class AnalyzeApi {
     _logger.d('$json', funcName);
 
     try {
-      final isSuccess = json.bool_('is_success');
-      if (isSuccess) {
-        final data = _SuccessData.fromJson(json);
-        final req = _requests.remove(data.requestId);
-        if (req == null) {
-          throw Exception("Request not found. ${data.requestId}");
-        }
-        final result = VisionResults.onSuccess(
-          type: req.request.type,
-          data: data.observations,
-        );
-        req.completer.complete(result);
-      } else {
-        final data = _FailureData.fromJson(json);
-        final req = _requests.remove(data.requestId);
-        if (req == null) return;
-        final result = VisionResults.onFailure(data: json);
-        req.completer.complete(result);
+      final data = _ReceivedData.fromJson(json);
+      final req = _requests.remove(data.requestId);
+      if (req == null) {
+        throw Exception("Request not found. ${data.requestId}");
       }
+      req.completer.complete(data);
     } catch (e, st) {
       _logger.e(
         "Error on receiving results",
@@ -92,7 +92,7 @@ class AnalyzeApi {
 class _ManagingRequest {
   final UniqueId requestId;
   final VisionRequest request;
-  final Completer<VisionResults> completer;
+  final Completer<_ReceivedData> completer;
 
   _ManagingRequest(this.request)
       : requestId = UniqueId.gen(),
@@ -106,42 +106,26 @@ class _ManagingRequest {
   }
 }
 
-class _SuccessData {
+class _ReceivedData {
   final UniqueId requestId;
-  final List<Json> observations;
+  final bool isSuccess;
+  final List<Json>? observations;
+  final Json? error;
 
-  _SuccessData({
+  _ReceivedData({
     required this.requestId,
-    required this.observations,
-  });
+    required this.isSuccess,
+    this.observations,
+    this.error,
+  }) : assert(isSuccess ? observations != null : error != null);
 
-  factory _SuccessData.fromJson(Json json) {
-    final requestId = json.str('request_id');
-    final observations = json.jsonList('results');
-    return _SuccessData(
-      requestId: UniqueId(requestId),
-      observations: observations,
-    );
-  }
-}
-
-class _FailureData {
-  final UniqueId requestId;
-  final String code;
-  final String message;
-
-  _FailureData({
-    required this.requestId,
-    required this.code,
-    required this.message,
-  });
-
-  factory _FailureData.fromJson(Json json) {
-    final error = json.json('error');
-    return _FailureData(
+  factory _ReceivedData.fromJson(Json json) {
+    final isSuccess = json.bool_('is_success');
+    return _ReceivedData(
       requestId: UniqueId(json.str('request_id')),
-      code: error.str('code'),
-      message: error.str('message'),
+      isSuccess: isSuccess,
+      observations: isSuccess ? json.jsonList('results') : null,
+      error: isSuccess ? null : json.json('error'),
     );
   }
 }

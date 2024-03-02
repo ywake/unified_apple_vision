@@ -99,6 +99,9 @@ vision.analyze(
         final observations = results.ofRecognizeTextRequest; // get casted results
         // some action
       },
+      onError: (error) {
+        // handle error
+      },
     ),
   ],
 );

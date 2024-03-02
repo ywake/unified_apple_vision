@@ -11,6 +11,7 @@ export 'src/enum/request_type.dart';
 
 export 'src/model/input_image.dart';
 export 'src/model/results.dart';
+export 'src/model/request_error.dart';
 
 export 'src/model/observation/barcode.dart';
 export 'src/model/observation/classification.dart';
