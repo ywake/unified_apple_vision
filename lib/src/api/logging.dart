@@ -11,9 +11,8 @@ class LoggingApi {
   Future<void> setLogLevel(VisionLogLevel level) async {
     _logger.threshold = level;
     try {
-      await Method.logging.invoke({
+      await Method.logging.invoke(VisionExecutionPriority.medium, {
         'level': level.name,
-        'priority': VisionExecutionPriority.medium.taskPriority,
       });
     } catch (e) {
       rethrow;

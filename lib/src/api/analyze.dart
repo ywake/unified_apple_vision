@@ -28,9 +28,8 @@ class AnalyzeApi {
     }
 
     try {
-      Method.analyze.invoke({
+      Method.analyze.invoke(executionPriority, {
         'image': image.toMap(),
-        'priority': executionPriority.taskPriority,
         'mode': analyzeMode.modeName,
         'requests': [for (var req in mReqs) req.toMap()]
       });

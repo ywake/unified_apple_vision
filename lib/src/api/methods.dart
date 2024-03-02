@@ -9,9 +9,15 @@ enum Method {
 
   static const channel = MethodChannel('unified_apple_vision/method');
 
-  Future<bool> invoke([Map<String, dynamic>? arg]) async {
+  Future<bool> invoke(
+    VisionExecutionPriority priority, [
+    Map<String, dynamic>? arg,
+  ]) async {
     try {
-      final res = await channel.invokeMethod<bool>(name, arg);
+      final res = await channel.invokeMethod<bool>(name, {
+        'priority': priority.taskPriority,
+        ...?arg,
+      });
       return res ?? false;
     } catch (e) {
       rethrow;

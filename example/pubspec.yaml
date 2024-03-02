@@ -7,20 +7,22 @@ environment:
   sdk: '>=3.2.6 <4.0.0'
 
 dependencies:
+  camerawesome: ^2.0.0+1
+  cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-
+  path_provider: ^2.1.2
   unified_apple_vision:
     path: ../
-  cupertino_icons: ^1.0.2
-  camerawesome: ^2.0.0+1
 
 dev_dependencies:
-  integration_test:
-    sdk: flutter
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
