@@ -1,6 +1,9 @@
 ## 1.3.0-preview.1
 * Feat: CoreML support (Needs to be implemented in a separate plugin)
 
+## 1.2.3
+* Fix: Changed from including Request errors in Results to returning errors in the onError callback.
+
 ## 1.2.2
 * Fix: Bugs
 * Fix: Remove dependencies

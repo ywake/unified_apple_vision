@@ -10,6 +10,7 @@ export 'src/enum/request_type.dart';
 
 export 'src/model/input_image.dart';
 export 'src/model/results.dart';
+export 'src/model/request_error.dart';
 
 export 'src/model/enum/barcode_symbology.dart';
 export 'src/model/enum/image_crop_and_scale_option.dart';

@@ -22,7 +22,7 @@ class Json {
   T? _value<T>(String key, bool require) {
     final value = data[key] as T?;
     if (require && value == null) {
-      throw Exception('There is no $key in Json');
+      throw JsonException('There is no $key in Json');
     }
     return value;
   }
@@ -157,5 +157,16 @@ extension MapEx on Map<String, dynamic> {
       return MapEntry(strKey, value);
     });
     return map;
+  }
+}
+
+class JsonException implements Exception {
+  final String message;
+
+  JsonException(this.message);
+
+  @override
+  String toString() {
+    return 'JsonException: $message';
   }
 }
