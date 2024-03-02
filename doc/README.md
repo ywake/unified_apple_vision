@@ -49,6 +49,9 @@ vision.analyze(
         final observations = result.ofRecognizeTextRequest; // get casted results
         // some action
       },
+      onError: (error) {
+        // handle error
+      },
     ),
     VisionDetectTextRectanglesRequest(
       onResult: (result) {
