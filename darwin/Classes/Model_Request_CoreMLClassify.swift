@@ -1,8 +1,8 @@
 import Vision
 
-typealias ModelInitializer = (Json) throws -> VNCoreMLModel
+private typealias ModelInitializer = (Json) throws -> VNCoreMLModel
 
-class CoreMLClassificationRequest: ImageBasedRequest, AnalyzeRequest {
+class CoreMLClassifyRequest: ImageBasedRequest, AnalyzeRequest {
   let model: VNCoreMLModel
   let imageCropAndScaleOption: VNImageCropAndScaleOption?
 
@@ -18,8 +18,7 @@ class CoreMLClassificationRequest: ImageBasedRequest, AnalyzeRequest {
 
   convenience init(json: Json) throws {
     let modelPath = try json.str("model_path")
-    var url: URL
-    url = try URL(fileURLWithPath: modelPath)
+    let url = try URL(fileURLWithPath: modelPath)
     let mlModel = try MLModel(contentsOf: url)
     let model = try VNCoreMLModel(for: mlModel)
     self.init(
@@ -32,7 +31,7 @@ class CoreMLClassificationRequest: ImageBasedRequest, AnalyzeRequest {
   }
 
   func type() -> RequestType {
-    return .coreMlClassification
+    return .coreMlClassify
   }
 
   func id() -> String {

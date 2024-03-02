@@ -44,9 +44,8 @@ extension VisionRequestTypeEx on VisionRequestType {
             VisionClassifyImageRequest(onResults: onResults),
           VisionRequestType.generateImageFeaturePrint =>
             VisionGenerateImageFeaturePrintRequest(onResults: onResults),
-          VisionRequestType.coreMlClassification =>
-            VisionCoreMLClassificationRequest(
-                modelPath: mobileNetV2Path, onResults: onResults),
+          VisionRequestType.coreMlClassify => VisionCoreMLClassifyRequest(
+              modelPath: mobileNetV2Path, onResults: onResults),
         }
       ].nonNulls.toList();
 
@@ -81,7 +80,7 @@ extension VisionRequestTypeEx on VisionRequestType {
             .map((e) => e.build())
             .toList();
       case VisionRequestType.classifyImage:
-      case VisionRequestType.coreMlClassification:
+      case VisionRequestType.coreMlClassify:
         return [
           result?.observations
               .whereType<VisionClassificationObservation>()

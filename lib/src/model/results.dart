@@ -40,7 +40,7 @@ class VisionResults {
             VisionClassificationObservation.fromJson(json),
           VisionRequestType.generateImageFeaturePrint =>
             VisionFeaturePrintObservation.fromJson(json),
-          VisionRequestType.coreMlClassification =>
+          VisionRequestType.coreMlClassify =>
             VisionClassificationObservation.fromJson(json),
         }
     ]);
@@ -85,6 +85,6 @@ class VisionResults {
   List<VisionFeaturePrintObservation> get ofGenerateImageFeaturePrintRequest =>
       observations.whereType<VisionFeaturePrintObservation>().toList();
 
-  List<VisionClassificationObservation> get ofCoreMlClassificationRequest =>
+  List<VisionClassificationObservation> get ofCoreMlClassifyRequest =>
       observations.whereType<VisionClassificationObservation>().toList();
 }
