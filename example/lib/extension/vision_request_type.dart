@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
+import 'package:unified_apple_vision_example/main.dart';
 
 import 'observations/vision_barcode_observation.dart';
 import 'observations/vision_classification_observation.dart';
@@ -18,8 +19,7 @@ extension VisionRequestTypeEx on VisionRequestType {
   List<VisionRequest> requests(void Function(VisionResults) onResults) => [
         switch (this) {
           VisionRequestType.trackObject ||
-          VisionRequestType.trackRectangle ||
-          VisionRequestType.coreMlClassification =>
+          VisionRequestType.trackRectangle =>
             null,
           VisionRequestType.recognizeText => VisionRecognizeTextRequest(
               automaticallyDetectsLanguage: true, onResults: onResults),
@@ -44,6 +44,9 @@ extension VisionRequestTypeEx on VisionRequestType {
             VisionClassifyImageRequest(onResults: onResults),
           VisionRequestType.generateImageFeaturePrint =>
             VisionGenerateImageFeaturePrintRequest(onResults: onResults),
+          VisionRequestType.coreMlClassification =>
+            VisionCoreMLClassificationRequest(
+                modelPath: mobileNetV2Path, onResults: onResults),
         }
       ].nonNulls.toList();
 
@@ -51,7 +54,6 @@ extension VisionRequestTypeEx on VisionRequestType {
     switch (this) {
       case VisionRequestType.trackObject:
       case VisionRequestType.trackRectangle:
-      case VisionRequestType.coreMlClassification:
         return [const Center(child: Text('Not available yet.'))];
       case VisionRequestType.generateImageFeaturePrint:
         return [const Center(child: Text('Widget not available.'))];
@@ -79,6 +81,7 @@ extension VisionRequestTypeEx on VisionRequestType {
             .map((e) => e.build())
             .toList();
       case VisionRequestType.classifyImage:
+      case VisionRequestType.coreMlClassification:
         return [
           result?.observations
               .whereType<VisionClassificationObservation>()

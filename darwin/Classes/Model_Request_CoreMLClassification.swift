@@ -6,14 +6,6 @@ class CoreMLClassificationRequest: ImageBasedRequest, AnalyzeRequest {
   let model: VNCoreMLModel
   let imageCropAndScaleOption: VNImageCropAndScaleOption?
 
-  private static var registry: [String: ModelInitializer] = [:]
-  static func registerModelInitializer(
-    _ name: String,
-    _ initializer: @escaping ModelInitializer
-  ) {
-    registry[name] = initializer
-  }
-
   init(
     parent: ImageBasedRequest,
     model: VNCoreMLModel,
@@ -25,10 +17,11 @@ class CoreMLClassificationRequest: ImageBasedRequest, AnalyzeRequest {
   }
 
   convenience init(json: Json) throws {
-    let modelInitializer = try CoreMLClassificationRequest.registry[json.str("model_name")]
-    guard let model = try modelInitializer?(json) else {
-      throw PluginError.invalidRequest(msg: "Model not found. Check 'model_name'.")
-    }
+    let modelPath = try json.str("model_path")
+    var url: URL
+    url = try URL(fileURLWithPath: modelPath)
+    let mlModel = try MLModel(contentsOf: url)
+    let model = try VNCoreMLModel(for: mlModel)
     self.init(
       parent: try ImageBasedRequest(json: json),
       model: model,

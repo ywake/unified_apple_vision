@@ -1,8 +1,10 @@
 import 'package:flutter/services.dart';
+import 'package:unified_apple_vision/src/enum/execution_priority.dart';
 
 enum Method {
   logging,
   analyze,
+  coreML,
   // supportedRecognitionLanguages,
   // computeDistance,
   ;

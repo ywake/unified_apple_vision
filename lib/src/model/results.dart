@@ -84,4 +84,7 @@ class VisionResults {
 
   List<VisionFeaturePrintObservation> get ofGenerateImageFeaturePrintRequest =>
       observations.whereType<VisionFeaturePrintObservation>().toList();
+
+  List<VisionClassificationObservation> get ofCoreMlClassificationRequest =>
+      observations.whereType<VisionClassificationObservation>().toList();
 }

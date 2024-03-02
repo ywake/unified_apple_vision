@@ -9,10 +9,12 @@ import Vision
 public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
   private let channel: FlutterMethodChannel
   private let analyzeApi: AnalyzeApi
+  private let coreMLApi: CoreMLApi
 
   public init(channel: FlutterMethodChannel) {
     self.channel = channel
     self.analyzeApi = AnalyzeApi(channel: channel)
+    self.coreMLApi = CoreMLApi(channel: channel)
     Logger.shared.channel = channel
   }
 
@@ -47,6 +49,9 @@ public class UnifiedAppleVisionPlugin: NSObject, FlutterPlugin {
           res(true)
         case .logging:
           try Logger.setLogLevel(arg)
+          res(true)
+        case .coreML:
+          try coreMLApi.compile(arg)
           res(true)
         // case "supportedRecognitionLanguages":
         //   self.supportedRecognitionLanguages(arg, result)

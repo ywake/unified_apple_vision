@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:unified_apple_vision/unified_apple_vision.dart';
 
 import 'api/analyze.dart';
+import 'api/core_ml.dart';
 import 'api/logging.dart';
 import 'api/methods.dart';
 import 'utility/json.dart';
@@ -28,6 +29,9 @@ class UnifiedAppleVision {
           break;
         case Method.logging:
           _loggingApi.onResults(json);
+          break;
+        case Method.coreML:
+          _coreMLApi.onResults(json);
           break;
       }
     } catch (e, st) {
@@ -76,6 +80,25 @@ class UnifiedAppleVision {
   Future<void> setLogLevel(VisionLogLevel level) async {
     try {
       await _loggingApi.setLogLevel(level);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  ///
+  /// CoreML API
+  ///
+  final _coreMLApi = CoreMLApi(_logger);
+
+  /// **iOS: 16.0+, macOS: 13.0+**
+  ///
+  /// Compile a Core ML model.
+  Future<String> compileModel(
+    String modelPath, [
+    VisionExecutionPriority priority = VisionExecutionPriority.lowest,
+  ]) async {
+    try {
+      return await _coreMLApi.compileModel(modelPath, priority);
     } catch (e) {
       rethrow;
     }
