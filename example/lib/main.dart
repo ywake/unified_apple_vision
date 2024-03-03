@@ -9,6 +9,7 @@ import 'package:unified_apple_vision/unified_apple_vision.dart';
 import 'extension/vision_request_type.dart';
 
 late final String mobileNetV2Path;
+late final String yoloV3Path;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,14 +37,19 @@ class _MyAppState extends State<MyApp> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    final byteData = await rootBundle.load('assets/MobileNetV2.mlmodel');
+    mobileNetV2Path = await _compileModel('assets/MobileNetV2.mlmodel');
+    yoloV3Path = await _compileModel('assets/YOLOv3.mlmodel');
+  }
+
+  Future<String> _compileModel(String assetPath) async {
+    final byteData = await rootBundle.load(assetPath);
     final pwd = await getTemporaryDirectory();
-    final file = File('${pwd.path}/MobileNetV2.mlmodel');
+    final file = File('${pwd.path}/${assetPath.split('/').last}');
     await file.writeAsBytes(byteData.buffer.asUint8List(
       byteData.offsetInBytes,
       byteData.lengthInBytes,
     ));
-    mobileNetV2Path = await _unifiedAppleVision.compileModel(
+    return await _unifiedAppleVision.compileModel(
       file.path,
       VisionExecutionPriority.high,
     );

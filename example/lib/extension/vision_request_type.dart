@@ -46,6 +46,8 @@ extension VisionRequestTypeEx on VisionRequestType {
             VisionGenerateImageFeaturePrintRequest(onResults: onResults),
           VisionRequestType.coreMlClassify => VisionCoreMLClassifyRequest(
               modelPath: mobileNetV2Path, onResults: onResults),
+          VisionRequestType.coreMlRecognize => VisionCoreMLRecognizeRequest(
+              modelPath: yoloV3Path, onResults: onResults),
         }
       ].nonNulls.toList();
 
@@ -61,6 +63,7 @@ extension VisionRequestTypeEx on VisionRequestType {
       case VisionRequestType.detectRectangles:
         return result?.ofDetectRectanglesRequest.map((e) => e.build()).toList();
       case VisionRequestType.recognizeAnimals:
+      case VisionRequestType.coreMlRecognize:
         return result?.ofRecognizeAnimalsRequest.map((e) => e.build()).toList();
       case VisionRequestType.detectTextRectangles:
         return result?.ofDetectTextRectanglesRequest

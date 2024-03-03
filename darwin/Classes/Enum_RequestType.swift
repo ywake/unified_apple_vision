@@ -13,6 +13,7 @@ enum RequestType: String {
   case classifyImage = "classify_image"
   case generateImageFeaturePrint = "generate_image_feature_print"
   case coreMlClassify = "core_ml_classify"
+  case coreMlRecognize = "core_ml_recognize"
 
   init?(_ string: String) {
     self.init(rawValue: string)
@@ -48,6 +49,8 @@ enum RequestType: String {
       return try GenerateImageFeaturePrintRequest(json: json)
     case .coreMlClassify:
       return try CoreMLClassifyRequest(json: json)
+    case .coreMlRecognize:
+      return try CoreMLRecognizeRequest(json: json)
     }
   }
 }
