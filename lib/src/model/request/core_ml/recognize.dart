@@ -4,12 +4,8 @@ import 'base.dart';
 
 /// **iOS 12.0+, macOS 10.14+**
 class VisionCoreMLRecognizeRequest extends VisionCoreMLRequest {
-  /// The path to the **Compiled** Core ML model file.
-  /// To compile a Core ML model, use the `compileModel()` method.
-  final String modelPath;
-
   const VisionCoreMLRecognizeRequest({
-    required this.modelPath,
+    required super.modelPath,
     super.imageCropAndScaleOption,
     super.regionOfInterest,
     required super.onResults,
@@ -19,7 +15,6 @@ class VisionCoreMLRecognizeRequest extends VisionCoreMLRequest {
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),
-      'model_path': modelPath,
     };
   }
 }
