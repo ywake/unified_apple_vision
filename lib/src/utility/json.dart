@@ -43,7 +43,7 @@ class Json {
   int int_(String key) => (_value<num>(key, true)!).toInt();
 
   /// Optionally fetches an int value for [key] and converts it, returning null if [key] is not found.
-  int? integerOr(String key) => (_value<num>(key, false))?.toInt();
+  int? intOr(String key) => (_value<num>(key, false))?.toInt();
 
   /// Fetches a double value for [key] and converts it. Throws an exception if [key] is not found.
   double double_(String key) => (_value<num>(key, true)!).toDouble();
@@ -144,20 +144,6 @@ class Json {
 
   /// Optionally fetches a base64 encoded bytes value for [key], returning null if [key] is not found.
   Uint8List? bytesOr(String key) => _bytes(key, false);
-}
-
-extension MapEx on Map<String, dynamic> {
-  // _Map<Object?, Object?>
-  static Map<String, dynamic> fromResponse(dynamic response) {
-    final map = (response as Map).map((key, value) {
-      final strKey = key as String;
-      if (value is Map) {
-        return MapEntry(strKey, MapEx.fromResponse(value));
-      }
-      return MapEntry(strKey, value);
-    });
-    return map;
-  }
 }
 
 class JsonException implements Exception {

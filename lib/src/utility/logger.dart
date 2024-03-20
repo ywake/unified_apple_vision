@@ -59,7 +59,7 @@ extension LogLevelEx on VisionLogLevel {
   String get emoji => switch (this) {
         VisionLogLevel.debug => '',
         VisionLogLevel.info => 'ℹ️',
-        VisionLogLevel.warning => '🟡',
+        VisionLogLevel.warning => '⚠️',
         VisionLogLevel.error => '🚫',
         VisionLogLevel.none => '',
       };
